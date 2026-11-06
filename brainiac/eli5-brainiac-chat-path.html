@@ -76,7 +76,7 @@ small{opacity:.7}
 <span style="font-size:.85rem">1. Work the <b style="color:#2e9e5b">▶ start here</b> boxes first: everything they need is already done, so they can run side by side.<br>
 2. The purple <span class="pn">1</span>…<span class="pn">5</span> path is the shortest way to Preschool: make story answers mostly right (T8) → let a typed live question reach the answer path (T10, the biggest unlock) → right short who/what/where/why answers (P6) → answer stories in its own words (P9) → pass the baby and pre-K story tests (P12).<br>
 3. A box is green only when nothing is owed: lab-only results stay yellow until the live brain shows them.</span></div>
-<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-06 @ 03:14 PST</div>
+<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-06 @ 08:50 PST</div>
 <div id="road" class="road"><svg id="roadsvg"></svg></div>
 <p><small>Bars marked "(guess)" are not written in any rule yet. Numbers from the brainiac board and rule files, 2026-11-03.</small></p>
 <style>
@@ -117,7 +117,7 @@ const N=[
 ["T11","T","partial","Names a thing or what happens, when asked","KB-1507, KB-1385, KB-209","120 / 128 right vs sham .50 on test feed; live replies never scored.","Same read on live answer lines with typed asks: ≥ 30 decided, right ≥ sham + 2 sd, no harm ≥ .6734, restart 6/6.","T10"],
 ["M1","M","done","Remembers words in its wiring, not stored text","KB-254, KB-275","Recall 1.000 from wiring alone.","Closed: round-trip on live copy equal; falsify stub FAILED.",""],
 ["M2","M","done","What it learned is still there after a restart","KB-326, KB-1727","Restart vs no-restart twin identical.","Closed (twin-leg falsify). Each new card adds its own restart leg.","M1"],
-["M3","M","partial","What it learned in chat survives a restart","KB-1910, KB-1146, KB-1899","'Why' answers 19/152 equal across 2 restarts (copy). Open chat turns dropped at restart.","Chat-taught items byte-equal after clean stop, no re-teach; open turns kept; 0 outside kills over ≥ 3 h.","M2,T5,T4"],
+["M3","M","partial","What it learned in chat survives a restart","KB-1910, KB-1146, KB-1899, KB-2619","'Why' answers 19/152 equal across 2 restarts (copy). Open chat turns dropped at restart.","Chat-taught items byte-equal after clean stop, no re-teach; open turns kept; 0 outside kills over ≥ 3 h.","M2,T5,T4"],
 ["M4","M","partial","Sleep turns a once-heard line into a lasting memory","KB-255, KB-329","Owed: live-brain read. On a copy: cued recall .151 → .745 after sleep; sham .04.","Copy proof done (beats no-replay + sham by 2 sd, falsify FAILED). Missing: same read on held lines in the live brain.","M2"],
 ["M5","M","partial","Holds a few things in mind for a moment","KB-199, KB-214, KB-223","Holds 3–7 items at 1.000, but no test shows it changes an answer. '7 slots' looks coded, not learned.","Task that needs a held item: on vs off vs sham, cue-disjoint; slots learned, not coded.",""],
 ["M6","M","open","New lessons do not wipe old ones","KB-251, KB-324, KB-363, KB-267","Stage-7 answers 49/50 → 18/50 after stage 8 is learned.","Stage-7 teacher-off rights ≥ 45/50 after stages 8..17; sham with matching cut count; no-restart twin.","M2"],
@@ -139,7 +139,7 @@ const N=[
 ["P11","P","blocked","Asks back when it does not know","KB-1143, KB-1147, KB-1148, KB-1197","Asks 0.","Answerable gap vs unanswerable sham; asks followed by a right held-out answer; no credit for memorized pairs.","P6,P9"],
 ["P12","P","blocked","Passes the baby, then pre-K school story tests","KB-1106, KB-1124, KB-209","Baby grade locked on KB-1124; pre-K needs it + KB-209.","Reference 3/3, all 9 shams FAIL, frozen test, live ≤ 45 calls, 0 copied 4-word runs.","P9,P3,P10,M6,M7"]
 ];
-const NOW=["KB-2602","KB-2627"];const NEXT=["KB-2605"];
+const NOW=[];const NEXT=["KB-2619"];
 const PATH=["T8","T10","P6","P9","P12"];
 const FLAG={T:"🏁 Toddler chat reached",M:"🏁 Mouse memory milestone",P:"🏁 Preschool chat reached"};
 const ST={done:"done",partial:"partly",open:"open",blocked:"blocked"};
