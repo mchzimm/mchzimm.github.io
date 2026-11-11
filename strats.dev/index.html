@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Modular Composition</title>
+<style>
+:root{color-scheme:dark;--bg:#14141c;--ink:#ecebf3;--mute:#b4b3c6;--card:#1f1f2c;--line:#44445e;--acc:#7fb8ff;--brick:#2b3a55;--brickline:#7fb8ff;--data:#3a2f4f;--dataline:#c9a6ff;--bad:#ff9a9a;--good:#8be0ae;--warn:#f2c14e;--chip-ok-bg:#8be0ae;--chip-ok-ink:#0c2a1a;--chip-no-bg:#ff9a9a;--chip-no-ink:#3a0c0c;--chip-mix-bg:#f2c14e;--chip-mix-ink:#2a2000;--chip-unk-bg:#b9b8cc;--chip-unk-ink:#1d1d2a}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font:19px/1.45 system-ui,-apple-system,sans-serif;overflow-x:hidden}
+main{max-width:820px;margin:0 auto;padding:24px 16px 60px}
+h1{font-size:2.1rem;line-height:1.15;margin:.2em 0}
+h2{font-size:1.45rem;margin:1.8em 0 .4em;color:var(--acc)}
+p{margin:.5em 0}
+.sub{color:var(--mute)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 16px;margin:12px 0;overflow-wrap:anywhere}
+code{background:#0d0d14;color:var(--ink);padding:1px 6px;border-radius:6px;font-size:.88em}
+svg{display:block;width:100%;height:auto;margin:10px 0}
+svg .t{fill:var(--ink);font:600 15px system-ui,sans-serif}
+svg .s{fill:var(--mute);font:13px system-ui,sans-serif}
+svg .brick{fill:var(--brick);stroke:var(--brickline);stroke-width:2}
+svg .data{fill:var(--data);stroke:var(--dataline);stroke-width:2}
+svg .bad{fill:none;stroke:var(--bad);stroke-width:3}
+svg .good{fill:none;stroke:var(--good);stroke-width:3}
+svg .arrow{stroke:var(--mute);stroke-width:2;fill:none}
+svg .tg{fill:var(--good);font:700 14px system-ui,sans-serif}
+svg .tb{fill:var(--bad);font:700 14px system-ui,sans-serif}
+svg .paper{fill:#2a2a3c;stroke:var(--line);stroke-width:2}
+.chip{display:inline-block;border-radius:99px;padding:1px 11px;font-size:.78rem;font-weight:800;letter-spacing:.02em;margin-right:6px;vertical-align:middle}
+.ok{background:var(--chip-ok-bg);color:var(--chip-ok-ink)}
+.no{background:var(--chip-no-bg);color:var(--chip-no-ink)}
+.mix{background:var(--chip-mix-bg);color:var(--chip-mix-ink)}
+.unk{background:var(--chip-unk-bg);color:var(--chip-unk-ink)}
+.step{border-left:8px solid var(--line);padding:10px 14px;margin:10px 0;background:var(--card);border-radius:0 14px 14px 0;overflow-wrap:anywhere}
+.step b{display:block}
+.step .when{font-size:.85rem;color:var(--mute)}
+.s0{margin-left:0;border-color:#7a7a96}.s1{margin-left:4%;border-color:var(--acc)}.s2{margin-left:8%;border-color:var(--dataline)}.s3{margin-left:12%;border-color:var(--good)}
+ul{padding-left:1.2em;margin:.4em 0}li{margin:.3em 0}
+.foot{margin-top:40px;color:var(--mute);font-size:.8rem}
+</style></head><body><main>
+<h1>Modular Composition</h1>
+<p class="sub">How we build big things so many helpers can work at the same time and never bump into each other. Like Lego.</p>
+
+<h2>1. The big idea: one brick, one box, one helper</h2>
+<div class="card">
+<p>Think of a pile of Lego. Every kind of brick lives in <b>its own box</b>. In a program, a box is a <b>file</b>. Each helper (an agent) gets <b>one box at a time</b>. If you want a new ability, you add a <b>new box</b>. You do not scribble inside someone else's box.</p>
+</div>
+<svg viewBox="0 0 640 210" role="img" aria-label="Three brick boxes plus one instruction card make a dragon">
+<rect class="brick" x="10" y="20" width="130" height="56" rx="10"/><text class="t" x="75" y="46" text-anchor="middle">wings</text><text class="s" x="75" y="65" text-anchor="middle">one code file</text>
+<rect class="brick" x="10" y="84" width="130" height="56" rx="10"/><text class="t" x="75" y="110" text-anchor="middle">legs</text><text class="s" x="75" y="129" text-anchor="middle">one code file</text>
+<rect class="brick" x="10" y="148" width="130" height="56" rx="10"/><text class="t" x="75" y="174" text-anchor="middle">fire breath</text><text class="s" x="75" y="193" text-anchor="middle">one code file</text>
+<rect class="data" x="250" y="62" width="160" height="86" rx="10"/><text class="t" x="330" y="92" text-anchor="middle">dragon card</text><text class="s" x="330" y="112" text-anchor="middle">a data file:</text><text class="s" x="330" y="130" text-anchor="middle">legs + wings + fire</text>
+<path class="arrow" d="M140 48 L250 90"/><path class="arrow" d="M140 112 L250 105"/><path class="arrow" d="M140 176 L250 125"/>
+<rect class="brick" x="500" y="62" width="130" height="86" rx="43"/><text class="t" x="565" y="100" text-anchor="middle">a dragon</text><text class="s" x="565" y="120" text-anchor="middle">built from the card</text>
+<path class="arrow" d="M410 105 L500 105"/>
+</svg>
+<div class="card">
+<p><b>Two kinds of boxes:</b></p>
+<ul>
+<li><b>Ability boxes = code.</b> One file per ability: wings, legs, fire breath.</li>
+<li><b>Instruction cards = data.</b> One small file per kind of thing: a dragon, an elf, an element like iron, a star type. A new dragon-like creature is a new card, not a code change.</li>
+</ul>
+<p>A dragon is not "a child of Reptile and Flyer". It is a thing that <i>has</i> wings, legs and fire breath. Mix and match, like Lego. The core of the program knows nothing about dragons or stars: it only knows what a brick is and keeps a list of bricks.</p>
+<p>The same shape works for a whole universe (stars, planets, materials, creatures) and for an app (features, buttons, saving, input).</p>
+</div>
+
+<h2>2. Why two kids must not write on the same paper</h2>
+<div class="card"><p>Somewhere there is usually a <b>list of all the bricks</b>. If every helper adds a line to that one paper, they crash into each other. The fix: nobody writes the list by hand. The computer <b>builds the list by looking at the folders</b>. Add a file, and the list grows by itself.</p></div>
+<svg viewBox="0 0 640 190" role="img" aria-label="Hand-written list conflicts, generated list does not">
+<rect class="paper" x="10" y="30" width="170" height="110" rx="8"/><text class="s" x="95" y="52" text-anchor="middle">one shared paper</text>
+<text class="s" x="95" y="78" text-anchor="middle">wings</text><text class="s" x="95" y="98" text-anchor="middle">legs ...</text>
+<text class="t" x="35" y="170" text-anchor="start">Kid A</text><text class="t" x="140" y="170" text-anchor="start">Kid B</text>
+<path class="arrow" d="M45 155 L80 110"/><path class="arrow" d="M150 155 L120 110"/>
+<text class="tb" x="95" y="20" text-anchor="middle">both write: crash</text>
+<rect class="bad" x="4" y="24" width="182" height="122" rx="12"/>
+<rect class="brick" x="260" y="30" width="110" height="38" rx="8"/><text class="t" x="315" y="55" text-anchor="middle">wings</text>
+<rect class="brick" x="260" y="78" width="110" height="38" rx="8"/><text class="t" x="315" y="103" text-anchor="middle">fire breath</text>
+<rect class="paper" x="450" y="40" width="180" height="90" rx="8"/><text class="s" x="540" y="64" text-anchor="middle">list built by the</text><text class="s" x="540" y="84" text-anchor="middle">computer from folders</text><text class="s" x="540" y="108" text-anchor="middle">nobody edits it</text>
+<path class="arrow" d="M370 50 L450 70"/><path class="arrow" d="M370 97 L450 100"/>
+<text class="tg" x="450" y="24" text-anchor="start">each kid adds a file: fine</text>
+<rect class="good" x="254" y="24" width="382" height="112" rx="12"/>
+</svg>
+
+<h2>3. Stairs: climb only when you must</h2>
+<p class="sub">Most things stay on the bottom step. We climb one step only when a measured signal says so, never "just in case".</p>
+<div class="step s0"><b>Step 0: plain files</b>Ordinary files. Small stuff stays here. Tiny scripts and one-off jobs use none of this.<span class="when">Climb to step 1 when: two helpers edited the same file in one round, or one file is over about 800 lines mixing several abilities.</span></div>
+<div class="step s1"><b>Step 1: one file per ability</b>A core file holds the rules; each ability is its own file; no ability file edits another.<span class="when">Climb to step 2 when: a hand-written shared list has 2 or more helpers adding to it at once, or any conflict shows up in a round.</span></div>
+<div class="step s2"><b>Step 2: list built by itself</b>The list of bricks and cards is generated from the folders (a small build script, about 45 lines). Adding things = adding files only.<span class="when">Climb to step 3 when: there are very many kinds of things, or builds get too slow. The numbers for this are still guesses (see section 6).</span></div>
+<div class="step s3"><b>Step 3: big machinery</b>A proper "bag of parts" engine, kinds loaded from data, groups of abilities as separate packages.<span class="when">Measure the real project first: the thresholds are guesses.</span></div>
+<p class="sub">Going back down is allowed: if a step shows 0 conflicts and fewer helpers, it may be simplified.</p>
+
+<h2>4. What we measured</h2>
+<p class="sub">Small tests on 2026-11-11 on one Mac. Real numbers, honest labels.</p>
+<div class="card"><span class="chip ok">VERIFIED</span><b>Auto-built list: 0 conflicts.</b> Two helpers each added an ability file plus a data file, merged, no conflicts, both abilities worked. Breaking the generator on purpose made the tests fail, so the tests do check it. A trap found: a shared test file would conflict, so each ability gets its own test file.</div>
+<div class="card"><span class="chip ok">MEASURED</span><b>Hand-written list vs generated list.</b> With 2, 4 and 8 helpers adding at once: a list where everyone appends a line at the end conflicted in 100% of trials. A sorted list conflicted in 15%, 75% and 100% of trials. The generated list (files only): 0 conflicts at 2, 4 and 8.</div>
+<div class="card"><span class="chip no">REFUTED</span><b>The <code>linkme</code> trick on web-assembly.</b> It does not compile there (all 4 builds failed). It works natively only. Do not use it on wasm.</div>
+<div class="card"><span class="chip ok">VERIFIED</span><b>The <code>inventory</code> trick on web-assembly.</b> Counted 3 of 3 bricks, and 0 with no bricks (control). Tested in node only.</div>
+<div class="card"><span class="chip ok">VERIFIED</span><b>The code-analysis tool sees the generated modules.</b> The command-line analyzer passed normally, failed on a deliberately wrong import, and failed when build scripts were switched off. It only prints pass/fail, not messages.</div>
+<div class="card"><span class="chip mix">MEASURED</span><b>Speed.</b> 2000 data cards plus 200 ability files built from scratch in 2.4 seconds; scanning the folders took 12 ms. With toy modules, so file count alone does not make builds slow. It does not tell us the real limit.</div>
+<div class="card"><span class="chip mix">MIXED</span><b>Other languages.</b> Zero-edit worked (0 conflicts, 3 behaviors) in Python, TypeScript on node, Go (same-package files, or a generated import file), Java (scan a classes folder), and C++ (file globbing). Not zero-edit, 1 conflict each: Java <code>ServiceLoader</code> (one shared services file) and Go blank-import lists. C++ code inside a static library was silently dropped by the linker (0 behaviors).</div>
+<div class="card"><span class="chip ok">VERIFIED</span><b>Old projects (brownfield).</b> Never rewrite everything. Add a scaffold beside the old code, plug the old code in through a thin adapter, then extract one thing per card. The extraction branches only add files; both merged with 0 conflicts and the old tests stayed green. But if two branches each delete their own line from the old shared list, that conflicts, so the owner deletes the old lines in one cleanup afterward. Tested on one tiny Rust crate with 3 kinds.</div>
+
+<h2>5. Old projects in one picture</h2>
+<svg viewBox="0 0 640 150" role="img" aria-label="Old code, scaffold, adapter, one extraction at a time">
+<rect class="paper" x="10" y="40" width="130" height="70" rx="10"/><text class="t" x="75" y="70" text-anchor="middle">old code</text><text class="s" x="75" y="90" text-anchor="middle">stays as is</text>
+<rect class="brick" x="180" y="40" width="130" height="70" rx="10"/><text class="t" x="245" y="70" text-anchor="middle">scaffold</text><text class="s" x="245" y="90" text-anchor="middle">new files beside it</text>
+<rect class="brick" x="350" y="40" width="130" height="70" rx="10"/><text class="t" x="415" y="70" text-anchor="middle">adapter</text><text class="s" x="415" y="90" text-anchor="middle">old code = fallback</text>
+<rect class="data" x="520" y="40" width="110" height="70" rx="10"/><text class="t" x="575" y="70" text-anchor="middle">1 thing</text><text class="s" x="575" y="90" text-anchor="middle">moved per card</text>
+<path class="arrow" d="M140 75 L180 75"/><path class="arrow" d="M310 75 L350 75"/><path class="arrow" d="M480 75 L520 75"/>
+</svg>
+<div class="card">Only what a task actually touches is moved, and only when the one-file-per-helper promise would otherwise break. Everything else stays old. Other languages for this part were <b>not</b> tested.</div>
+
+<h2>6. Still unverified</h2>
+<div class="card">
+<ul>
+<li><span class="chip unk">UNVERIFIED</span>Web or bundler wasm targets inside a real browser (only node was run).</li>
+<li><span class="chip unk">UNVERIFIED</span>Other wasm runtimes (wasmtime, wasmer): only node's runtime ran.</li>
+<li><span class="chip unk">UNVERIFIED</span>How the generated modules look in an editor window (only the command-line analyzer ran).</li>
+<li><span class="chip unk">UNVERIFIED</span>Vite's glob import, and TypeScript type-checking (tools missing); Java from a packed JAR (only an unpacked classes folder).</li>
+<li><span class="chip unk">UNVERIFIED</span>Old-project moves on real legacy crates, in other languages, and the scaffold cost beyond the toy crate.</li>
+<li><span class="chip unk">GUESS</span>"More than about 20 kinds" and "build over about 20 seconds" as reasons to reach step 3: neither was decided by measurement. Measure the real project.</li>
+<li><span class="chip unk">GUESS</span>"More than 3 helpers" is only a soft hint with no measured basis. The real trigger is 2 or more helpers editing one hand-written list, or any conflict in a round.</li>
+</ul>
+</div>
+
+<p class="foot">Source: global policy "modular-composition" (~/.claude/policies/modular-composition.md). Results from 2026-11-11, one macOS machine. <span id="upd">updated 2026-11-11 17:19 UTC</span></p>
+</main></body></html>
