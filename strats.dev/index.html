@@ -89,14 +89,16 @@ ul{padding-left:1.2em;margin:.4em 0}li{margin:.3em 0}
 
 <h2>4. What we measured</h2>
 <p class="sub">Small tests on 2026-11-11 on one Mac. Real numbers, honest labels.</p>
+<div class="card"><span class="chip ok">SCOREBOARD</span><b>18 result rows: 13 verified, 1 refuted, 2 measured, 1 mixed, 1 blocked (not attempted).</b> Every guarantee test had a control that must fail or conflict, and we broke the guard on purpose to see the tests turn red (the two speed and conflict-count rows are plain measurements). Round 3 (today) closed most of the old "unverified" list: rows 9 to 14 below.</div>
 <div class="card"><span class="chip ok">VERIFIED</span><b>Auto-built list: 0 conflicts.</b> Two helpers each added an ability file plus a data file, merged, no conflicts, both abilities worked. Breaking the generator on purpose made the tests fail, so the tests do check it. A trap found: a shared test file would conflict, so each ability gets its own test file.</div>
 <div class="card"><span class="chip ok">MEASURED</span><b>Hand-written list vs generated list.</b> With 2, 4 and 8 helpers adding at once: a list where everyone appends a line at the end conflicted in 100% of trials. A sorted list conflicted in 15%, 75% and 100% of trials. The generated list (files only): 0 conflicts at 2, 4 and 8.</div>
 <div class="card"><span class="chip no">REFUTED</span><b>The <code>linkme</code> trick on web-assembly.</b> It does not compile there (all 4 builds failed). It works natively only. Do not use it on wasm.</div>
-<div class="card"><span class="chip ok">VERIFIED</span><b>The <code>inventory</code> trick on web-assembly.</b> Counted 3 of 3 bricks, and 0 with no bricks (control). Tested in node only.</div>
+<div class="card"><span class="chip ok">VERIFIED</span><b>The <code>inventory</code> trick on web-assembly.</b> Counted 3 of 3 bricks, and 0 with no bricks (control), in node, in the <code>wasmtime</code> runtime (a downloaded program, checksum matched, nothing installed system-wide; leaving one brick out gave 2), and in a real browser engine (headless Chrome) for both the "web" and the "bundler" packaging styles: 3 of 3, and 0 for the control.</div>
 <div class="card"><span class="chip ok">VERIFIED</span><b>The code-analysis tool sees the generated modules.</b> The command-line analyzer passed normally, failed on a deliberately wrong import, and failed when build scripts were switched off. It only prints pass/fail, not messages.</div>
 <div class="card"><span class="chip mix">MEASURED</span><b>Speed.</b> 2000 data cards plus 200 ability files built from scratch in 2.4 seconds; scanning the folders took 12 ms. With toy modules, so file count alone does not make builds slow. It does not tell us the real limit.</div>
-<div class="card"><span class="chip mix">MIXED</span><b>Other languages.</b> Zero-edit worked (0 conflicts, 3 behaviors) in Python, TypeScript on node, Go (same-package files, or a generated import file), Java (scan a classes folder), and C++ (file globbing). Not zero-edit, 1 conflict each: Java <code>ServiceLoader</code> (one shared services file) and Go blank-import lists. C++ code inside a static library was silently dropped by the linker (0 behaviors).</div>
+<div class="card"><span class="chip mix">MIXED</span><b>Other languages.</b> Zero-edit worked (0 conflicts, 3 behaviors) in Python, TypeScript on node (also type-checked with <code>tsc</code>, and with Vite's glob import), Go (same-package files, or a generated import file), Java (scan a classes folder, or scan inside a packed JAR), and C++ (file globbing). Traps found today: in Java do not name the interface <code>Module</code> (it clashes with a built-in); in TypeScript each ability file must end with <code>satisfies Module</code>, or a wrong shape slips past the type checker; a Vite glob that matches nothing builds quietly with 0 bricks, so always assert a count. Not zero-edit, 1 conflict each: Java <code>ServiceLoader</code> (one shared services file) and Go blank-import lists. C++ code inside a static library was silently dropped by the linker (0 behaviors).</div>
 <div class="card"><span class="chip ok">VERIFIED</span><b>Old projects (brownfield).</b> Never rewrite everything. Add a scaffold beside the old code, plug the old code in through a thin adapter, then extract one thing per card. The extraction branches only add files; both merged with 0 conflicts and the old tests stayed green. But if two branches each delete their own line from the old shared list, that conflicts, so the owner deletes the old lines in one cleanup afterward. Tested on one tiny Rust crate with 3 kinds.</div>
+<div class="card"><span class="chip ok">VERIFIED</span><b>Old projects in 5 more languages.</b> Python, TypeScript, Java, C++ and Go, each with a tiny old file (one if-chain, 3 kinds, 3 old tests): scaffold plus thin adapter kept all 3 old tests green; two branches each moved one kind into its own new file and merged with 0 conflicts (5 tests green). Control: two branches editing the old if-chain conflicted in all 5. Breaking the adapter made the untouched kind fail in all 5; breaking a moved ability made its tests fail in all 5. Only toy files, not real old code.</div>
 
 <h2>5. Old projects in one picture</h2>
 <svg viewBox="0 0 640 150" role="img" aria-label="Old code, scaffold, adapter, one extraction at a time">
@@ -106,20 +108,19 @@ ul{padding-left:1.2em;margin:.4em 0}li{margin:.3em 0}
 <rect class="data" x="520" y="40" width="110" height="70" rx="10"/><text class="t" x="575" y="70" text-anchor="middle">1 thing</text><text class="s" x="575" y="90" text-anchor="middle">moved per card</text>
 <path class="arrow" d="M140 75 L180 75"/><path class="arrow" d="M310 75 L350 75"/><path class="arrow" d="M480 75 L520 75"/>
 </svg>
-<div class="card">Only what a task actually touches is moved, and only when the one-file-per-helper promise would otherwise break. Everything else stays old. Other languages for this part were <b>not</b> tested.</div>
+<div class="card">Only what a task actually touches is moved, and only when the one-file-per-helper promise would otherwise break. Everything else stays old. This part now has tiny tests in 6 languages; real old code has not been tried.</div>
 
 <h2>6. Still unverified</h2>
 <div class="card">
 <ul>
-<li><span class="chip unk">UNVERIFIED</span>Web or bundler wasm targets inside a real browser (only node was run).</li>
-<li><span class="chip unk">UNVERIFIED</span>Other wasm runtimes (wasmtime, wasmer): only node's runtime ran.</li>
-<li><span class="chip unk">UNVERIFIED</span>How the generated modules look in an editor window (only the command-line analyzer ran).</li>
-<li><span class="chip unk">UNVERIFIED</span>Vite's glob import, and TypeScript type-checking (tools missing); Java from a packed JAR (only an unpacked classes folder).</li>
-<li><span class="chip unk">UNVERIFIED</span>Old-project moves on real legacy crates, in other languages, and the scaffold cost beyond the toy crate.</li>
+<li><span class="chip unk">UNVERIFIED</span>How the generated modules look in an editor window (needs an editor screen; only the command-line analyzer ran).</li>
+<li><span class="chip unk">UNVERIFIED</span>The real build-time limit for step 3: it needs a real project's crate (for example a 20,000-line crate with 20 or more ability files, timed cold and after one edit) compared with that project's own target.</li>
+<li><span class="chip unk">UNVERIFIED</span>Old-project moves on real old code (a real giant if-chain with real tests), and the cost of the scaffold beyond a toy.</li>
+<li><span class="chip unk">UNVERIFIED</span>The <code>wasmer</code> runtime, Firefox and Safari, and bundlers other than Vite.</li>
 <li><span class="chip unk">GUESS</span>"More than about 20 kinds" and "build over about 20 seconds" as reasons to reach step 3: neither was decided by measurement. Measure the real project.</li>
 <li><span class="chip unk">GUESS</span>"More than 3 helpers" is only a soft hint with no measured basis. The real trigger is 2 or more helpers editing one hand-written list, or any conflict in a round.</li>
 </ul>
 </div>
 
-<p class="foot">Source: global policy "modular-composition" (~/.claude/policies/modular-composition.md). Results from 2026-11-11, one macOS machine. <span id="upd">updated 2026-11-11 17:19 UTC</span></p>
+<p class="foot">Source: global policy "modular-composition" (~/.claude/policies/modular-composition.md). Results from 2026-11-11, one macOS machine. <span id="upd">updated 2026-11-11 17:45 UTC</span></p>
 </main></body></html>
