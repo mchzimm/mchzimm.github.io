@@ -1599,7 +1599,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div id="gtip" role="tooltip"></div>
 <script>(function(){var t=document.getElementById('gtip');function show(e){var s=e.target.closest('.dot[data-tip],.ring[data-tip]');if(!s){t.style.display='none';return}t.innerHTML=s.getAttribute('data-tip');t.style.display='block';var r=s.getBoundingClientRect(),w=t.offsetWidth,h=t.offsetHeight,x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.bottom+8+h>innerHeight?r.top-h-8:r.bottom+8;t.style.left=x+'px';t.style.top=y+'px'}document.addEventListener('mouseover',show);document.addEventListener('click',show);document.addEventListener('scroll',function(){t.style.display='none'},true)})();</script>
 <!-- captl:end -->
-<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-14 08:04 PST</div>
+<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-14 08:28 PST</div>
 <div id="road" class="road"><svg id="roadsvg"></svg></div>
 <p><small>Bars marked "(guess)" are not written in any rule yet. Numbers from the brainiac board and rule files, 2026-11-03.</small></p>
 <style>
@@ -1662,7 +1662,7 @@ const N=[
 ["P11","P","blocked","Asks back when it does not know","KB-1143, KB-1147, KB-1148, KB-1197","Asks 0.","Answerable gap vs unanswerable sham; asks followed by a right held-out answer; no credit for memorized pairs.","P6,P9"],
 ["P12","P","blocked","Passes the baby, then pre-K school story tests","KB-1106, KB-1124, KB-209","Baby grade locked on KB-1124; pre-K needs it + KB-209.","Reference 3/3, all 9 shams FAIL, frozen test, live ≤ 45 calls, 0 copied 4-word runs.","P9,P3,P10,M6,M7"]
 ];
-const NOW=["KB-2822","KB-2817","KB-2810","KB-2808","KB-2806","KB-2807","KB-2805","KB-2800","KB-2792","KB-2783","KB-2760","KB-2755","KB-2657","KB-2656","KB-2655","KB-2645"];const NEXT=["KB-2802"];
+const NOW=["KB-2823","KB-2824","KB-2822","KB-2817","KB-2808","KB-2806","KB-2807","KB-2805","KB-2800","KB-2792","KB-2783","KB-2760","KB-2755","KB-2657","KB-2656","KB-2655","KB-2645"];const NEXT=["KB-2802"];
 const PATH=["T8","T10","P6","P9","P12"];
 const FLAG={T:"🏁 Toddler chat reached",M:"🏁 Mouse memory milestone",P:"🏁 Preschool chat reached"};
 const ST={done:"done",partial:"partly",open:"open",blocked:"blocked"};
