@@ -39,7 +39,7 @@ small{opacity:.7}
 <div class="card row"><div class="big">📚</div><div>We taught it the question shapes blindly (no hints): <b>1 new answer</b> only. Letting Claude help through the helper made it <b>worse (13 vs 19)</b>. Scores of 17 to 19 are not stable yet.</div></div>
 <div class="card row"><div class="big">🧪</div><div>We built a <b>blind practice set of 39 new questions</b> it has never seen. Its own brain gets <b>0 of 39</b>. So a chooser that picks between the helper's answer and its own answer has nothing to protect: its own answer is never right on new questions.</div></div>
 <div class="card row"><div class="big">🔒</div><div>The idea of using the <b>same-chat memory slot</b> is closed: that slot is overwritten before the question arrives, so it cannot carry the earlier chat. Also, the blind 39-question set overlaps the practice feed, so a fair test of "does the curriculum teach recall" was run as a pair of short legs (KB-2932): it taught almost nothing.</div></div>
-<div class="card row"><div class="big">📏</div><div>The goal sits at about <b>19 shown of 32 (17 to 19, fragile)</b> without a decision from you. Teaching it a curriculum is closed too: a long practice feed taught only <b>2 of 9</b> even when the exact question and answer were in it, and <b>4 of 39</b> new questions vs <b>0</b> without it (KB-2932, failed). Only two things are left: a test of a bigger helper model (KB-2941, running now) and your call on letting Claude answer the empty or wrong replies.</div></div>
+<div class="card row"><div class="big">📏</div><div>The goal sits at about <b>19 shown of 32 (17 to 19, fragile)</b> without a decision from you. Teaching it a curriculum is closed too: a long practice feed taught only <b>2 of 9</b> even when the exact question and answer were in it, and <b>4 of 39</b> new questions vs <b>0</b> without it (KB-2932, failed). The test of a bigger helper model (KB-2941) is blocked on the model download (0.04 to 0.34 MB/s, 3 to 13 hours), so nothing is left to run by itself. Only two things can move it: your call on letting Claude answer the empty or wrong replies, or the upstream project relaxing its reply filter (our issue there is still unanswered).</div></div>
 
 <h2>3. Try a chat today</h2>
 <div class="card chat">
@@ -1604,7 +1604,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div id="gtip" role="tooltip"></div>
 <script>(function(){var t=document.getElementById('gtip');function show(e){var s=e.target.closest('.dot[data-tip],.ring[data-tip]');if(!s){t.style.display='none';return}t.innerHTML=s.getAttribute('data-tip');t.style.display='block';var r=s.getBoundingClientRect(),w=t.offsetWidth,h=t.offsetHeight,x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.bottom+8+h>innerHeight?r.top-h-8:r.bottom+8;t.style.left=x+'px';t.style.top=y+'px'}document.addEventListener('mouseover',show);document.addEventListener('click',show);document.addEventListener('scroll',function(){t.style.display='none'},true)})();</script>
 <!-- captl:end -->
-<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-15 09:44 PST</div>
+<div id="diagupd" style="font-size:.8rem;color:#666;margin:.4rem 0">Diagram updated: 2026-11-15 09:59 PST</div>
 <div id="road" class="road"><svg id="roadsvg"></svg></div>
 <p><small>Bars marked "(guess)" are not written in any rule yet. Numbers from the brainiac board and rule files, 2026-11-03.</small></p>
 <style>
@@ -1667,7 +1667,7 @@ const N=[
 ["P11","P","blocked","Asks back when it does not know","KB-1143, KB-1147, KB-1148, KB-1197","Asks 0.","Answerable gap vs unanswerable sham; asks followed by a right held-out answer; no credit for memorized pairs.","P6,P9"],
 ["P12","P","blocked","Passes the baby, then pre-K school story tests","KB-1106, KB-1124, KB-209","Baby grade locked on KB-1124; pre-K needs it + KB-209.","Reference 3/3, all 9 shams FAIL, frozen test, live ≤ 45 calls, 0 copied 4-word runs.","P9,P3,P10,M6,M7"]
 ];
-const NOW=["KB-2941"];const NEXT=["KB-2717"];
+const NOW=[];const NEXT=["KB-2717"];
 const PATH=["T8","T10","P6","P9","P12"];
 const FLAG={T:"🏁 Toddler chat reached",M:"🏁 Mouse memory milestone",P:"🏁 Preschool chat reached"};
 const ST={done:"done",partial:"partly",open:"open",blocked:"blocked"};
