@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ELI5: Goal progress</title>
+<style>
+:root{color-scheme:dark;--bg:#14141c;--ink:#ecebe4;--dim:#b4b3c4;--card:#20202e;--line:#3a3a52;--ok:#5fd68f;--chk:#5ecfd0;--fix:#f2b53a;--wait:#a9a9b8;--last:#c4a2f5;--chipink:#10101a;--tipbg:#2c2c42;--tipink:#f4f2ea}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 system-ui,sans-serif}
+main{max-width:960px;margin:0 auto;padding:22px 16px 60px}
+h1{font-size:1.9rem;margin:.2em 0}h2{font-size:1.3rem;margin:1.4em 0 .4em}
+.sub{color:var(--dim)}
+.card{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:14px 18px;margin:12px 0}
+.chip{display:inline-block;border-radius:99px;padding:2px 12px;font-size:.78rem;font-weight:700;color:var(--chipink);white-space:nowrap}
+.c-ok{background:var(--ok)}.c-chk{background:var(--chk)}.c-fix{background:var(--fix)}.c-wait{background:var(--wait)}.c-last{background:var(--last)}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;color:var(--dim);font-size:.8rem;padding:6px 8px;border-bottom:2px solid var(--line)}
+td{padding:10px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{color:var(--dim);width:2em}td.eta{color:var(--dim);font-size:.85rem}
+tbody tr{cursor:pointer;position:relative}
+tbody tr:hover,tbody tr:focus,tbody tr.open{background:var(--card);outline:2px solid var(--line)}
+td.tipcell{padding:0;width:0;border:0}
+.tip{display:none;position:absolute;left:8px;right:8px;top:100%;z-index:5;background:var(--tipbg);color:var(--tipink);border:2px solid var(--last);border-radius:12px;padding:10px 14px;font-size:.88rem;box-shadow:0 8px 24px #000a}
+.tip p{margin:.4em 0}.lab{color:var(--fix);font-weight:700}
+tr:hover .tip,tr:focus .tip,tr.open .tip{display:block}
+.hint{color:var(--dim);font-size:.85rem}
+@media(max-width:600px){body{font-size:16px}th.eta,td.eta{display:none}}
+</style></head><body><main>
+<h1><a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html" style="color:inherit;text-decoration:none">Can brainiac learn from its understudy's corrections?</a></h1>
+<p class="sub">Goal: when the understudy (a small local helper model) corrects brainiac, brainiac learns it and gives the better answer next time. As of 18:15 PST 2026-11-19. Updated <span id="upd">2026-11-19 18:23 PST</span>.</p>
+<div class="card"><b>Short answer:</b> brainiac does learn the corrected answer. The better answer does not reliably reach you yet, because (1) after a restart it first says a wrong worn-out answer several times, and (2) when brainiac is right, the understudy's reply is still shown instead. Whole goal live: rough ~21:00 PST.</div>
+<div class="legend"><span class="chip c-ok">works</span><span class="chip c-chk">checked</span><span class="chip c-fix">being fixed / built</span><span class="chip c-wait">waiting</span><span class="chip c-last">last step</span></div>
+<p class="hint">Hover, focus (Tab) or tap a row for root cause, evidence and next step.</p>
+<table><thead><tr><th>#</th><th>Status</th><th>What it means</th><th class="eta">ETA</th><th></th></tr></thead><tbody>
+<tr tabindex="0" aria-describedby="tip1" data-tip="tip1"><td class="n">1</td><td><span class="chip c-ok">works</span></td><td>Understudy corrects a reply and teaches the answer</td><td class="eta">done</td>
+<td class="tipcell"><div role="tooltip" id="tip1" class="tip"><b>Understudy corrects a reply and teaches the answer</b><p>The understudy (small local helper) drafts a reply, a check keeps or replaces it, and the kept answer is taught to brainiac as a heard line.</p><p><span class="lab">Root cause / evidence:</span> Cards KB-3122 / KB-3126. Hypothesis: none needed, this step works.</p><p><span class="lab">Next step / ETA:</span> Nothing left.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip2" data-tip="tip2"><td class="n">2</td><td><span class="chip c-ok">works</span></td><td>Brainiac stores the lesson</td><td class="eta">done</td>
+<td class="tipcell"><div role="tooltip" id="tip2" class="tip"><b>Brainiac stores the lesson</b><p>In the 15:13 save the memory cell for &quot;a pumpkin&quot; did not exist. In the 16:04 save it holds &quot;orange&quot;. Hypothesis confirmed: a correction creates a new memory.</p><p><span class="lab">Root cause / evidence:</span> Evidence: the two saves (KB-3224).</p><p><span class="lab">Next step / ETA:</span> Nothing left.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip3" data-tip="tip3"><td class="n">3</td><td><span class="chip c-ok">works on test copies</span></td><td>Brainiac answers from the lesson</td><td class="eta">done</td>
+<td class="tipcell"><div role="tooltip" id="tip3" class="tip"><b>Brainiac answers from the lesson</b><p>Brainiac answers &quot;a pumpkin orange&quot; and &quot;the sky blue&quot;. The answer is read from that same memory cell. It picks the strongest next word; the &quot;end of sentence&quot; option cannot win early.</p><p><span class="lab">Root cause / evidence:</span> Evidence: KB-3214 read.</p><p><span class="lab">Next step / ETA:</span> Still to prove on the live brain (last step).</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip4" data-tip="tip4"><td class="n">4</td><td><span class="chip c-chk">checked, no problem</span></td><td>Lessons fading from being asked a lot</td><td class="eta">done</td>
+<td class="tipcell"><div role="tooltip" id="tip4" class="tip"><b>Lessons fading from being asked a lot</b><p>104 asks weakened the stored weight of &quot;orange&quot; (diluted by end-of-sentence counts) but it stayed far above the delete floor (0.018 vs 0.002), so the answer did not change.</p><p><span class="lab">Root cause / evidence:</span> KB-3224 PASS. Hypothesis (fading deletes the lesson) refuted.</p><p><span class="lab">Next step / ETA:</span> Nothing left.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip5" data-tip="tip5"><td class="n">5</td><td><span class="chip c-fix">bug found, being fixed</span></td><td>Wear-off memory across restart (KB-3214)</td><td class="eta">fix ~18:40, check ~19:15</td>
+<td class="tipcell"><div role="tooltip" id="tip5" class="tip"><b>Wear-off memory across restart (KB-3214)</b><p>Brainiac avoids words it just overused (&quot;wear-off&quot;). That was forgotten at restart, so it says &quot;is a pumpkin&quot; about 5 times before &quot;orange&quot;. The fix saves it in a small side file.</p><p><span class="lab">Root cause / evidence:</span> Root cause of the new bug: the word &quot;is&quot; exists under two internal numbers (stage word and extra word). Save and load used one, picking used the other, so the row was skipped on reload. Fix: use the same lookup as picking.</p><p><span class="lab">Next step / ETA:</span> Fix ~18:40, check ~19:15.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip6" data-tip="tip6"><td class="n">6</td><td><span class="chip c-fix">being built</span></td><td>Show brainiac&#x27;s own reply when right (KB-3138)</td><td class="eta">build ~19:00, check ~19:30</td>
+<td class="tipcell"><div role="tooltip" id="tip6" class="tip"><b>Show brainiac&#x27;s own reply when right (KB-3138)</b><p>A forced route always shows the understudy&#x27;s reply. In 130 checked turns brainiac&#x27;s own right answer was shown 0 times (an earlier &quot;22 of 170&quot; count included greeting echoes, now corrected).</p><p><span class="lab">Root cause / evidence:</span> History: only 3 of 19 hidden right answers followed an earlier lesson, so gains are mostly for future questions. First version keeps the record in memory only; the understudy check still runs so a wrong first lesson can be corrected.</p><p><span class="lab">Next step / ETA:</span> Build ~19:00, check ~19:30.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip7" data-tip="tip7"><td class="n">7</td><td><span class="chip c-wait">waiting</span></td><td>Keep that record across restarts (KB-3234)</td><td class="eta">~20:30</td>
+<td class="tipcell"><div role="tooltip" id="tip7" class="tip"><b>Keep that record across restarts (KB-3234)</b><p>Stores only scrambled fingerprints (hashes) of the question and answer words, never text.</p><p><span class="lab">Root cause / evidence:</span> Waits for KB-3214&#x27;s side-file pattern to be proven.</p><p><span class="lab">Next step / ETA:</span> ~20:30.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip8" data-tip="tip8"><td class="n">8</td><td><span class="chip c-chk">checks pass, switch off</span></td><td>Answer tables stay right when word groups are renumbered (KB-3202)</td><td class="eta">switch on ~19:45</td>
+<td class="tipcell"><div role="tooltip" id="tip8" class="tip"><b>Answer tables stay right when word groups are renumbered (KB-3202)</b><p>Restart check: renumbering ran once, not again after restart; who/what answers are the same. A rehearsal on a live-save copy held, but that copy had nothing to renumber, so today it changes nothing live.</p><p><span class="lab">Root cause / evidence:</span> Still owed: a break-on-purpose check, explaining the yes/no answer drift (chance level), and one full test run.</p><p><span class="lab">Next step / ETA:</span> Switch on ~19:45.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip9" data-tip="tip9"><td class="n">9</td><td><span class="chip c-fix">design started</span></td><td>Understudy uses its local model, not only stored answers (KB-3206)</td><td class="eta">design ~18:45, build ~20:00+</td>
+<td class="tipcell"><div role="tooltip" id="tip9" class="tip"><b>Understudy uses its local model, not only stored answers (KB-3206)</b><p>The sky and pumpkin drafts came from the understudy&#x27;s stored answers with 0 model calls.</p><p><span class="lab">Root cause / evidence:</span> Hypothesis: the store answers first whenever it has a hit or the turn is forced. The design finds the exact rule.</p><p><span class="lab">Next step / ETA:</span> Design ~18:45, build ~20:00 or later.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip10" data-tip="tip10"><td class="n">10</td><td><span class="chip c-chk">checker running</span></td><td>Repair tests broken by older changes (KB-3218)</td><td class="eta">~18:30</td>
+<td class="tipcell"><div role="tooltip" id="tip10" class="tip"><b>Repair tests broken by older changes (KB-3218)</b><p>Failing tests went from 17 to 5. One cause (KB-2776 turned on) broke 7. One credit test was put back on purpose to flag a possible behavior change.</p><p><span class="lab">Root cause / evidence:</span> Three new cards filed (KB-3228 / 3230 / 3232) for the rest.</p><p><span class="lab">Next step / ETA:</span> ~18:30.</p></div></td></tr>
+<tr tabindex="0" aria-describedby="tip11" data-tip="tip11"><td class="n">11</td><td><span class="chip c-last">last step</span></td><td>Go live (restart live brainiac with fixes)</td><td class="eta">~21:00</td>
+<td class="tipcell"><div role="tooltip" id="tip11" class="tip"><b>Go live (restart live brainiac with fixes)</b><p>Backup first, safety check on a copy, then restart. This is when real chats show the improvement.</p><p><span class="lab">Root cause / evidence:</span> Depends on every row above; each failed check adds about 30 to 60 minutes.</p><p><span class="lab">Next step / ETA:</span> ~21:00.</p></div></td></tr>
+</tbody></table>
+<h2>In plain words</h2>
+<div class="card">Brainiac already remembers what the helper taught it. Two things stand in the way: it forgets which words it just overused when it restarts, and it still shows the helper's reply even when its own is right. Fixes are being built and checked one by one, then brainiac is restarted with all of them.<br><small class="sub">Times are guesses; each failed check adds about 30-60 minutes.</small></div>
+<script>
+document.querySelectorAll('tbody tr').forEach(function(r){r.addEventListener('click',function(){var o=r.classList.contains('open');document.querySelectorAll('tr.open').forEach(function(x){x.classList.remove('open')});if(!o)r.classList.add('open')});
+r.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();r.click()}if(e.key==='Escape')r.classList.remove('open')})});
+</script>
+</main></body></html>
