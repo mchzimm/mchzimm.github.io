@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<!--
+HOW TO UPDATE: edit only the PIECES array in the script (one object per box). Fields: id, name, lane (chat|study|tests|link),
+status (done|verify|planned|blocked), chip (short text), what, how (plain words), works, nums, next, to (ids this box feeds; draws arrows).
+The top diagram and its overlays render from PIECES; the three status sections below are static diagram HTML. Then change the UPDATED string below. Published to https://mchzimm.github.io/brainiac/understudy-progress.html by brainiac-ghpages_publish.sh (old brainiac-understudy URL redirects here).
+-->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Brainiac Understudy</title>
+<style>
+:root{color-scheme:dark;--vgood:#3fb950;--vbad:#f85149;--vwip:#d29922;--vline:#e6edf3;--vnumink:#0d1117;--done:#2e7d32;--verify:#9a5b00;--planned:#56626d;--blocked:#8e3b3b;--bg:#0d1117;--surface:#161b22;--border:#30363d;--ink:#e6edf3;--muted:#9da7b3;--chipink:#fff;--arrow:#8b949e;--link:#79c0ff;--focus:#58a6ff;--shadow:rgba(0,0,0,.6);--edge:rgba(255,255,255,.25);--chipbg:rgba(0,0,0,.35)}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:14px;max-width:1100px;margin:auto}
+h1{margin:.2em 0}h1 a{color:var(--link)}
+.stamp{font-size:12px;color:var(--muted)}
+.intro{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;font-size:13px}
+.legend span{padding:2px 8px;border-radius:10px;color:var(--chipink)}
+#dwrap{position:relative}
+#arrows{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.lane{margin:10px 0 18px;position:relative;z-index:1}
+.lane h3{margin:0 0 6px;font-size:14px;color:var(--muted)}
+.row{display:flex;flex-wrap:wrap;gap:22px 26px}
+.box{width:150px;min-height:62px;border-radius:8px;color:var(--chipink);padding:6px 8px;font-size:13px;cursor:pointer;border:2px solid var(--edge);text-align:left;font-family:inherit}
+.box b{display:block}.box i{display:inline-block;font-style:normal;font-size:11px;background:var(--chipbg);border-radius:8px;padding:0 6px;margin-top:3px}
+.box:focus{outline:3px solid var(--focus)}
+.s-done{background:var(--done)}.s-verify{background:var(--verify)}.s-planned{background:var(--planned)}.s-blocked{background:var(--blocked)}.s-now{background:#5b2c83}
+#ov{position:fixed;display:none;z-index:9;width:min(340px,calc(100vw - 16px));max-height:calc(100vh - 16px);overflow:auto;background:var(--surface);color:var(--ink);border:2px solid var(--muted);border-radius:8px;padding:10px 12px;font-size:13px;box-shadow:0 4px 18px var(--shadow)}
+#ov h4{margin:0 24px 4px 0}#ov p{margin:4px 0}#ov button{position:absolute;right:6px;top:4px;font-size:16px;border:0;background:none;color:var(--ink);cursor:pointer}
+#arrows line{stroke:var(--arrow)}#ah path{fill:var(--arrow)}
+a{color:var(--link)}
+table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surface)}td,th{border:1px solid var(--border);padding:4px 6px;text-align:left;vertical-align:top}
+.pill{color:var(--chipink);border-radius:8px;padding:0 6px;font-size:12px;white-space:nowrap}
+
+.viz{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;margin:10px 0}
+.vhead{font-weight:600;margin-bottom:6px;display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline}
+.vkey{font-weight:400;font-size:12px;color:var(--muted);display:inline-flex;flex-wrap:wrap;gap:2px 8px;align-items:center}
+.k{display:inline-block;width:12px;height:10px;border-radius:2px;vertical-align:middle;margin-right:2px}
+.k-good,.k-ok{background:var(--vgood)}.k-bad,.k-no{background:var(--vbad)}.k-line{width:3px;height:12px;background:var(--vline)}
+.k-un{background:var(--planned)}.k-used{background:var(--vbad)}.k-res{background:var(--vwip)}.k-left{background:var(--vgood)}
+.vrow{margin:4px 0}.vlab{font-size:13px;color:var(--muted)}
+.vtrk{position:relative;height:20px;background:var(--bg);border-radius:4px}
+.vbar{height:100%;border-radius:4px}.v-good{background:var(--vgood)}.v-bad{background:var(--vbad)}
+.v-dash{border:2px dashed var(--vline);box-sizing:border-box;background:none}
+.vline{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--vline)}
+.vnum{position:absolute;left:6px;top:1px;font-size:12px;font-weight:600;color:var(--vnumink)}
+.v-dash~.vnum{color:var(--ink)}
+.vcap{font-size:12px;color:var(--muted);margin-top:6px}
+.gauge{display:flex;height:26px;border-radius:4px;overflow:hidden}
+.gauge div{display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--vnumink);white-space:nowrap;overflow:hidden}
+.g-used{background:var(--vbad)}.g-res{background:var(--vwip)}.g-left{background:var(--vgood)}
+.board{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.bcol{flex:1 1 200px;min-width:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px}
+.bh{font-weight:700;font-size:13px;padding:4px 8px;border-radius:6px;margin-bottom:6px;color:var(--vnumink)}
+.bh-ok{background:var(--vgood)}.bh-no{background:var(--vbad)}.bh-wip{background:var(--vwip)}.bh-blk{background:var(--planned);color:var(--chipink)}
+.chip{display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;font-size:13px;padding:5px 8px;margin:4px 0;border-radius:6px;background:var(--bg);border-left:5px solid var(--planned)}
+.chip b{white-space:nowrap}.ch-ok{border-color:var(--vgood)}.ch-no{border-color:var(--vbad)}.ch-wip{border-color:var(--vwip)}
+.flow{display:flex;flex-wrap:wrap;gap:12px}.fmain{flex:1 1 220px}.ftest{flex:1 1 180px;border:1px dashed var(--muted);border-radius:8px;padding:6px}
+.fnode{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;font-size:13px;padding:6px 8px;border-radius:6px;background:var(--bg);border-left:6px solid var(--planned)}
+.fn-ok{border-color:var(--vgood)}.fn-no{border-color:var(--vbad)}.fn-un{border-color:var(--planned)}
+.farr{text-align:center;color:var(--muted);line-height:1.1}
+.flive{border:1px solid var(--border);border-radius:8px;padding:6px}
+.ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
+</style></head><body>
+<h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
+<div class="stamp">updated <span id="upd">2026-11-22 03:01 PST</span></div>
+<div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
+<div class="legend"><span style="background:var(--done)">done</span><span style="background:var(--verify)">built, verifying</span><span style="background:var(--planned)">planned</span><span style="background:var(--blocked)">blocked / backlog</span><span style="background:#5b2c83">being worked on now</span><small>Tap or hover a box for details. Arrows show what feeds what.</small></div>
+<div id="dwrap"><svg id="arrows"><defs><marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0L8,4L0,8z"/></marker></defs></svg><div id="lanes"></div></div>
+<div id="ov" role="dialog"><button aria-label="close" id="x">x</button><div id="ovb"></div></div>
+<!-- captl:start -->
+<section id="captl" class="captl" aria-label="When each piece of the understudy was worked on">
+<h2 id="cap-timeline">When each piece of the understudy was worked on<span class="captl-infowrap"><button type="button" class="captl-info" aria-label="How this chart is made" aria-describedby="captl-info-tip">ℹ️</button><span id="captl-info-tip" class="captl-infotip" role="tooltip"><span class="captl-ith">How this chart is made</span> <span class="captl-itl">Dates come from the understudy&#x27;s saved work history (git log): a piece counts on a day when a saved step names it at the start (or merges it).</span> <span class="captl-itl">Days next to each other join into one mark (47 marks now). Passed / did not pass come from the step notes saying PASS, or FAIL / MISS.</span> <span class="captl-itl">Marks of 2026-11-21 (#43-#47) come from the card board; days 11-08 to 11-20 are not drawn yet.</span></span></span></h2>
+<p class="captl-intro">One line per piece of the diagram above that has dated work. A mark is a day with saved work on that piece; hover a mark to see what was done.</p>
+<style id="captl-css">#captl{display:grid;gap:8px;min-width:0}#captl .captl-intro{margin:0;color:var(--mut,#5d6a62);max-width:80ch}#captl .captl-note{margin:0;font-size:13px;line-height:1.45;color:var(--mut,#5d6a62);max-width:90ch}#captl .captl-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}#captl .captl-bar label{font-weight:600;color:var(--fg,#1d2420)}#captl .captl-sel{font:inherit;font-size:15px;color:var(--fg,#1d2420);background:var(--card,#fff);border:1px solid var(--mut,#5d6a62);border-radius:8px;padding:5px 8px;min-height:36px;max-width:100%}#captl .captl-sel:focus{outline:2px solid var(--fg,#1d2420);outline-offset:2px}#captl .captl-blurb{margin:0;font-size:14px;line-height:1.45;color:var(--mut,#5d6a62);max-width:80ch}#captl h2#cap-timeline{position:relative}#captl .captl-infowrap{display:inline}#captl .captl-info{font-size:.62em;line-height:1;vertical-align:middle;margin-left:.45em;min-width:24px;min-height:24px;padding:2px 4px;border:0;border-radius:6px;background:transparent;cursor:help}#captl .captl-info:focus-visible{outline:2px solid var(--fg,#1d2420);outline-offset:2px}#captl .captl-infotip{display:none;position:absolute;left:0;top:100%;margin-top:6px;z-index:20;box-sizing:border-box;width:min(34rem,100%);padding:10px 12px;text-align:left;text-transform:none;letter-spacing:normal;white-space:normal;font:400 14px/1.5 var(--b,system-ui,sans-serif);color:var(--fg,#1d2420);background:var(--card,#fff);border:1px solid var(--line,#d7ddd5);border-radius:10px;box-shadow:0 4px 16px #0003}#captl .captl-infotip::before{content:"";position:absolute;left:0;right:0;top:-8px;height:8px}#captl .captl-infotip .captl-ith{display:block;font-weight:600;margin-bottom:4px}#captl .captl-infotip .captl-itl{display:block;margin-top:4px}#captl .captl-infowrap:hover .captl-infotip,#captl .captl-info:focus-visible+.captl-infotip{display:block}#captl{}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #captl{}}:root[data-theme="dark"] #captl{}.captl-root{width:100%;min-width:0;overflow:hidden;box-sizing:border-box;background:var(--card,#fff);border:1px solid var(--line,#d7ddd5);border-radius:10px}.captl-root svg{display:block}.captl-root .dot:focus{outline:none}.captl-root circle.dot:focus-visible{stroke:var(--fg,#1d2420)!important;stroke-width:2!important}.captl-root line.dot:focus-visible{stroke:var(--fg,#1d2420)!important}#gtip .tt{opacity:.75;font-size:12px}#captl,#gtip{--fg:#e6edf3;--mut:#9da7b3;--card:#161b22;--line:#30363d;--cap1:hsl(0 45% 52%);--ink-1:hsl(0 65% 64%);--cap2:hsl(36 45% 52%);--ink-2:hsl(36 65% 64%);--cap3:hsl(73 45% 52%);--ink-3:hsl(73 65% 64%);--cap4:hsl(109 45% 52%);--ink-4:hsl(109 65% 64%);--cap5:hsl(146 45% 52%);--ink-5:hsl(146 65% 64%);--cap6:hsl(182 45% 52%);--ink-6:hsl(182 65% 64%);--cap7:hsl(219 45% 52%);--ink-7:hsl(219 65% 64%);--cap8:hsl(255 45% 55%);--ink-8:hsl(255 65% 69%);--cap9:hsl(292 45% 52%);--ink-9:hsl(292 65% 64%);--cap10:hsl(328 45% 52%);--ink-10:hsl(328 65% 64%);--cap11:hsl(5 45% 52%);--ink-11:hsl(5 65% 64%);--cap12:hsl(41 45% 52%);--ink-12:hsl(41 65% 64%);--cap13:hsl(78 45% 52%);--ink-13:hsl(78 65% 64%);--cap14:hsl(114 45% 52%);--ink-14:hsl(114 65% 64%);--cap15:hsl(151 45% 52%);--ink-15:hsl(151 65% 64%);--cap16:hsl(187 45% 52%);--ink-16:hsl(187 65% 64%);--cap17:hsl(224 45% 52%);--ink-17:hsl(224 65% 64%);--cap18:hsl(260 45% 55%);--ink-18:hsl(260 65% 68%);--cap19:hsl(297 45% 52%);--ink-19:hsl(297 65% 64%);--cap20:hsl(333 45% 52%);--ink-20:hsl(333 65% 64%);--cap21:hsl(10 45% 52%);--ink-21:hsl(10 65% 64%);--cap22:hsl(46 45% 52%);--ink-22:hsl(46 65% 64%);--cap23:hsl(83 45% 52%);--ink-23:hsl(83 65% 64%);--cap24:hsl(120 45% 52%);--ink-24:hsl(120 65% 64%);--cap25:hsl(156 45% 52%);--ink-25:hsl(156 65% 64%);--cap26:hsl(193 45% 52%);--ink-26:hsl(193 65% 64%);--cap27:hsl(229 45% 53%);--ink-27:hsl(229 65% 66%);--cap28:hsl(266 45% 54%);--ink-28:hsl(266 65% 67%);--cap29:hsl(302 45% 52%);--ink-29:hsl(302 65% 64%);--cap30:hsl(339 45% 52%);--ink-30:hsl(339 65% 64%);--cap31:hsl(15 45% 52%);--ink-31:hsl(15 65% 64%);--cap32:hsl(52 45% 52%);--ink-32:hsl(52 65% 64%);--cap33:hsl(88 45% 52%);--ink-33:hsl(88 65% 64%);--cap34:hsl(125 45% 52%);--ink-34:hsl(125 65% 64%);--cap35:hsl(161 45% 52%);--ink-35:hsl(161 65% 64%);--cap36:hsl(198 45% 52%);--ink-36:hsl(198 65% 64%);--cap37:hsl(234 45% 55%);--ink-37:hsl(234 65% 68%);--cap38:hsl(271 45% 53%);--ink-38:hsl(271 65% 66%);--cap39:hsl(307 45% 52%);--ink-39:hsl(307 65% 64%);--cap40:hsl(344 45% 52%);--ink-40:hsl(344 65% 64%);--cap41:hsl(20 45% 52%);--ink-41:hsl(20 65% 64%);--cap42:hsl(57 45% 52%);--ink-42:hsl(57 65% 64%);}#gtip{position:fixed;z-index:99;max-width:min(340px,calc(100vw - 32px));background:#1d1d24;color:#eeeef2;border:1px solid #555a;border-radius:8px;padding:8px 10px;font:13px/1.4 system-ui,sans-serif;box-shadow:0 4px 16px #0006;display:none}#gtip b{display:block;margin-bottom:2px}.dot[data-tip],.ring[data-tip]{cursor:pointer}</style>
+<div class="captl-bar"><label for="captl-layout">View</label><select id="captl-layout" class="captl-sel" autocomplete="off"><option value="lanes" selected>Lanes</option><option value="ribbon">Ribbon</option><option value="curves">Growth curves</option><option value="arcs">Arcs</option><option value="bump">Rank race</option></select></div>
+<p id="captl-blurb" class="captl-blurb">One thin line per skill, with a dot or bar on the days many tests passed: the best view for seeing which skill moved when.</p>
+<div id="captl-root" class="captl-root" data-captl-layout="lanes" data-layout="lanes"></div>
+<p class="captl-note">47 of 74 pieces have dated work (47 marks). The 5 marks on 2026-11-21 come from the card board. Pieces whose name never starts a saved step: date not known: user, repl, reader, store, embed, typer, rank, guard, corr, reply, child, sdb, marks, rot, probe, ladder, stats, dev, dev5, sealed3, live, reask, niceread, retr0, rerank0, binder, newheld.</p>
+<script type="application/json" id="captl-data">{"start":"2026-11-06","end":"2026-11-21","gaps":[],"caps":[{"n":1,"name":"Retrieval (finding the right sentence)","emoji":"\ud83d\udcac","fill":"hsl(0 45% 52%)","ink":"hsl(0 65% 64%)","pass":0,"fail":0},{"n":2,"name":"Miss diagnosis (xt0)","emoji":"\ud83e\uddea","fill":"hsl(36 45% 52%)","ink":"hsl(36 65% 64%)","pass":0,"fail":0},{"n":3,"name":"Time words (xt1)","emoji":"\ud83d\udcac","fill":"hsl(73 45% 52%)","ink":"hsl(73 65% 64%)","pass":2,"fail":0},{"n":4,"name":"Names material (NAMES_MAT)","emoji":"\ud83d\udcda","fill":"hsl(109 45% 52%)","ink":"hsl(109 65% 64%)","pass":1,"fail":0},{"n":5,"name":"why questions","emoji":"\ud83d\udcac","fill":"hsl(146 45% 52%)","ink":"hsl(146 65% 64%)","pass":1,"fail":1},{"n":6,"name":"Answer extractor","emoji":"\ud83d\udcac","fill":"hsl(182 45% 52%)","ink":"hsl(182 65% 64%)","pass":1,"fail":2},{"n":7,"name":"Answer cache from study (probecache)","emoji":"\ud83d\udcda","fill":"hsl(219 45% 52%)","ink":"hsl(219 65% 64%)","pass":0,"fail":2},{"n":8,"name":"Cache gate (cachegate)","emoji":"\ud83d\udcda","fill":"hsl(255 45% 55%)","ink":"hsl(255 65% 69%)","pass":0,"fail":0},{"n":9,"name":"Local model fills cache (llmgen)","emoji":"\ud83d\udcda","fill":"hsl(292 45% 52%)","ink":"hsl(292 65% 64%)","pass":0,"fail":2},{"n":10,"name":"Who / what only, bigger model (llmgen2)","emoji":"\ud83d\udcda","fill":"hsl(328 45% 52%)","ink":"hsl(328 65% 64%)","pass":0,"fail":2},{"n":11,"name":"Model at answer time (answertime)","emoji":"\ud83d\udcda","fill":"hsl(5 45% 52%)","ink":"hsl(5 65% 64%)","pass":2,"fail":0},{"n":12,"name":"Chat model default on (atflip)","emoji":"\ud83d\udcac","fill":"hsl(41 45% 52%)","ink":"hsl(41 65% 64%)","pass":0,"fail":0},{"n":13,"name":"Confidence check (calib)","emoji":"\ud83d\udcda","fill":"hsl(78 45% 52%)","ink":"hsl(78 65% 64%)","pass":0,"fail":2},{"n":14,"name":"Confidence check, try 4 (calib4)","emoji":"\ud83d\udcda","fill":"hsl(114 45% 52%)","ink":"hsl(114 65% 64%)","pass":0,"fail":0},{"n":15,"name":"Vote margin as confidence (confauc)","emoji":"\ud83d\udcda","fill":"hsl(151 45% 52%)","ink":"hsl(151 65% 64%)","pass":0,"fail":0},{"n":16,"name":"Re-read by vote margin (targetread, targetread2)","emoji":"\ud83d\udcda","fill":"hsl(187 45% 52%)","ink":"hsl(187 65% 64%)","pass":0,"fail":0},{"n":17,"name":"Answer-time pick, seed check (seedcheck)","emoji":"\ud83d\udcac","fill":"hsl(224 45% 52%)","ink":"hsl(224 65% 64%)","pass":0,"fail":0},{"n":18,"name":"Coverage picks re-reads (covmark)","emoji":"\ud83d\udcda","fill":"hsl(260 45% 55%)","ink":"hsl(260 65% 68%)","pass":2,"fail":0},{"n":19,"name":"Coverage as passing mark (markcov)","emoji":"\ud83d\udcda","fill":"hsl(297 45% 52%)","ink":"hsl(297 65% 64%)","pass":1,"fail":0},{"n":20,"name":"Time to saturation, real qwen (satread)","emoji":"\ud83d\udcda","fill":"hsl(333 45% 52%)","ink":"hsl(333 65% 64%)","pass":0,"fail":0},{"n":21,"name":"Confidence-triggered re-study (confmark)","emoji":"\ud83d\udcda","fill":"hsl(10 45% 52%)","ink":"hsl(10 65% 64%)","pass":0,"fail":3},{"n":22,"name":"Per-story rising bar (barmark)","emoji":"\ud83d\udcda","fill":"hsl(46 45% 52%)","ink":"hsl(46 65% 64%)","pass":0,"fail":0},{"n":23,"name":"Only one Ollama model loaded (onemodel)","emoji":"\ud83d\udcda","fill":"hsl(83 45% 52%)","ink":"hsl(83 65% 64%)","pass":1,"fail":0},{"n":24,"name":"afterpath step 0","emoji":"\ud83d\udcac","fill":"hsl(120 45% 52%)","ink":"hsl(120 65% 64%)","pass":0,"fail":0},{"n":25,"name":"D4 extraction step 0","emoji":"\ud83d\udcac","fill":"hsl(156 45% 52%)","ink":"hsl(156 65% 64%)","pass":0,"fail":0},{"n":26,"name":"qreach count","emoji":"\ud83d\udcac","fill":"hsl(193 45% 52%)","ink":"hsl(193 65% 64%)","pass":0,"fail":0},{"n":27,"name":"bindtable","emoji":"\ud83d\udcac","fill":"hsl(229 45% 53%)","ink":"hsl(229 65% 66%)","pass":0,"fail":0},{"n":28,"name":"qfree build","emoji":"\ud83d\udcac","fill":"hsl(266 45% 54%)","ink":"hsl(266 65% 67%)","pass":0,"fail":1},{"n":29,"name":"qfree-2","emoji":"\ud83d\udcac","fill":"hsl(302 45% 52%)","ink":"hsl(302 65% 64%)","pass":2,"fail":0},{"n":30,"name":"qheld","emoji":"\ud83d\udcac","fill":"hsl(339 45% 52%)","ink":"hsl(339 65% 64%)","pass":1,"fail":1},{"n":31,"name":"self-test mark","emoji":"\ud83d\udcac","fill":"hsl(15 45% 52%)","ink":"hsl(15 65% 64%)","pass":1,"fail":2},{"n":32,"name":"re-read with local LLM","emoji":"\ud83d\udcac","fill":"hsl(52 45% 52%)","ink":"hsl(52 65% 64%)","pass":0,"fail":1},{"n":33,"name":"study write vs answer key","emoji":"\ud83d\udcac","fill":"hsl(88 45% 52%)","ink":"hsl(88 65% 64%)","pass":0,"fail":0},{"n":34,"name":"can study notice mistakes","emoji":"\ud83d\udcac","fill":"hsl(125 45% 52%)","ink":"hsl(125 65% 64%)","pass":0,"fail":0},{"n":35,"name":"why grading said right","emoji":"\ud83d\udcac","fill":"hsl(161 45% 52%)","ink":"hsl(161 65% 64%)","pass":0,"fail":0},{"n":36,"name":"stricter grader","emoji":"\ud83d\udcac","fill":"hsl(198 45% 52%)","ink":"hsl(198 65% 64%)","pass":0,"fail":2},{"n":37,"name":"rotation reach and fix cap","emoji":"\ud83d\udcac","fill":"hsl(234 45% 55%)","ink":"hsl(234 65% 68%)","pass":0,"fail":2},{"n":38,"name":"answer-time wording fix","emoji":"\ud83d\udcac","fill":"hsl(271 45% 53%)","ink":"hsl(271 65% 66%)","pass":0,"fail":0},{"n":39,"name":"error map (errmap)","emoji":"\ud83d\udcac","fill":"hsl(307 45% 52%)","ink":"hsl(307 65% 64%)","pass":0,"fail":3},{"n":40,"name":"test order fix (namesart)","emoji":"\ud83e\uddea","fill":"hsl(344 45% 52%)","ink":"hsl(344 65% 64%)","pass":0,"fail":0},{"n":41,"name":"harm source (harmsrc)","emoji":"\ud83d\udcda","fill":"hsl(20 45% 52%)","ink":"hsl(20 65% 64%)","pass":0,"fail":0},{"n":42,"name":"right-sentence ranking (hitorder)","emoji":"\ud83d\udcda","fill":"hsl(57 45% 52%)","ink":"hsl(57 65% 64%)","pass":0,"fail":0},{"n":43,"name":"Claude at answer time, tests (KB-3360)","emoji":"\ud83d\udcac","fill":"hsl(97 45% 52%)","ink":"hsl(97 65% 64%)","pass":1,"fail":0},{"n":44,"name":"How much Claude adds (KB-3362)","emoji":"\ud83e\uddea","fill":"hsl(134 45% 52%)","ink":"hsl(134 65% 64%)","pass":0,"fail":0},{"n":45,"name":"Horse/duck fix (KB-3374, KB-3380)","emoji":"\ud83d\udcac","fill":"hsl(170 45% 52%)","ink":"hsl(170 65% 64%)","pass":0,"fail":0},{"n":46,"name":"Checkout swap (KB-3406)","emoji":"\ud83d\udd17","fill":"hsl(207 45% 52%)","ink":"hsl(207 65% 64%)","pass":0,"fail":0},{"n":47,"name":"Live Claude counter (KB-3438)","emoji":"\ud83d\udd17","fill":"hsl(300 45% 52%)","ink":"hsl(300 65% 64%)","pass":0,"fail":0}],"markers":[{"id":"m1","cap":1,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"retr:2026-11-06:2026-11-06","tip":"<b>#1 \ud83d\udcac Retrieval (finding the right sentence)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>1 saved work step, 1 merged into the main version. Latest note: Merge retr-seed: seed_w + no encoding count in rank + did-verb junk guard"},{"id":"m2","cap":2,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"xt0:2026-11-06:2026-11-06","tip":"<b>#2 \ud83e\uddea Miss diagnosis (xt0)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: xt0: step 0 cross-type diagnosis hard tier, GO small lever"},{"id":"m3","cap":3,"from":"2026-11-06","to":"2026-11-06","nPass":2,"nFail":0,"first":true,"key":"xt1:2026-11-06:2026-11-06","tip":"<b>#3 \ud83d\udcac Time words (xt1)<\/b><span class=\"tt\">26-11-06 \u00b7 2 passed, 0 failed<\/span><br>16 saved work steps, 1 merged into the main version. Latest note: xt1: rule step 0 (TIMEW category spec)"},{"id":"m4","cap":4,"from":"2026-11-06","to":"2026-11-06","nPass":1,"nFail":0,"first":true,"key":"namesmat:2026-11-06:2026-11-06","tip":"<b>#4 \ud83d\udcda Names material (NAMES_MAT)<\/b><span class=\"tt\">26-11-06 \u00b7 1 passed, 0 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: namesmat: rule + NM_TRACE step-0 trace"},{"id":"m5","cap":5,"from":"2026-11-06","to":"2026-11-06","nPass":1,"nFail":1,"first":true,"key":"why:2026-11-06:2026-11-06","tip":"<b>#5 \ud83d\udcac why questions<\/b><span class=\"tt\">26-11-06 \u00b7 1 passed, 1 failed<\/span><br>8 saved work steps, 1 merged into the main version. Latest note: why: cause window before &#x27;so&#x27;, marker pick by question overlap, why probe frame (flag UNDERSTUDY_WHY); C2 miss 1/4"},{"id":"m6","cap":6,"from":"2026-11-06","to":"2026-11-06","nPass":1,"nFail":2,"first":true,"key":"extract:2026-11-06:2026-11-06","tip":"<b>#6 \ud83d\udcac Answer extractor<\/b><span class=\"tt\">26-11-06 \u00b7 1 passed, 2 failed<\/span><br>5 saved work steps, 3 merged into the main version. Latest note: extract step 0: rule file (before any run)"},{"id":"m7","cap":7,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":2,"first":true,"key":"probecache:2026-11-06:2026-11-06","tip":"<b>#7 \ud83d\udcda Answer cache from study (probecache)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 2 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: probecache step 0: rule file (before any run)"},{"id":"m8","cap":8,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"cachegate:2026-11-06:2026-11-06","tip":"<b>#8 \ud83d\udcda Cache gate (cachegate)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: cachegate step 0: rule file (gates G1-G4, pick rule) before any run"},{"id":"m9","cap":9,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":2,"first":true,"key":"llmgen:2026-11-06:2026-11-06","tip":"<b>#9 \ud83d\udcda Local model fills cache (llmgen)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 2 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: llmgen step 0: rule file + tools/llmgen0.py (0a real-reader tally 172/172, rights 104/104; G4 oracle 11), before any LLM call"},{"id":"m10","cap":10,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":2,"first":true,"key":"llmgen2:2026-11-06:2026-11-06","tip":"<b>#10 \ud83d\udcda Who / what only, bigger model (llmgen2)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 2 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: llmgen2 rule + step A column (G5 prediction pre-stated)"},{"id":"m11","cap":11,"from":"2026-11-06","to":"2026-11-06","nPass":2,"nFail":0,"first":true,"key":"answertime:2026-11-06:2026-11-06","tip":"<b>#11 \ud83d\udcda Model at answer time (answertime)<\/b><span class=\"tt\">26-11-06 \u00b7 2 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: answertime step 0: rule file (pre-stated, before any LLM call)"},{"id":"m12","cap":12,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"atflip:2026-11-06:2026-11-06","tip":"<b>#12 \ud83d\udcac Chat model default on (atflip)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: atflip: UNDERSTUDY_CHAT_LLM default on (unset=on, 0/empty off); suites pin =0; unset=on test; docs; metrics row"},{"id":"m13","cap":13,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":2,"first":true,"key":"calib:2026-11-06:2026-11-06","tip":"<b>#13 \ud83d\udcda Confidence check (calib)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 2 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: calib step 0 rule (written before any run)"},{"id":"m14","cap":14,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"calib4:2026-11-06:2026-11-06","tip":"<b>#14 \ud83d\udcda Confidence check, try 4 (calib4)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: calib4 step 0: demeaned rho ext 0.094 sham -0.098, branch stop"},{"id":"m15","cap":15,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"confauc:2026-11-06:2026-11-06","tip":"<b>#15 \ud83d\udcda Vote margin as confidence (confauc)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: confauc: tally-margin confidence AUC read, tools, results, metrics"},{"id":"m16","cap":16,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"targetread:2026-11-06:2026-11-06","tip":"<b>#16 \ud83d\udcda Re-read by vote margin (targetread, targetread2)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: targetread: step1 STOP at default seed, results, metrics"},{"id":"m17","cap":17,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"seedcheck:2026-11-06:2026-11-06","tip":"<b>#17 \ud83d\udcac Answer-time pick, seed check (seedcheck)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: seedcheck step 0 result + budget 121"},{"id":"m18","cap":18,"from":"2026-11-06","to":"2026-11-06","nPass":2,"nFail":0,"first":true,"key":"covmark:2026-11-06:2026-11-06","tip":"<b>#18 \ud83d\udcda Coverage picks re-reads (covmark)<\/b><span class=\"tt\">26-11-06 \u00b7 2 passed, 0 failed<\/span><br>8 saved work steps, 1 merged into the main version. Latest note: covmark worker: record cov in every arm"},{"id":"m19","cap":19,"from":"2026-11-06","to":"2026-11-06","nPass":1,"nFail":0,"first":true,"key":"markcov:2026-11-06:2026-11-06","tip":"<b>#19 \ud83d\udcda Coverage as passing mark (markcov)<\/b><span class=\"tt\">26-11-06 \u00b7 1 passed, 0 failed<\/span><br>7 saved work steps, 1 merged into the main version. Latest note: markcov: tests, driver"},{"id":"m20","cap":20,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":0,"first":true,"key":"satread:2026-11-06:2026-11-06","tip":"<b>#20 \ud83d\udcda Time to saturation, real qwen (satread)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: satread: tools, results, metrics rows (read A saturation 7.6 min, read B real qwen answer time)"},{"id":"m21","cap":21,"from":"2026-11-06","to":"2026-11-06","nPass":0,"nFail":3,"first":true,"key":"confmark:2026-11-06:2026-11-06","tip":"<b>#21 \ud83d\udcda Confidence-triggered re-study (confmark)<\/b><span class=\"tt\">26-11-06 \u00b7 0 passed, 3 failed<\/span><br>7 saved work steps, 1 merged into the main version. Latest note: confmark: step 0 tools, addendum conf_q for no-tally answers"},{"id":"m22","cap":22,"from":"2026-11-06","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"barmark:2026-11-06:2026-11-07","tip":"<b>#22 \ud83d\udcda Per-story rising bar (barmark)<\/b><span class=\"tt\">26-11-06 \u2192 26-11-07 \u00b7 0 passed, 0 failed<\/span><br>9 saved work steps, 1 merged into the main version. Latest note: barmark tool: driven reply_row leg committed (v0.1.27)"},{"id":"m23","cap":23,"from":"2026-11-06","to":"2026-11-07","nPass":1,"nFail":0,"first":true,"key":"onemodel:2026-11-06:2026-11-07","tip":"<b>#23 \ud83d\udcda Only one Ollama model loaded (onemodel)<\/b><span class=\"tt\">26-11-06 \u2192 26-11-07 \u00b7 1 passed, 0 failed<\/span><br>8 saved work steps, 1 merged into the main version. Latest note: onemodel: default leg on record, CHANGELOG"},{"id":"m24","cap":24,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"afterpath:2026-11-07:2026-11-07","tip":"<b>#24 \ud83d\udcac afterpath step 0<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: merge afterpath: step 0, clause not met, no build"},{"id":"m25","cap":25,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"d4step0:2026-11-07:2026-11-07","tip":"<b>#25 \ud83d\udcac D4 extraction step 0<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: merge d4step0: tools-only step"},{"id":"m26","cap":26,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"qreach:2026-11-07:2026-11-07","tip":"<b>#26 \ud83d\udcac qreach count<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: qreach tool + d4step0 record-only hook"},{"id":"m27","cap":27,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"bindtable:2026-11-07:2026-11-07","tip":"<b>#27 \ud83d\udcac bindtable<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: merge bindtable: offline binder shape + vote-order ceiling"},{"id":"m28","cap":28,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":1,"first":true,"key":"qfree:2026-11-07:2026-11-07","tip":"<b>#28 \ud83d\udcac qfree build<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 1 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: qfree: flag UNDERSTUDY_QFREE free-text qwen reply on fire gate; legs, tables, tests, results"},{"id":"m29","cap":29,"from":"2026-11-07","to":"2026-11-07","nPass":2,"nFail":0,"first":true,"key":"qfree2:2026-11-07:2026-11-07","tip":"<b>#29 \ud83d\udcac qfree-2<\/b><span class=\"tt\">26-11-07 \u00b7 2 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: qfree2: rule + chat-first build (flag UNDERSTUDY_CHAT_FIRST default 0)"},{"id":"m30","cap":30,"from":"2026-11-07","to":"2026-11-07","nPass":1,"nFail":1,"first":true,"key":"qheld:2026-11-07:2026-11-07","tip":"<b>#30 \ud83d\udcac qheld<\/b><span class=\"tt\">26-11-07 \u00b7 1 passed, 1 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: qheld: rule (written before any read)"},{"id":"m31","cap":31,"from":"2026-11-07","to":"2026-11-07","nPass":1,"nFail":2,"first":true,"key":"selfmark:2026-11-07:2026-11-07","tip":"<b>#31 \ud83d\udcac self-test mark<\/b><span class=\"tt\">26-11-07 \u00b7 1 passed, 2 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: selfmark step 0 tool: probe score per story, split-half, validity vs test rights, re-read movability, pace (numbers only, 0 LLM calls)"},{"id":"m32","cap":32,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":1,"first":true,"key":"ladderre:2026-11-07:2026-11-07","tip":"<b>#32 \ud83d\udcac re-read with local LLM<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 1 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: ladderre tool: study re-read with the LLM ladder on (local rungs, QHELD guard), OFF/ON arms, planted stub/leak check, L2 saturation leg"},{"id":"m33","cap":33,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"writekey:2026-11-07:2026-11-07","tip":"<b>#33 \ud83d\udcac study write vs answer key<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>6 saved work steps, 1 merged into the main version. Latest note: writekey tool: classify items wrong after a study re-read by answer path and rk key (N/G0/Z/d/e/a/b/c), rk +1 plant ceiling, leak stub, st.r\u2026"},{"id":"m34","cap":34,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"detect:2026-11-07:2026-11-07","tip":"<b>#34 \ud83d\udcac can study notice mistakes<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: merge detect (step 0 diagnosis)"},{"id":"m35","cap":35,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"gradegap:2026-11-07:2026-11-07","tip":"<b>#35 \ud83d\udcac why grading said right<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: merge gradegap (diagnosis)"},{"id":"m36","cap":36,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":2,"first":true,"key":"strictgrade:2026-11-07:2026-11-07","tip":"<b>#36 \ud83d\udcac stricter grader<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 2 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: strictgrade: step 0 tool (OFF legs, S1-S5 aggregate; read + falsify modes kept for a later build)"},{"id":"m37","cap":37,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":2,"first":true,"key":"reachcap:2026-11-07:2026-11-07","tip":"<b>#37 \ud83d\udcac rotation reach and fix cap<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 2 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: reachcap tool"},{"id":"m38","cap":38,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"parasel:2026-11-07:2026-11-07","tip":"<b>#38 \ud83d\udcac answer-time wording fix<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>5 saved work steps, 1 merged into the main version. Latest note: parasel step 0 tool (P1-P3 on gradegap OFF legs)"},{"id":"m39","cap":39,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":3,"first":true,"key":"errmap:2026-11-07:2026-11-07","tip":"<b>#39 \ud83d\udcac error map (errmap)<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 3 failed<\/span><br>8 saved work steps, 1 merged into the main version. Latest note: errmap step 1: frame-hit promote behind UNDERSTUDY_FRAMEHIT (default off), planted fixture, read harness flag + stub"},{"id":"m40","cap":40,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"namesart:2026-11-07:2026-11-07","tip":"<b>#40 \ud83e\uddea test order fix (namesart)<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: namesart: names-path study harm is harness order artifact (25/26 flip with lu=own story; fixed order CTRL +5/6, 93-&gt;88)"},{"id":"m41","cap":41,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"harmsrc:2026-11-07:2026-11-07","tip":"<b>#41 \ud83d\udcda harm source (harmsrc)<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>4 saved work steps, 1 merged into the main version. Latest note: merge harmsrc (study harm diffuse: snew 6 distinct hurt vs 50 helped, rk 2, residual 9 = ask-order artifact; rank split non-gold-above 26)"},{"id":"m42","cap":42,"from":"2026-11-07","to":"2026-11-07","nPass":0,"nFail":0,"first":true,"key":"hitorder:2026-11-07:2026-11-07","tip":"<b>#42 \ud83d\udcda right-sentence ranking (hitorder)<\/b><span class=\"tt\">26-11-07 \u00b7 0 passed, 0 failed<\/span><br>3 saved work steps, 1 merged into the main version. Latest note: merge hitorder (step 0 STOP: no cheap feature separates gold hitter, best 9/26, flips 46 %)"},{"id":"m43","cap":43,"from":"2026-11-21","to":"2026-11-21","nPass":1,"nFail":0,"first":true,"key":"kb43:2026-11-21:2026-11-21","tip":"<b>#43 \ud83d\udcac Claude at answer time, tests (KB-3360)<\/b><span class=\"tt\">26-11-21 \u00b7 1 passed, 0 failed<\/span><br>PASS. Claude may answer in tests; privacy switch default off (on = 0 calls); one shared cap of 500 calls, 244 used."},{"id":"m44","cap":44,"from":"2026-11-21","to":"2026-11-21","nPass":0,"nFail":0,"first":true,"key":"kb44:2026-11-21:2026-11-21","tip":"<b>#44 \ud83e\uddea How much Claude adds (KB-3362)<\/b><span class=\"tt\">26-11-21 \u00b7 0 passed, 0 failed<\/span><br>In progress. Measures what Claude adds on top of the understudy alone. 0 real calls yet; the paid leg waits on a Claude login."},{"id":"m45","cap":45,"from":"2026-11-21","to":"2026-11-21","nPass":0,"nFail":0,"first":true,"key":"kb45:2026-11-21:2026-11-21","tip":"<b>#45 \ud83d\udcac Horse/duck fix (KB-3374, KB-3380)<\/b><span class=\"tt\">26-11-21 \u00b7 0 passed, 0 failed<\/span><br>Deployed, verdict pending. Helper stopped repeating an old subject: 76-79 of 91 right (was 22-31)."},{"id":"m46","cap":46,"from":"2026-11-21","to":"2026-11-21","nPass":0,"nFail":0,"first":true,"key":"kb46:2026-11-21:2026-11-21","tip":"<b>#46 \ud83d\udd17 Checkout swap (KB-3406)<\/b><span class=\"tt\">26-11-21 \u00b7 0 passed, 0 failed<\/span><br>Backlog. Main machine copy is not on the agreed version; swap waits for a peer run to finish."},{"id":"m47","cap":47,"from":"2026-11-21","to":"2026-11-21","nPass":0,"nFail":0,"first":true,"key":"kb47:2026-11-21:2026-11-21","tip":"<b>#47 \ud83d\udd17 Live Claude counter (KB-3438)<\/b><span class=\"tt\">26-11-21 \u00b7 0 passed, 0 failed<\/span><br>Backlog, design first. One shared live Claude call counter for both machines, so live Claude is reachable; waits on the checkout swap."}],"cum":{"1":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"2":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"3":[["2026-11-06",2],["2026-11-07",2],["2026-11-08",2],["2026-11-09",2],["2026-11-10",2],["2026-11-11",2],["2026-11-12",2],["2026-11-13",2],["2026-11-14",2],["2026-11-15",2],["2026-11-16",2],["2026-11-17",2],["2026-11-18",2],["2026-11-19",2],["2026-11-20",2],["2026-11-21",2]],"4":[["2026-11-06",1],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"5":[["2026-11-06",1],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"6":[["2026-11-06",1],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"7":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"8":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"9":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"10":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"11":[["2026-11-06",2],["2026-11-07",2],["2026-11-08",2],["2026-11-09",2],["2026-11-10",2],["2026-11-11",2],["2026-11-12",2],["2026-11-13",2],["2026-11-14",2],["2026-11-15",2],["2026-11-16",2],["2026-11-17",2],["2026-11-18",2],["2026-11-19",2],["2026-11-20",2],["2026-11-21",2]],"12":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"13":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"14":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"15":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"16":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"17":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"18":[["2026-11-06",2],["2026-11-07",2],["2026-11-08",2],["2026-11-09",2],["2026-11-10",2],["2026-11-11",2],["2026-11-12",2],["2026-11-13",2],["2026-11-14",2],["2026-11-15",2],["2026-11-16",2],["2026-11-17",2],["2026-11-18",2],["2026-11-19",2],["2026-11-20",2],["2026-11-21",2]],"19":[["2026-11-06",1],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"20":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"21":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"22":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"23":[["2026-11-06",1],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"24":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"25":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"26":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"27":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"28":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"29":[["2026-11-06",0],["2026-11-07",2],["2026-11-08",2],["2026-11-09",2],["2026-11-10",2],["2026-11-11",2],["2026-11-12",2],["2026-11-13",2],["2026-11-14",2],["2026-11-15",2],["2026-11-16",2],["2026-11-17",2],["2026-11-18",2],["2026-11-19",2],["2026-11-20",2],["2026-11-21",2]],"30":[["2026-11-06",0],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"31":[["2026-11-06",0],["2026-11-07",1],["2026-11-08",1],["2026-11-09",1],["2026-11-10",1],["2026-11-11",1],["2026-11-12",1],["2026-11-13",1],["2026-11-14",1],["2026-11-15",1],["2026-11-16",1],["2026-11-17",1],["2026-11-18",1],["2026-11-19",1],["2026-11-20",1],["2026-11-21",1]],"32":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"33":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"34":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"35":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"36":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"37":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"38":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"39":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"40":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"41":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"42":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"43":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",1]],"44":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"45":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"46":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]],"47":[["2026-11-06",0],["2026-11-07",0],["2026-11-08",0],["2026-11-09",0],["2026-11-10",0],["2026-11-11",0],["2026-11-12",0],["2026-11-13",0],["2026-11-14",0],["2026-11-15",0],["2026-11-16",0],["2026-11-17",0],["2026-11-18",0],["2026-11-19",0],["2026-11-20",0],["2026-11-21",0]]}}</script>
+<script id="captl-js">/* KB-2389 layout "lanes": one thin horizontal line per skill, dots (one day) and bars (several days) on it.
+   Contract: see the LAYOUT CONTRACT in regen_cap_timeline.py (colours from host vars, var() through style, bad data
+   logged not drawn). ES5, no libs, no network. */
+(function () {
+  var C = window.CAPTL = window.CAPTL || { layouts: [] };
+  var NS = 'http://www.w3.org/2000/svg';
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var MUT = 'var(--mut,#5d6a62)';
+  var FG = 'var(--fg,#1d2420)';
+  var LINE = 'var(--line,#d7ddd5)';
+  var CARD = 'var(--card,#fff)';
+  var NOPTR = 'pointer-events:none';
+
+  /* attrs -> element; fill / stroke values that are var() go through style (presentation attributes do not resolve var()) */
+  function el(name, attrs, parent, sty) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) {
+      if (!attrs.hasOwnProperty(k)) { continue; }
+      var v = String(attrs[k]);
+      if ((k === 'fill' || k === 'stroke') && v.indexOf('var(') === 0) { e.style.setProperty(k, v); } else { e.setAttribute(k, v); }
+    }
+    if (sty) { e.style.cssText += ';' + sty; }
+    if (parent) { parent.appendChild(e); }
+    return e;
+  }
+  function fillV(c) { return 'var(--cap' + c.n + ',' + c.fill + ')'; }
+  function inkV(c) { return 'var(--ink-' + c.n + ',' + c.ink + ')'; }
+  function dayNo(iso) { var p = String(iso).split('-'); return Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000; }
+  function dayLabel(n) { var t = new Date(n * 86400000); return MON[t.getUTCMonth()] + ' ' + t.getUTCDate(); }
+  function shortName(name) {
+    var s = String(name).replace(/\s*\(.*$/, '');
+    if (!s) { s = String(name); }
+    return s.length > 24 ? s.slice(0, 23) + '…' : s;
+  }
+  function fail(root, msg) {
+    console.error('captl lanes: ' + msg);
+    root.setAttribute('data-err', msg);
+  }
+
+  function render(root, data) {
+    while (root.firstChild) { root.removeChild(root.firstChild); }
+    var cw = root.clientWidth;
+    root.dataset.w = String(cw);
+    if (!data || !data.caps || !data.start || !data.end || isNaN(dayNo(data.start)) || isNaN(dayNo(data.end))) {
+      fail(root, 'data.start, data.end or data.caps is missing; nothing drawn');
+      return;
+    }
+    var W = Math.round(cw) || 600;
+    var caps = data.caps.slice().sort(function (a, b) { return a.n - b.n; });
+    var n = caps.length;
+    var wide = W >= 700;
+    var padT = 1, axisH = 17;
+    var pitch = Math.max(13, Math.min(14, Math.floor((200 - padT - axisH) / Math.max(1, n))));
+    if (padT + n * pitch + axisH > 700) {
+      console.warn('captl lanes: ' + n + ' skills at the minimum lane pitch of ' + pitch + ' px need ' +
+        (padT + n * pitch + axisH) + ' px; the 700 px height cap is exceeded');
+    }
+    var left = wide ? 176 : 30, right = 12;
+    var plotW = Math.max(60, W - left - right);
+    var s0 = dayNo(data.start), nDays = dayNo(data.end) - s0 + 1;
+    var dayW = plotW / nDays;
+    var lanesH = n * pitch, H = padT + lanesH + axisH;
+    var rMax = (pitch - 1) / 2;
+
+    var svg = el('svg', { xmlns: NS, width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'group',
+      'aria-label': 'Timeline: one line per skill, marks on the days many tests passed',
+      'font-family': 'inherit', 'font-size': 10 }, null);
+    svg.style.display = 'block';
+    var defs = el('defs', {}, svg);
+    var hid = 'captl-hatch-' + (root.id || 'x');
+    var pat = el('pattern', { id: hid, width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, defs);
+    el('line', { x1: 0, y1: 0, x2: 0, y2: 5, stroke: MUT, 'stroke-opacity': 0.35, 'stroke-width': 1.5 }, pat);
+
+    function xc(iso) { return left + (dayNo(iso) - s0 + 0.5) * dayW; }
+    var yOf = {};
+    caps.forEach(function (c, i) { yOf[c.n] = padT + i * pitch + pitch / 2; });
+
+    // gap days (no done card): hatched column band
+    (data.gaps || []).forEach(function (g) {
+      var x = left + (dayNo(g) - s0) * dayW;
+      el('rect', { x: x, y: padT, width: dayW, height: lanesH, fill: 'url(#' + hid + ')' }, svg, NOPTR);
+    });
+
+    // axis ticks
+    var step = 1, cand = [1, 2, 3, 4, 7, 14];
+    for (var ci = 0; ci < cand.length; ci++) { step = cand[ci]; if (step * dayW >= 46) { break; } }
+    var ticks = [];
+    for (var di = 0; di < nDays; di += step) { ticks.push(di); }
+    var last = ticks[ticks.length - 1];
+    if (last !== nDays - 1 && (nDays - 1 - last) * dayW >= 46) { ticks.push(nDays - 1); }
+    var axY = padT + lanesH + 0.5;
+    ticks.forEach(function (d) {
+      var x = left + (d + 0.5) * dayW;
+      el('line', { x1: x, y1: padT, x2: x, y2: axY, stroke: LINE, 'stroke-width': 1 }, svg, NOPTR);
+      el('line', { x1: x, y1: axY, x2: x, y2: axY + 3, stroke: MUT, 'stroke-width': 1 }, svg, NOPTR);
+      var t = el('text', { x: x, y: axY + 13, 'text-anchor': 'middle' }, svg, 'fill:' + MUT + ';' + NOPTR);
+      t.textContent = dayLabel(s0 + d);
+    });
+    el('line', { x1: left, y1: axY, x2: left + plotW, y2: axY, stroke: MUT, 'stroke-width': 1 }, svg, NOPTR);
+
+    // lanes: guide line + label
+    caps.forEach(function (c) {
+      var y = yOf[c.n];
+      el('line', { x1: left + 1, y1: y, x2: left + plotW - 1, y2: y, stroke: fillV(c), 'stroke-width': 2,
+        'stroke-linecap': 'round' }, svg, NOPTR);
+      var t = el('text', { x: 22, y: y + 3.5, 'text-anchor': 'end', 'font-weight': 700 }, svg, 'fill:' + inkV(c) + ';' + NOPTR);
+      t.textContent = '#' + c.n;
+      if (wide) {
+        var nm = el('text', { x: 28, y: y + 3.5, 'text-anchor': 'start' }, svg, 'fill:' + FG + ';' + NOPTR);
+        nm.textContent = shortName(c.name);
+      }
+    });
+
+    // marks: big ones first so small ones stay on top
+    var capBy = {};
+    caps.forEach(function (c) { capBy[c.n] = c; });
+    data.markers.slice().sort(function (a, b) { return b.nPass - a.nPass; }).forEach(function (m) {
+      var c = capBy[m.cap];
+      if (!c) { console.error('captl lanes: marker ' + m.id + ' names skill #' + m.cap + ', which is not in data.caps; marker skipped'); return; }
+      var y = yOf[m.cap];
+      var r = Math.min(rMax, 2.5 + Math.min(2.5, 0.35 * Math.sqrt(m.nPass)));
+      var label = '#' + m.cap + ' ' + c.name + ', ' + (m.from === m.to ? m.from : m.from + ' to ' + m.to) + ', ' + m.nPass + ' passed';
+      // an empty tip is NOT papered over: the dot keeps data-tip="" (the checker counts it, the page selftest fails on it)
+      if (!m.tip || !String(m.tip).trim()) { console.error('captl lanes: marker ' + m.id + ' has an empty or missing tip'); }
+      var common = { class: 'dot', 'data-tip': m.tip || '', 'data-cap': m.cap,
+        'data-m': m.id, tabindex: 0, role: 'img', 'aria-label': label };
+      var e;
+      if (m.from === m.to) {
+        common.cx = xc(m.from); common.cy = y; common.r = r; common.fill = inkV(c); common.stroke = CARD; common['stroke-width'] = 1;
+        e = el('circle', common, svg);
+      } else {
+        common.x1 = xc(m.from); common.x2 = xc(m.to); common.y1 = y; common.y2 = y; common.stroke = inkV(c);
+        common['stroke-width'] = 2 * r; common['stroke-linecap'] = 'round';
+        e = el('line', common, svg);
+      }
+      e.style.cursor = 'pointer';
+    });
+
+    root.appendChild(svg);
+  }
+
+  C.layouts.push({
+    id: 'lanes',
+    title: 'Lanes',
+    blurb: 'One thin line per skill, with a dot or bar on the days many tests passed: the best view for seeing which skill moved when.',
+    render: render
+  });
+})();
+/* KB-2389 capability timeline layout "ribbon": one narrow band, every marker on a single time axis.
+   Contract: pushes {id,title,blurb,render(root,data)} onto window.CAPTL.layouts. Plain ES5, inline SVG,
+   no libs / network / fonts. Fixed px sizes (no viewBox scaling); width is re-read from root.clientWidth
+   on every render call, so the host may call render again on resize (the root is cleared first).
+   Spans are drawn as a dumbbell, not a pill of height 2r: a 5 px bar from first to last day with the PASS-count
+   dot (r = 3 + 1.3 * sqrt(nPass), cap 9) at its midpoint. A full-height pill buried 14 concurrent markers in a
+   90 px band (offline visible-area minimum ~0.00); the dumbbell keeps every marker at least 20 % visible.
+   Bar and dot are one <path class="dot"> so the whole shape is the hover / focus target.
+   Colours: host vars (var(--fg|--mut|--card|--capN|--ink-N, fallback)) applied through style, see the LAYOUT CONTRACT in
+   regen_cap_timeline.py. The 90 px cap covers the dot band, date row and ONE legend row; when the #N chips do not fit in
+   one row they wrap to more rows and those extra rows add height beyond the cap (the band keeps its size). */
+(function () {
+  "use strict";
+  var C = window.CAPTL = window.CAPTL || { layouts: [] };
+  if (!C.layouts) { C.layouts = []; }
+  var NS = "http://www.w3.org/2000/svg";
+  var INK = "var(--fg,#1d2420)";      // text and focus ring
+  var MUTED = "var(--mut,#5d6a62)";   // axis, date labels, gap band
+  var CARD = "var(--card,#fff)";      // ring / halo around dots
+  var MAX_H = 90;           // hard cap for the whole svg, legend included
+  var PAD_L = 22, PAD_R = 22, PAD_T = 3, PAD_B = 2;
+  var LABEL_H = 14;         // date label row under the dot band
+  var LEGEND_H = 18;        // 4 px gap + 14 px chip row (one row counts against MAX_H, extra rows add height)
+  var LEGEND_MIN_W = 700;
+  var RING = 3;             // focus ring distance outside the dot
+  var BAR_T = 5;            // thickness of the span bar (the dot on it keeps the PASS-count radius)
+  var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+  function dayNum(iso) {
+    var p = String(iso).split("-");
+    return Math.round(Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000);
+  }
+  function dateLabel(n) {
+    var d = new Date(n * 86400000);
+    return MONTHS[d.getUTCMonth()] + " " + d.getUTCDate();
+  }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function radius(nPass) { return Math.min(9, 3 + 1.3 * Math.sqrt(Math.max(0, +nPass || 0))); }
+
+  /* Overlap cost of capsule A (core segment a1..b1, radius r1, centre y1) against capsule B.
+     Squared depth: deep overlaps cost much more than shallow ones, so crowded columns fan out evenly
+     and every marker keeps a visible strip. */
+  function overlapCost(a1, b1, r1, y1, a2, b2, r2, y2, air) {
+    var gapX = Math.max(0, a2 - b1, a1 - b2);
+    var dist = Math.sqrt(gapX * gapX + (y1 - y2) * (y1 - y2));
+    var pen = r1 + r2 + air - dist;
+    if (pen <= 0) { return 0; }
+    var ovx = Math.max(0, Math.min(b1, b2) - Math.max(a1, a2));
+    return pen * pen * (ovx + 2 * pen);
+  }
+
+  /* An item is a list of capsules (core segment a..b, radius r, all at the item's y): a single-day marker
+     is one dot, a span is a thin bar plus its dot. Cost of two items = sum over their capsule pairs. */
+  function pairCost(u, yu, v, yv, air) {
+    var c = 0;
+    for (var i = 0; i < u.parts.length; i++) {
+      for (var j = 0; j < v.parts.length; j++) {
+        var p = u.parts[i], q = v.parts[j];
+        c += overlapCost(p.a, p.b, p.r, yu, q.a, q.b, q.r, yv, air);
+      }
+    }
+    return c;
+  }
+
+  /* Beeswarm dodge. Draw order is big dot first, small on top; each item goes to the row nearest the axis with
+     the least overlap against the items already placed. Seven rows: the axis row plus 3 above and 3 below,
+     pitch = (half - 9) / 3 px, y always inside +-(half - extent). A refinement pass and a hide penalty were measured
+     and did not help the worst-covered marker.
+     Returns the draw order. */
+  function place(items, half) {
+    var air = 1, rows = 3;
+    var order = items.slice().sort(function (p, q) {
+      return (q.r - p.r) || ((q.xe - q.xs) - (p.xe - p.xs)) || (p.idx - q.idx);
+    });
+    var n = order.length, i;
+    function best(it, upto) {
+      var lim = Math.max(0, Math.floor(half - it.ext)), by = 0, bc = Infinity;
+      var step = Math.max(1, Math.floor((half - 9) / rows));
+      var kmax = Math.min(rows, Math.floor(lim / step));
+      for (var k = 0; k <= kmax; k++) {
+        for (var sg = (k === 0 ? 1 : 2); sg > 0; sg--) {
+          var y = (sg === 2 ? k : -k) * step, cost = 0.02 * Math.abs(y);
+          for (var m = 0; m < upto && cost < bc; m++) {
+            cost += pairCost(it, y, order[m], order[m].y, air);
+          }
+          if (cost < bc - 1e-9) { bc = cost; by = y; }
+        }
+        if (bc <= 0.02 * k * step) { break; }       // nothing farther out can beat this
+      }
+      return by;
+    }
+    for (i = 0; i < n; i++) { order[i].y = 0; }
+    for (i = 0; i < n; i++) { order[i].y = best(order[i], i); }
+    return order;
+  }
+
+  /* Legend chips wrapped into rows of the available width. Returns {rows, chips:[{cap,x,row,w}]}. */
+  function legendLayout(caps, W) {
+    var avail = W - PAD_L - PAD_R, x = 0, row = 0, chips = [];
+    caps.forEach(function (c) {
+      var w = 8 + 6.2 * ("#" + c.n).length;
+      if (x > 0 && x + w > avail) { row++; x = 0; }
+      chips.push({ cap: c, x: PAD_L + x, row: row, w: w });
+      x += w + 4;
+    });
+    return { rows: row + 1, chips: chips };
+  }
+
+  /* All geometry, no DOM. */
+  function compute(data, W) {
+    var d0 = dayNum(data.start), d1 = dayNum(data.end);
+    var nDays = Math.max(1, d1 - d0 + 1);
+    var withLegend = W >= LEGEND_MIN_W && (data.caps || []).length > 0;
+    var legend = withLegend ? legendLayout(data.caps, W) : { rows: 0, chips: [] };
+    var legendExtra = withLegend ? (legend.rows - 1) * LEGEND_H : 0;   // rows 2.. add height beyond MAX_H
+    var dayPx = Math.max(1, (W - PAD_L - PAD_R) / nDays);
+    var fixed = PAD_T + LABEL_H + PAD_B + (withLegend ? LEGEND_H : 0);
+    var half = Math.floor((MAX_H - fixed) / 2);    // dot band half height incl. focus ring margin
+    var capBy = {};
+    (data.caps || []).forEach(function (c) { capBy[c.n] = c; });
+
+    var known = (data.markers || []).filter(function (m) {
+      if (capBy[m.cap]) { return true; }
+      console.error("captl ribbon: marker " + m.id + " names skill #" + m.cap + ", which is not in data.caps; marker skipped");
+      return false;
+    });
+    var items = known.map(function (m, idx) {
+      var f = clamp(dayNum(m.from) - d0, 0, nDays - 1);
+      var t = clamp(dayNum(m.to) - d0, f, nDays - 1);
+      var r = radius(m.nPass);
+      var xs = PAD_L + f * dayPx, xe = PAD_L + (t + 1) * dayPx;
+      if (xe - xs < 2 * r) { var mid = (xs + xe) / 2; xs = mid - r; xe = mid + r; }
+      var cx = (xs + xe) / 2;
+      var span = t > f && (xe - xs) > 2 * r + 0.5;
+      var parts = [{ a: cx, b: cx, r: r }];
+      if (span) { parts.push({ a: xs + BAR_T / 2, b: xe - BAR_T / 2, r: BAR_T / 2 }); }
+      return { m: m, idx: idx, r: r, span: span, xs: xs, xe: xe, cx: cx, parts: parts, ext: r, y: 0 };
+    });
+    var drawOrder = place(items, half - RING);
+    var ext = 0;
+    items.forEach(function (it) { ext = Math.max(ext, Math.abs(it.y) + it.ext); });
+    var bandHalf = Math.max(14, Math.min(half, Math.ceil(ext) + RING));
+    var height = PAD_T + 2 * bandHalf + LABEL_H + PAD_B + (withLegend ? LEGEND_H : 0) + legendExtra;
+
+    var step = 14, cand = [1, 2, 3, 4, 5, 7, 10, 14];
+    for (var q = 0; q < cand.length; q++) { if (cand[q] * dayPx >= 52) { step = cand[q]; break; } }
+    return { d0: d0, nDays: nDays, dayPx: dayPx, W: W, height: height, bandHalf: bandHalf,
+             axisY: PAD_T + bandHalf, withLegend: withLegend, legend: legend, labelStep: step,
+             items: items, drawOrder: drawOrder, capBy: capBy };
+  }
+
+  /* fill / stroke values that are var() go through style: presentation attributes do not resolve var() */
+  function el(name, attrs, parent) {
+    var e = document.createElementNS(NS, name);
+    if (attrs) {
+      for (var k in attrs) {
+        if (!attrs.hasOwnProperty(k)) { continue; }
+        var v = String(attrs[k]);
+        if ((k === "fill" || k === "stroke") && v.indexOf("var(") === 0) { e.style.setProperty(k, v); }
+        else if (k === "style") { e.style.cssText += ";" + v; }      // append: setAttribute("style") would drop the var() fills above
+        else { e.setAttribute(k, v); }
+      }
+    }
+    if (parent) { parent.appendChild(e); }
+    return e;
+  }
+  function fillV(c) { return "var(--cap" + c.n + "," + c.fill + ")"; }
+  function inkV(c) { return "var(--ink-" + c.n + "," + c.ink + ")"; }
+  function f1(v) { return String(Math.round(v * 100) / 100); }
+  var NOPTR = "pointer-events:none";
+
+  function circlePath(cx, y, r) {
+    return "M" + f1(cx - r) + " " + f1(y) + "A" + f1(r) + " " + f1(r) + " 0 1 1 " + f1(cx + r) + " " + f1(y) +
+           "A" + f1(r) + " " + f1(r) + " 0 1 1 " + f1(cx - r) + " " + f1(y) + "Z";
+  }
+  function barPath(a, b, y, h) {                   // closed outline of a bar with round ends, half thickness h
+    return "M" + f1(a) + " " + f1(y - h) + "H" + f1(b) + "A" + f1(h) + " " + f1(h) + " 0 0 1 " + f1(b) + " " + f1(y + h) +
+           "H" + f1(a) + "A" + f1(h) + " " + f1(h) + " 0 0 1 " + f1(a) + " " + f1(y - h) + "Z";
+  }
+  /* Outer outline of "bar + dot" grown by `grow` px (the focus ring). The bar and the dot circle are drawn as
+     one clockwise outline, so no inner arcs show. */
+  function ringPath(it, y, grow) {
+    var h = BAR_T / 2 + grow, R = it.r + grow, a = it.xs + BAR_T / 2, b = it.xe - BAR_T / 2;
+    if (!it.span) { return circlePath(it.cx, y, R); }
+    var s = Math.sqrt(Math.max(0, R * R - h * h));
+    if (a > it.cx - s || b < it.cx + s) { return circlePath(it.cx, y, R); }
+    return "M" + f1(a) + " " + f1(y - h) + "H" + f1(it.cx - s) + "A" + f1(R) + " " + f1(R) + " 0 0 1 " + f1(it.cx + s) + " " + f1(y - h) +
+           "H" + f1(b) + "A" + f1(h) + " " + f1(h) + " 0 0 1 " + f1(b) + " " + f1(y + h) +
+           "H" + f1(it.cx + s) + "A" + f1(R) + " " + f1(R) + " 0 0 1 " + f1(it.cx - s) + " " + f1(y + h) +
+           "H" + f1(a) + "A" + f1(h) + " " + f1(h) + " 0 0 1 " + f1(a) + " " + f1(y - h) + "Z";
+  }
+
+  function render(root, data) {
+    while (root.firstChild) { root.removeChild(root.firstChild); }
+    var W = root.clientWidth;
+    root.dataset.w = String(W);
+    if (!data || !data.caps || !data.start || !data.end || isNaN(dayNum(data.start)) || isNaN(dayNum(data.end))) {
+      console.error("captl ribbon: data.start, data.end or data.caps is missing; nothing drawn");
+      root.setAttribute("data-err", "data.start, data.end or data.caps is missing; nothing drawn");
+      return;
+    }
+    var g = compute(data, Math.max(W, 300));
+    var axisY = g.axisY, bandTop = PAD_T, bandBot = PAD_T + 2 * g.bandHalf;
+    function X(dayIdx) { return PAD_L + dayIdx * g.dayPx; }
+
+    var svg = el("svg", { width: String(g.W), height: String(g.height), role: "group",
+      "aria-label": "Capability ribbon: " + (data.markers || []).length + " markers from " + data.start + " to " + data.end,
+      style: "display:block;overflow:hidden;max-width:none" }, root);
+    svg.setAttribute("font-family", "inherit");
+
+    /* gap days: light dashed vertical band */
+    var gBack = el("g", { style: NOPTR }, svg);
+    (data.gaps || []).forEach(function (iso) {
+      var i = dayNum(iso) - g.d0;
+      if (i < 0 || i >= g.nDays) { return; }
+      el("rect", { x: f1(X(i)), y: bandTop, width: f1(g.dayPx), height: bandBot - bandTop, fill: MUTED, "fill-opacity": ".07" }, gBack);
+      [X(i), X(i + 1)].forEach(function (x) {
+        el("line", { x1: f1(x), x2: f1(x), y1: bandTop, y2: bandBot, stroke: MUTED, "stroke-opacity": ".55",
+                     "stroke-width": "1", "stroke-dasharray": "3 3" }, gBack);
+      });
+    });
+
+    /* axis, day ticks, date labels, faint grid under labelled days */
+    var gAxis = el("g", { style: NOPTR }, svg);
+    for (var d = 0; d < g.nDays; d += g.labelStep) {
+      var lx = X(d + 0.5);
+      el("line", { x1: f1(lx), x2: f1(lx), y1: bandTop, y2: bandBot, stroke: MUTED, "stroke-opacity": ".14", "stroke-width": "1" }, gAxis);
+    }
+    el("line", { x1: f1(X(0)), x2: f1(X(g.nDays)), y1: axisY, y2: axisY, stroke: MUTED, "stroke-width": "1.5" }, gAxis);
+    for (var t = 0; t < g.nDays; t++) {
+      var lab = (t % g.labelStep === 0), tx = X(t + 0.5), th = lab ? 5 : 2.5;
+      el("line", { x1: f1(tx), x2: f1(tx), y1: f1(axisY - th), y2: f1(axisY + th), stroke: MUTED, "stroke-width": "1" }, gAxis);
+    }
+    var lastLab = -1;
+    for (var u = 0; u < g.nDays; u += g.labelStep) {
+      var tt = el("text", { x: f1(X(u + 0.5)), y: bandBot + LABEL_H - 3, "text-anchor": "middle", "font-size": "10",
+                            fill: MUTED, "font-family": "inherit" }, gAxis);
+      tt.textContent = dateLabel(g.d0 + u);
+      lastLab = u;
+    }
+    var endIdx = g.nDays - 1;                       // also label the last day when it has room
+    if (endIdx > lastLab && (endIdx - lastLab) * g.dayPx >= 52) {
+      var te = el("text", { x: f1(X(endIdx + 0.5)), y: bandBot + LABEL_H - 3, "text-anchor": "middle", "font-size": "10",
+                            fill: MUTED, "font-family": "inherit" }, gAxis);
+      te.textContent = dateLabel(g.d0 + endIdx);
+    }
+
+    /* thin guide from the axis to every single-day dot that was dodged off the axis */
+    var gGuide = el("g", { style: NOPTR }, svg);
+    g.items.forEach(function (it) {
+      if (it.span || Math.abs(it.y) <= it.r) { return; }
+      var cap = g.capBy[it.m.cap];
+      var sgn = it.y > 0 ? 1 : -1;
+      el("line", { x1: f1(it.cx), x2: f1(it.cx), y1: axisY, y2: f1(axisY + it.y - sgn * it.r),
+                   stroke: cap ? fillV(cap) : MUTED, "stroke-width": "2" }, gGuide);
+    });
+
+    /* markers: big first, small on top. One .dot hit target each (circle, or round-capped line for spans). */
+    var gMarks = el("g", {}, svg);
+    var gRing = el("g", { style: NOPTR }, svg);
+    g.drawOrder.forEach(function (it) {
+      var m = it.m, cap = g.capBy[m.cap];
+      var ink = cap ? inkV(cap) : MUTED;
+      var y = axisY + it.y;
+      // an empty tip is NOT papered over: the dot keeps data-tip="" (the checker counts it, the page selftest fails on it)
+      var tip = (m.tip && String(m.tip).trim()) ? String(m.tip) : "";
+      if (!tip) { console.error("captl ribbon: marker " + m.id + " has an empty or missing tip"); }
+      var common = { "data-tip": tip, "data-cap": String(m.cap), "data-m": String(m.id), tabindex: "0",
+                     "class": "dot", style: "cursor:pointer;outline:none" };
+      var hit;
+      if (it.span) {                                // dumbbell: thin bar plus its dot, one hit path
+        var shape = barPath(it.xs + BAR_T / 2, it.xe - BAR_T / 2, y, BAR_T / 2) + circlePath(it.cx, y, it.r);
+        el("path", { d: shape, fill: CARD, stroke: CARD, "stroke-width": "3", "stroke-linejoin": "round", style: NOPTR }, gMarks);
+        hit = el("path", { d: shape, fill: ink, "fill-opacity": ".85" }, gMarks);
+        el("circle", { cx: f1(it.cx), cy: f1(y), r: f1(it.r), fill: ink, stroke: CARD, "stroke-width": "1.5", style: NOPTR }, gMarks);
+      } else {
+        hit = el("circle", { cx: f1(it.cx), cy: f1(y), r: f1(it.r), fill: ink, stroke: CARD, "stroke-width": "1.5" }, gMarks);
+      }
+      for (var k in common) {
+        if (!common.hasOwnProperty(k)) { continue; }
+        if (k === "style") { hit.style.cssText += ";" + common[k]; } else { hit.setAttribute(k, common[k]); }
+      }
+      var ring = el("path", { d: ringPath(it, y, RING), fill: "none", stroke: INK, "stroke-width": "2",
+                              visibility: "hidden" }, gRing);
+      hit.addEventListener("focus", function () { ring.setAttribute("visibility", "visible"); });
+      hit.addEventListener("blur", function () { ring.setAttribute("visibility", "hidden"); });
+    });
+
+    /* legend of #N chips, only when there is room; wraps to more rows when the chips do not fit one row */
+    if (g.withLegend) {
+      var gLeg = el("g", { style: NOPTR }, svg);
+      var ly0 = bandBot + LABEL_H + 4;
+      g.legend.chips.forEach(function (ch) {
+        var c = ch.cap, ly = ly0 + ch.row * LEGEND_H, label = "#" + c.n;
+        el("rect", { x: f1(ch.x), y: ly, width: f1(ch.w), height: "14", rx: "7", fill: fillV(c), "fill-opacity": ".2", stroke: fillV(c), "stroke-width": "1" }, gLeg);
+        var tl = el("text", { x: f1(ch.x + ch.w / 2), y: ly + 10.5, "text-anchor": "middle", "font-size": "10", "font-weight": "700",
+                              fill: inkV(c), "font-family": "inherit" }, gLeg);
+        tl.textContent = label;
+      });
+    }
+  }
+
+  for (var li = C.layouts.length - 1; li >= 0; li--) { if (C.layouts[li].id === "ribbon") { C.layouts.splice(li, 1); } }
+  C.layouts.push({
+    id: "ribbon",
+    title: "Ribbon",
+    blurb: "The quickest what-happened-when overview in the smallest footprint: every capability change as one dot or bar on a single time line.",
+    render: render
+  });
+})();
+/* KB-2389 capability timeline layout "curves" (Growth curves).
+ * Cumulative share of each capability's own passed cards over time, one step-wise curve per
+ * capability. Marker dots sit on the curve at the marker's last day; span markers also get a
+ * thicker segment over from..to. Self-contained: no libs, no network, no globals but window.CAPTL.
+ * Colours: host vars through style (var(--fg|--mut|--line|--card|--capN|--ink-N, fallback)), see the LAYOUT CONTRACT
+ * in regen_cap_timeline.py. Bad data (no start / end / caps, marker of an unknown skill) is logged, not drawn.
+ */
+(function () {
+  var C = window.CAPTL = window.CAPTL || { layouts: [] };
+  var NS = 'http://www.w3.org/2000/svg';
+  var INK = 'var(--fg,#1d2420)';        // text, focus ring
+  var MUTED = 'var(--mut,#5d6a62)';     // muted text
+  var GRID = 'var(--line,#d7ddd5)';     // neutral chrome (grid, ticks)
+  var CARD = 'var(--card,#fff)';        // halo behind text, ring around dots
+  var H = 220;              // total svg height (spec cap)
+  var PAD_L = 34;           // y tick labels
+  var PAD_T = 12;           // top: 100 % line, first #N label centre
+  var Y_BASE = H - 24;      // 0 % line
+  var Y_LAB_MAX = H - 16;   // lowest #N label centre
+  var FAN = 24;             // leader fan between curve end and label column
+  var LAB_W = 26;           // one #N label column
+  var MIN_LAB_GAP = 14;     // min 14 px between labels (11 px font box is ~13 px tall)
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  /* fill / stroke values that are var() go through style: presentation attributes do not resolve var() */
+  function mk(tag, attrs, live) {
+    var e = document.createElementNS(NS, tag);
+    var k, v;
+    for (k in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, k)) { continue; }
+      v = String(attrs[k]);
+      if ((k === 'fill' || k === 'stroke') && v.indexOf('var(') === 0) { e.style.setProperty(k, v); } else { e.setAttribute(k, v); }
+    }
+    if (!live) { e.style.pointerEvents = 'none'; }
+    return e;
+  }
+  function f(v) { return Math.round(v * 10) / 10; }
+  function fillV(c) { return 'var(--cap' + c.n + ',' + c.fill + ')'; }
+  function inkV(c) { return 'var(--ink-' + c.n + ',' + c.ink + ')'; }
+  function dayNum(s) {
+    var p = String(s).split('-');
+    return Math.round(Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000);
+  }
+  function dayLabel(s) {
+    var p = String(s).split('-');
+    return MON[(+p[1] - 1) % 12] + ' ' + (+p[2]);
+  }
+  function isoOf(dn) {
+    var d = new Date(dn * 86400000);
+    var m = d.getUTCMonth() + 1, dd = d.getUTCDate();
+    return d.getUTCFullYear() + '-' + (m < 10 ? '0' : '') + m + '-' + (dd < 10 ? '0' : '') + dd;
+  }
+
+  function render(root, data) {
+    while (root.firstChild) { root.removeChild(root.firstChild); }
+    var cw = root.clientWidth;
+    root.dataset.w = String(cw);
+    if (!data || !data.caps || !data.start || !data.end || isNaN(dayNum(data.start)) || isNaN(dayNum(data.end))) {
+      console.error('captl curves: data.start, data.end or data.caps is missing; nothing drawn');
+      root.setAttribute('data-err', 'data.start, data.end or data.caps is missing; nothing drawn');
+      return;
+    }
+    var W = cw > 0 ? cw : 600;
+
+    var caps = (data.caps || []).slice().sort(function (a, b) { return a.n - b.n; });
+    var capBy = {};
+    caps.forEach(function (c) { capBy[c.n] = c; });
+    var d0 = dayNum(data.start);
+    var nd = Math.max(1, dayNum(data.end) - d0 + 1);
+    function idxOf(s) {
+      var i = dayNum(s) - d0;
+      return i < 0 ? 0 : (i > nd - 1 ? nd - 1 : i);
+    }
+
+    // label columns (de-collided #N labels need ceil(n / perCol) columns)
+    var perCol = Math.floor((Y_LAB_MAX - PAD_T) / MIN_LAB_GAP) + 1;
+    var nCols = Math.max(1, Math.ceil(caps.length / perCol));
+    var padR = FAN + nCols * LAB_W + 6;
+    var x0 = PAD_L;
+    var xEnd = Math.max(x0 + 80, W - padR);
+    var dw = (xEnd - x0) / nd;
+    var plotH = Y_BASE - PAD_T;
+    function yOf(s) { return Y_BASE - s * plotH; }
+    function xa(i) { return x0 + i * dw; }
+
+    // per capability: cumulative share per day
+    var info = {};
+    caps.forEach(function (c) {
+      var arr = (data.cum && data.cum[String(c.n)]) || [];
+      var v = [], i, prev = 0;
+      for (i = 0; i < arr.length; i++) {
+        var ix = dayNum(arr[i][0]) - d0;
+        if (ix >= 0 && ix < nd) { v[ix] = +arr[i][1]; }
+      }
+      for (i = 0; i < nd; i++) {
+        if (v[i] === undefined || v[i] < prev) { v[i] = prev; }
+        prev = v[i];
+      }
+      var total = v[nd - 1];   // the curve is each skill's own share: divide by its own final count
+      var share = [], t50 = nd;
+      for (i = 0; i < nd; i++) {
+        share[i] = total > 0 ? v[i] / total : 0;
+        if (t50 === nd && total > 0 && share[i] >= 0.5) { t50 = i; }
+      }
+      info[c.n] = { share: share, t50: t50 };
+    });
+    function shareAt(n, i) { return info[n] ? info[n].share[i] : 0; }
+
+    var svg = mk('svg', {
+      width: W, height: H, viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+      'aria-label': 'Cumulative growth curves: share of each capability’s passed cards reached over time'
+    }, true);
+    svg.style.display = 'block';
+    svg.style.overflow = 'hidden';
+
+    var gBack = mk('g', {}, false), gCurve = mk('g', {}, false), gLab = mk('g', {}, false);
+    var gSeg = mk('g', {}, false), gHalo = mk('g', {}, false), gDot = mk('g', {}, true);
+    svg.appendChild(gBack); svg.appendChild(gCurve); svg.appendChild(gLab);
+    svg.appendChild(gSeg); svg.appendChild(gHalo); svg.appendChild(gDot);
+
+    // gap days: faint band (+ short caption when it fits)
+    (data.gaps || []).forEach(function (g) {
+      var i = dayNum(g) - d0;
+      if (i < 0 || i >= nd) { return; }
+      gBack.appendChild(mk('rect', {
+        x: f(xa(i)), y: PAD_T, width: f(dw), height: plotH, fill: MUTED, opacity: 0.1
+      }, false));
+      if (dw >= 58) {
+        var t = mk('text', {
+          x: f(xa(i) + dw / 2), y: Y_BASE - 5, 'text-anchor': 'middle', 'font-size': 10,
+          'font-family': 'inherit', fill: MUTED, stroke: CARD, 'stroke-width': 3,
+          'paint-order': 'stroke'
+        }, false);
+        t.textContent = 'no cards';
+        gBack.appendChild(t);
+      }
+    });
+
+    // grid + y tick labels
+    [0, 0.25, 0.5, 0.75, 1].forEach(function (p) {
+      var y = f(yOf(p));
+      gBack.appendChild(mk('line', {
+        x1: x0, x2: f(xEnd), y1: y, y2: y, stroke: (p === 0 ? MUTED : GRID), 'stroke-width': 1
+      }, false));
+      var t = mk('text', {
+        x: x0 - 5, y: f(y + 3.5), 'text-anchor': 'end', 'font-size': 10,
+        'font-family': 'inherit', fill: MUTED
+      }, false);
+      t.textContent = Math.round(p * 100) + '%';
+      gBack.appendChild(t);
+    });
+
+    // date axis: pick the smallest day step that keeps labels >= 46 px apart
+    var steps = [1, 2, 3, 7, 14, 28], step = 28, s;
+    for (s = 0; s < steps.length; s++) {
+      if (steps[s] * dw >= 46) { step = steps[s]; break; }
+    }
+    var di;
+    for (di = 0; di < nd; di += step) {
+      var cx = xa(di) + dw / 2;
+      gBack.appendChild(mk('line', {
+        x1: f(cx), x2: f(cx), y1: Y_BASE, y2: Y_BASE + 3, stroke: MUTED, 'stroke-width': 1
+      }, false));
+      var tl = mk('text', {
+        x: f(cx), y: H - 6, 'text-anchor': 'middle', 'font-size': 10,
+        'font-family': 'inherit', fill: MUTED
+      }, false);
+      tl.textContent = dayLabel(isoOf(d0 + di));
+      gBack.appendChild(tl);
+    }
+
+    // curves (step-wise by day), start at 0 % at the left edge
+    var curve = {};
+    caps.forEach(function (c) {
+      var sh = info[c.n].share;
+      var d = 'M' + f(x0) + ',' + f(Y_BASE), i;
+      for (i = 0; i < nd; i++) {
+        var y = f(yOf(sh[i]));
+        d += 'L' + f(xa(i)) + ',' + y + 'L' + f(xa(i + 1)) + ',' + y;
+      }
+      var p = mk('path', {
+        d: d, fill: 'none', stroke: inkV(c), 'stroke-width': 1.5, opacity: 0.8,
+        'stroke-linejoin': 'round', 'data-c': c.n
+      }, false);
+      gCurve.appendChild(p);
+      curve[c.n] = { path: p };
+    });
+
+    // direct labels "#N": all curves end at 100 %, so fan leaders out to a de-collided column,
+    // earliest-bloomers (curve reaches 50 % first) on top
+    var order = caps.slice().sort(function (a, b) {
+      return (info[a.n].t50 - info[b.n].t50) || (a.n - b.n);
+    });
+    var perColUsed = Math.min(order.length, perCol);
+    var labStep = perColUsed > 1 ? Math.min(14, (Y_LAB_MAX - PAD_T) / (perColUsed - 1)) : 0;
+    order.forEach(function (c, k) {
+      var col = Math.floor(k / perCol), row = k % perCol;
+      var ly = PAD_T + row * labStep;
+      var lx = xEnd + FAN + col * LAB_W;
+      var ld = mk('line', {
+        x1: f(xEnd), y1: f(yOf(1)), x2: f(lx - 3), y2: f(ly), stroke: inkV(c),
+        'stroke-width': 1, opacity: 0.5, 'data-c': c.n
+      }, false);
+      gLab.appendChild(ld);
+      var tx = mk('text', {
+        x: f(lx), y: f(ly + 3.5), 'font-size': 11, 'font-weight': 600,
+        'font-family': 'inherit', fill: inkV(c), 'data-c': c.n
+      }, false);
+      tx.textContent = '#' + c.n;
+      gLab.appendChild(tx);
+      curve[c.n].leader = ld;
+      curve[c.n].label = tx;
+    });
+
+    var capEls = {};   // per capability: marker parts (halo, span segment, dot) with their base opacity
+    function addEl(n, el, op) { (capEls[n] = capEls[n] || []).push({ el: el, op: op }); }
+    function highlight(n) {
+      caps.forEach(function (c) {
+        var o = curve[c.n], on = c.n === n;
+        o.path.setAttribute('opacity', on ? 1 : 0.12);
+        o.path.setAttribute('stroke-width', on ? 2.5 : 1.5);
+        if (o.label) { o.label.setAttribute('opacity', on ? 1 : 0.25); }
+        if (o.leader) { o.leader.setAttribute('opacity', on ? 1 : 0.15); }
+        (capEls[c.n] || []).forEach(function (e) { e.el.setAttribute('opacity', on ? e.op : e.op * 0.3); });
+      });
+      if (curve[n] && curve[n].path.parentNode) { gCurve.appendChild(curve[n].path); }
+    }
+    function unhighlight() {
+      caps.forEach(function (c) {
+        var o = curve[c.n];
+        o.path.setAttribute('opacity', 0.8);
+        o.path.setAttribute('stroke-width', 1.5);
+        if (o.label) { o.label.removeAttribute('opacity'); }
+        if (o.leader) { o.leader.setAttribute('opacity', 0.5); }
+        (capEls[c.n] || []).forEach(function (e) { e.el.setAttribute('opacity', e.op); });
+      });
+    }
+    // hover / focus: highlight the capability's curve; focus draws a dark stroke ring
+    function wire(el, capN) {
+      var keepStroke = el.style.getPropertyValue('stroke'), keepSw = el.getAttribute('stroke-width');
+      el.addEventListener('mouseenter', function () { if (curve[capN]) { highlight(capN); } });
+      el.addEventListener('mouseleave', unhighlight);
+      el.addEventListener('focus', function () {
+        el.style.setProperty('stroke', INK);
+        el.setAttribute('stroke-width', 2.5);
+        if (curve[capN]) { highlight(capN); }
+      });
+      el.addEventListener('blur', function () {
+        el.style.setProperty('stroke', keepStroke);
+        el.setAttribute('stroke-width', keepSw);
+        unhighlight();
+      });
+    }
+
+    // marker geometry: dot on the curve at the marker's last day. Curves of different capabilities
+    // coincide (all end at 100 %, all start at 0 %), so dots that would sit on top of each other are
+    // nudged apart, sideways inside their own day first (stays on the flat curve), then up/down a few px
+    var ms = (data.markers || []).filter(function (m) {
+      if (capBy[m.cap]) { return true; }
+      console.error('captl curves: marker ' + m.id + ' names skill #' + m.cap + ', which is not in data.caps; marker skipped');
+      return false;
+    }).sort(function (a, b) {
+      return (b.nPass - a.nPass) || (a.cap - b.cap);
+    });
+    var hx = Math.max(0, Math.min(30, dw / 2 - 1)), cand = [], ox, oy;
+    for (ox = -hx; ox <= hx + 0.01; ox += 1.5) {
+      for (oy = -16; oy <= 16.01; oy += 1.5) { cand.push([ox, oy, ox * ox + 9 * oy * oy]); }
+    }
+    cand.sort(function (p, q) { return (p[2] - q[2]) || (p[0] - q[0]) || (p[1] - q[1]); });
+    var placed = [];
+    var geo = ms.map(function (m) {
+      var fi = idxOf(m.from), ti = idxOf(m.to);
+      if (fi > ti) { var sw = fi; fi = ti; ti = sw; }
+      var r = Math.min(7, 2.5 + 0.9 * Math.sqrt(m.nPass));
+      var bx = xa(ti) + dw / 2, by = yOf(shareAt(m.cap, ti));
+      var best = null, bestGap = -1, k, j;
+      for (k = 0; k < cand.length; k++) {
+        var px = bx + cand[k][0], py = by + cand[k][1];
+        if (py < r + 1 || py > Y_BASE + 6) { continue; }
+        var gap = 1e9;
+        for (j = 0; j < placed.length; j++) {
+          var dx = px - placed[j].x, dy = py - placed[j].y;
+          var g2 = Math.sqrt(dx * dx + dy * dy) / (0.9 * (r + placed[j].r));
+          if (g2 < gap) { gap = g2; }
+        }
+        if (gap >= 1) { best = [px, py]; break; }
+        if (gap > bestGap) { bestGap = gap; best = [px, py]; }
+      }
+      if (!best) { best = [bx, by]; }
+      placed.push({ x: best[0], y: best[1], r: r });
+      return { m: m, fi: fi, ti: ti, r: r, x: best[0], y: best[1] };
+    });
+
+    geo.forEach(function (o) {
+      var m = o.m, fi = o.fi, ti = o.ti, r = o.r;
+      var c = capBy[m.cap];
+      var label = '#' + m.cap + ' ' + c.name + ': ' + m.nPass + ' passed, ' +
+        (fi !== ti ? m.from + ' to ' + m.to : m.from);
+
+      var halo = mk('circle', {
+        cx: f(o.x), cy: f(o.y), r: f(r + 2.5), fill: fillV(c), opacity: 0.9
+      }, false);
+      gHalo.appendChild(halo);
+      addEl(m.cap, halo, 0.9);
+
+      if (fi !== ti) {
+        // span: thicker segment of the curve over from..to (decoration; the dot carries the tip)
+        var d = 'M' + f(xa(fi)) + ',' + f(yOf(fi > 0 ? shareAt(m.cap, fi - 1) : 0)), i;
+        for (i = fi; i <= ti; i++) {
+          var y = f(yOf(shareAt(m.cap, i)));
+          d += 'L' + f(xa(i)) + ',' + y + 'L' + f(xa(i + 1)) + ',' + y;
+        }
+        var seg = mk('path', {
+          d: d, fill: 'none', stroke: inkV(c), 'stroke-width': f(2 * r), opacity: 0.24,
+          'stroke-linecap': 'round', 'stroke-linejoin': 'round'
+        }, false);
+        gSeg.appendChild(seg);
+        addEl(m.cap, seg, 0.24);
+      }
+
+      var hit = mk('circle', {
+        cx: f(o.x), cy: f(o.y), r: f(r), fill: inkV(c), stroke: CARD, 'stroke-width': 1,
+        opacity: 1
+      }, true);
+      gDot.appendChild(hit);
+      addEl(m.cap, hit, 1);
+      hit.setAttribute('class', 'dot');
+      // an empty tip is NOT papered over: the dot keeps data-tip="" (the checker counts it, the page selftest fails on it)
+      if (!m.tip || !String(m.tip).trim()) { console.error('captl curves: marker ' + m.id + ' has an empty or missing tip'); }
+      hit.setAttribute('data-tip', m.tip || '');
+      hit.setAttribute('data-cap', m.cap);
+      hit.setAttribute('data-m', m.id);
+      hit.setAttribute('tabindex', '0');
+      hit.setAttribute('aria-label', label);
+      hit.style.cursor = 'pointer';
+      hit.style.outline = 'none';
+      wire(hit, m.cap);
+    });
+
+    root.appendChild(svg);
+  }
+
+  C.layouts.push({
+    id: 'curves',
+    title: 'Growth curves',
+    blurb: 'One curve per skill showing the share of its own passed cards reached over time, so you see when each skill earned most of its passes.',
+    render: render
+  });
+})();
+/* KB-2389 capability timeline layout "arcs": arc diagram.
+   One axis near the bottom (days), one dot per marker on the axis (span markers also a thick
+   segment), thin semi-elliptical arcs above the axis join consecutive markers of one capability.
+   Plain ES5, no libs, no network. Redraws from root.clientWidth on every call (host re-calls on resize).
+   Colours: host vars through style (var(--fg|--mut|--card|--ink-N, fallback)), see the LAYOUT CONTRACT in
+   regen_cap_timeline.py. Bad data (no start / end / caps, marker of an unknown skill, marker without tip) is logged. */
+(function () {
+  var C = window.CAPTL = window.CAPTL || { layouts: [] };
+  var NS = 'http://www.w3.org/2000/svg';
+
+  var H = 148;          /* total svg height, spec cap is 150 */
+  var AXIS_Y = 120;     /* axis baseline */
+  var ARC_MAX = 104;    /* tallest arc (apex at AXIS_Y - ARC_MAX) */
+  var ARC_FULL_DAYS = 14; /* arc height is proportional to the time distance: ARC_MAX at this many days */
+  var ARC_MIN = 5;      /* shortest arcs stay visible */
+  var PAD_X = 20;       /* left and right padding, keeps first/last labels and round caps inside */
+  var INK = 'var(--fg,#1d2420)';
+  var MUT = 'var(--mut,#5d6a62)';
+  var HALO = 'var(--card,#fff)';
+  var FALLBACK_INK = 'var(--mut,#5d6a62)';
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function mk(name, attrs, parent) {
+    var e = document.createElementNS(NS, name);
+    if (attrs) { for (var k in attrs) { if (attrs.hasOwnProperty(k)) { e.setAttribute(k, String(attrs[k])); } } }
+    if (parent) { parent.appendChild(e); }
+    return e;
+  }
+  function dayNum(iso) {
+    var p = String(iso).split('-');
+    return Math.round(Date.UTC(+p[0], +p[1] - 1, +p[2]) / 86400000);
+  }
+  function labelOf(n) {
+    var d = new Date(n * 86400000);
+    return MON[d.getUTCMonth()] + ' ' + d.getUTCDate();
+  }
+  function radius(nPass) { return Math.min(8, 3 + 1.1 * Math.sqrt(nPass || 0)); }
+  function plain(html) {
+    try { return new DOMParser().parseFromString(String(html), 'text/html').body.textContent.replace(/\s+/g, ' ').trim(); }
+    catch (e) { return ''; }
+  }
+  function r1(v) { return Math.round(v * 10) / 10; }
+
+  /* 1-D collision relaxation: dots at nearly the same x are pushed apart (same day: about +-5 px for two
+     small dots) so none hides another. Order is by x then capability number, so it is deterministic. */
+  function dodge(items, W, dayPx) {
+    var i, it, n = 0, maxShift = Math.min(34, dayPx);  /* never more than one day off its true date */
+    for (i = 0; i < items.length; i++) { items[i].x0 = items[i].mid; items[i].px = items[i].mid; }
+    for (n = 0; n < 120; n++) {
+      items.sort(function (a, b) { return (a.px - b.px) || (a.cap - b.cap) || (a.ord - b.ord); });
+      var moved = false;
+      for (i = 0; i + 1 < items.length; i++) {
+        var a = items[i], b = items[i + 1];
+        var need = a.r + b.r + 1.5, gap = b.px - a.px;
+        if (gap < need - 0.05) {
+          var push = (need - gap) / 2;
+          a.px -= push; b.px += push; moved = true;
+        }
+      }
+      for (i = 0; i < items.length; i++) {
+        it = items[i];
+        it.px += (it.x0 - it.px) * 0.025;                 /* weak spring back to the true date */
+        if (it.px - it.x0 > maxShift) { it.px = it.x0 + maxShift; }
+        if (it.x0 - it.px > maxShift) { it.px = it.x0 - maxShift; }
+        /* keep the whole marker (segment ends + round caps) inside the svg */
+        if (it.px + (it.x1 - it.mid) - it.r < 1) { it.px = 1 + it.r - (it.x1 - it.mid); }
+        if (it.px + (it.x2 - it.mid) + it.r > W - 1) { it.px = W - 1 - it.r - (it.x2 - it.mid); }
+      }
+      if (!moved && n > 3) { break; }
+    }
+    for (i = 0; i < items.length; i++) { items[i].dx = items[i].px - items[i].x0; }
+  }
+
+  function render(root, data) {
+    while (root.firstChild) { root.removeChild(root.firstChild); }
+    var cw = root.clientWidth;
+    root.dataset.w = String(cw);
+    if (!data || !data.caps || !data.markers || !data.start || !data.end || isNaN(dayNum(data.start)) || isNaN(dayNum(data.end))) {
+      console.error('captl arcs: data.start, data.end, data.caps or data.markers is missing; nothing drawn');
+      root.setAttribute('data-err', 'data.start, data.end, data.caps or data.markers is missing; nothing drawn');
+      return;
+    }
+    var W = cw > 0 ? cw : 640;
+    var d0 = dayNum(data.start), d1 = dayNum(data.end);
+    var N = Math.max(1, d1 - d0 + 1);
+    var plotW = Math.max(60, W - 2 * PAD_X);
+    var dayPx = plotW / N;
+    function X(t) { return PAD_X + t * dayPx; }
+
+    var capBy = {}, ci;
+    for (ci = 0; ci < data.caps.length; ci++) { capBy[data.caps[ci].n] = data.caps[ci]; }
+    function inkOf(cap) { return capBy[cap] ? 'var(--ink-' + cap + ',' + capBy[cap].ink + ')' : FALLBACK_INK; }
+
+    var svg = mk('svg', {
+      width: W, height: H, role: 'group',
+      'aria-label': 'Capability arcs: one dot per marker on a day axis, arcs join the steps of one capability'
+    });
+    svg.style.display = 'block';
+    svg.style.overflow = 'hidden';
+    svg.style.fontFamily = 'inherit';
+    svg.style.fontSize = '10px';
+    root.appendChild(svg);
+
+    /* ---- gap days: faint band + rotated note ---- */
+    var gi, g, placed = [];  /* placed = text boxes already taken (gap notes, then #N labels) */
+    for (gi = 0; gi < (data.gaps || []).length; gi++) {
+      var gt = dayNum(data.gaps[gi]) - d0;
+      if (gt < 0 || gt >= N) { continue; }
+      mk('rect', { x: r1(X(gt)), y: 4, width: r1(dayPx), height: AXIS_Y - 4 + 14, 'pointer-events': 'none' }, svg).style.fill = MUT;
+      svg.lastChild.setAttribute('opacity', '0.10');
+      if (dayPx >= 16) {
+        g = mk('text', {
+          x: 0, y: 0, 'text-anchor': 'end', 'pointer-events': 'none',
+          transform: 'translate(' + r1(X(gt) + dayPx / 2 + 3.5) + ' 8) rotate(-90)'
+        }, svg);
+        g.style.fill = MUT; g.textContent = 'no done card';
+        placed.push({ l: X(gt) + dayPx / 2 - 5, r: X(gt) + dayPx / 2 + 7, t: 0, b: 78 });
+      }
+    }
+
+    /* ---- axis, day ticks, date labels ---- */
+    var ax = mk('line', { x1: r1(X(0)), y1: AXIS_Y, x2: r1(X(N)), y2: AXIS_Y, 'stroke-width': 1, 'pointer-events': 'none' }, svg);
+    ax.style.stroke = MUT;
+    var step = 1, steps = [1, 2, 3, 4, 5, 7, 14], si;
+    for (si = 0; si < steps.length; si++) { step = steps[si]; if (step * dayPx >= 44) { break; } }
+    var t;
+    for (t = 0; t < N; t++) {
+      var tx = r1(X(t + 0.5)), lab = (t % step === 0);
+      mk('line', { x1: tx, y1: AXIS_Y + 9, x2: tx, y2: AXIS_Y + (lab ? 14 : 12), 'stroke-width': 1, 'pointer-events': 'none' }, svg).style.stroke = MUT;
+      if (lab) {
+        var tl = mk('text', { x: tx, y: AXIS_Y + 26, 'text-anchor': 'middle', 'pointer-events': 'none' }, svg);
+        tl.style.fill = MUT; tl.textContent = labelOf(d0 + t);
+      }
+    }
+
+    /* ---- markers: geometry ---- */
+    var items = [], mi, m;
+    for (mi = 0; mi < data.markers.length; mi++) {
+      m = data.markers[mi];
+      if (!capBy[m.cap]) {
+        console.error('captl arcs: marker ' + m.id + ' names skill #' + m.cap + ', which is not in data.caps; marker skipped');
+        continue;
+      }
+      var ft = dayNum(m.from) - d0, tt = dayNum(m.to) - d0;
+      var x1 = X(ft + 0.5), x2 = X(tt + 0.5);
+      items.push({
+        m: m, cap: m.cap, ord: mi, r: radius(m.nPass), span: tt > ft, ft: ft, tt: tt,
+        x1: x1, x2: x2, mid: (x1 + x2) / 2
+      });
+    }
+    dodge(items, W, dayPx);
+    for (mi = 0; mi < items.length; mi++) {
+      items[mi].x1 += items[mi].dx; items[mi].x2 += items[mi].dx; items[mi].cx = items[mi].mid + items[mi].dx;
+    }
+
+    /* ---- arcs: consecutive markers of one capability ---- */
+    var byCap = {}, k;
+    for (mi = 0; mi < items.length; mi++) { (byCap[items[mi].cap] = byCap[items[mi].cap] || []).push(items[mi]); }
+    var arcs = [], capKeys = [];
+    for (k in byCap) { if (byCap.hasOwnProperty(k)) { capKeys.push(+k); } }
+    capKeys.sort(function (a, b) { return a - b; });
+    var ki, li;
+    for (ki = 0; ki < capKeys.length; ki++) {
+      var list = byCap[capKeys[ki]];
+      list.sort(function (a, b) { return (a.ft - b.ft) || (a.ord - b.ord); });
+      for (li = 0; li + 1 < list.length; li++) {
+        var a = list[li], b = list[li + 1];
+        var days = Math.abs((b.mid - a.mid)) / dayPx;
+        var ry = Math.max(ARC_MIN, Math.min(ARC_MAX, days * ARC_MAX / ARC_FULL_DAYS));
+        var xa = Math.min(a.cx, b.cx), xb = Math.max(a.cx, b.cx), rx = (xb - xa) / 2;
+        if (rx < 0.5) { continue; }
+        arcs.push({ cap: capKeys[ki], xa: xa, xb: xb, rx: rx, ry: ry });
+      }
+    }
+    /* long arcs first so short ones sit on top of them */
+    arcs.sort(function (p, q) { return q.ry - p.ry; });
+    var arcEls = [], ai;
+    for (ai = 0; ai < arcs.length; ai++) {
+      var ar = arcs[ai];
+      var pe = mk('path', {
+        d: 'M' + r1(ar.xa) + ' ' + AXIS_Y + 'A' + r1(ar.rx) + ' ' + r1(ar.ry) + ' 0 0 1 ' + r1(ar.xb) + ' ' + AXIS_Y,
+        fill: 'none', 'stroke-width': 1.2, 'stroke-opacity': 0.6, 'pointer-events': 'none', 'data-arc-cap': ar.cap
+      }, svg);
+      pe.style.stroke = inkOf(ar.cap);
+      arcEls.push({ cap: ar.cap, el: pe });
+    }
+
+    /* ---- #N labels on arc apexes (collision-checked, tallest arcs first) ---- */
+    var labEls = [];
+    for (ai = 0; ai < arcs.length; ai++) {
+      var al = arcs[ai];
+      if (al.rx < 12 || al.ry < 14) { continue; }
+      var txt = '#' + al.cap, tw = 6.4 * txt.length + 4;
+      var lx = (al.xa + al.xb) / 2, ly = AXIS_Y - al.ry - 3;
+      var box = { l: lx - tw / 2, r: lx + tw / 2, t: ly - 10, b: ly + 2 };
+      if (box.t < 0 || box.l < 0 || box.r > W) { continue; }
+      var clash = false, pi;
+      for (pi = 0; pi < placed.length; pi++) {
+        var q = placed[pi];
+        if (box.l < q.r && box.r > q.l && box.t < q.b && box.b > q.t) { clash = true; break; }
+      }
+      if (clash) { continue; }
+      placed.push(box);
+      var lt = mk('text', {
+        x: r1(lx), y: r1(ly), 'text-anchor': 'middle', 'pointer-events': 'none',
+        'stroke-width': 3, 'stroke-linejoin': 'round', 'paint-order': 'stroke', 'data-lab-cap': al.cap
+      }, svg);
+      lt.style.fill = inkOf(al.cap); lt.style.stroke = HALO;
+      lt.textContent = txt;
+      labEls.push({ cap: al.cap, el: lt });
+    }
+
+    /* ---- markers. Pass 1: span segments (long first, short on top). Pass 2: every dot (big first, small
+       on top), so each marker keeps a visible dot above all segments. The span dot only forwards hover and
+       click to its own segment, so the host tooltip always shows the marker whose dot is under the pointer. ---- */
+    var marks = [], byId = {}, oi, it;
+    function markOf(itm) {
+      return byId[itm.m.id] || (byId[itm.m.id] = { cap: itm.cap, hit: null, els: [], it: itm });
+    }
+    function tag(hit, itm) {
+      var tip = itm.m.tip, label;
+      if (tip == null || !String(tip).trim()) {
+        // an empty tip is NOT papered over: the dot keeps an empty data-tip (the checker counts it, the page selftest fails on it)
+        console.error('captl arcs: marker ' + itm.m.id + ' has an empty or missing tip');
+        tip = '';
+        label = '#' + itm.cap + ' ' + capBy[itm.cap].name;
+      } else {
+        label = plain(tip);
+      }
+      var common = {
+        'class': 'dot', 'data-tip': tip, 'data-cap': itm.cap, 'data-m': itm.m.id,
+        tabindex: 0, role: 'img', 'aria-label': label
+      }, kk;
+      for (kk in common) { if (common.hasOwnProperty(kk)) { hit.setAttribute(kk, String(common[kk])); } }
+      hit.style.cursor = 'pointer';
+      hit.style.outline = 'none';
+    }
+    var spans = items.filter(function (q) { return q.span; }).sort(function (p, q) {
+      return ((q.x2 - q.x1) - (p.x2 - p.x1)) || (p.ord - q.ord);
+    });
+    for (oi = 0; oi < spans.length; oi++) {
+      it = spans[oi];
+      /* segment is thinner than the dot (bead on a bar); an opaque page-colored halo under it keeps
+         overlapping spans of different capabilities readable instead of one muddy band */
+      var pw = 0.9 * it.r + 3, mkS = markOf(it);
+      var halo = mk('line', {
+        x1: r1(it.x1), y1: AXIS_Y, x2: r1(it.x2), y2: AXIS_Y, 'stroke-width': r1(pw + 2.5),
+        'stroke-linecap': 'round', 'pointer-events': 'none'
+      }, svg);
+      halo.style.stroke = HALO;
+      var seg = mk('line', {
+        x1: r1(it.x1), y1: AXIS_Y, x2: r1(it.x2), y2: AXIS_Y, 'stroke-width': r1(pw),
+        'stroke-linecap': 'round', 'stroke-opacity': 0.9
+      }, svg);
+      seg.style.stroke = inkOf(it.cap);
+      tag(seg, it);
+      mkS.hit = seg; mkS.els.push(halo, seg);
+    }
+    var order = items.slice().sort(function (p, q) { return (q.r - p.r) || (p.ord - q.ord); });
+    for (oi = 0; oi < order.length; oi++) {
+      it = order[oi];
+      var mkD = markOf(it);
+      var dotEl = mk('circle', { cx: r1(it.cx), cy: AXIS_Y, r: r1(it.r), 'stroke-width': 1 }, svg);
+      dotEl.style.fill = inkOf(it.cap); dotEl.style.stroke = HALO;
+      if (it.span) {
+        dotEl.setAttribute('data-core-of', it.m.id);   /* not a hit target itself: forwards to the segment */
+        dotEl.style.cursor = 'pointer';
+      } else {
+        tag(dotEl, it);
+        mkD.hit = dotEl;
+      }
+      mkD.els.push(dotEl);
+    }
+    for (oi = 0; oi < items.length; oi++) { marks.push(byId[items[oi].m.id]); }
+    function forward(e) {
+      var tg = e.target, id = tg && tg.getAttribute ? tg.getAttribute('data-core-of') : null;
+      if (id === null || !byId[id]) { return; }
+      e.stopPropagation();
+      byId[id].hit.dispatchEvent(new MouseEvent(e.type, { bubbles: true, clientX: e.clientX, clientY: e.clientY }));
+    }
+    svg.addEventListener('mouseover', forward);
+    svg.addEventListener('click', forward);
+
+    /* ---- hover / focus emphasis of one capability + own focus ring ---- */
+    var ring = mk('rect', { x: 0, y: 0, width: 0, height: 0, fill: 'none', 'stroke-width': 2, 'pointer-events': 'none' }, svg);
+    ring.style.stroke = INK; ring.style.display = 'none';
+    function emph(cap) {
+      var i;
+      for (i = 0; i < arcEls.length; i++) {
+        var on = arcEls[i].cap === cap;
+        arcEls[i].el.setAttribute('stroke-opacity', on ? 1 : 0.1);
+        arcEls[i].el.setAttribute('stroke-width', on ? 2 : 1.2);
+      }
+      for (i = 0; i < labEls.length; i++) { labEls[i].el.setAttribute('opacity', labEls[i].cap === cap ? 1 : 0.2); }
+      for (i = 0; i < marks.length; i++) {
+        var o = marks[i].cap === cap ? 1 : 0.3, j;
+        for (j = 0; j < marks[i].els.length; j++) { marks[i].els[j].setAttribute('opacity', o); }
+      }
+    }
+    function calm() {
+      var i, j;
+      for (i = 0; i < arcEls.length; i++) { arcEls[i].el.setAttribute('stroke-opacity', 0.6); arcEls[i].el.setAttribute('stroke-width', 1.2); }
+      for (i = 0; i < labEls.length; i++) { labEls[i].el.removeAttribute('opacity'); }
+      for (i = 0; i < marks.length; i++) { for (j = 0; j < marks[i].els.length; j++) { marks[i].els[j].removeAttribute('opacity'); } }
+    }
+    function capOf(e) {
+      var tg = e.target, cid = tg && tg.getAttribute ? tg.getAttribute('data-core-of') : null;
+      if (cid !== null && byId[cid]) { return byId[cid].cap; }
+      return (tg && tg.getAttribute && tg.getAttribute('class') === 'dot') ? +tg.getAttribute('data-cap') : null;
+    }
+    svg.addEventListener('mouseover', function (e) { var c = capOf(e); if (c === null) { calm(); } else { emph(c); } });
+    svg.addEventListener('mouseleave', calm);
+    svg.addEventListener('focusin', function (e) {
+      var c = capOf(e);
+      if (c === null) { return; }
+      emph(c);
+      var i, mk0 = null;
+      for (i = 0; i < marks.length; i++) { if (marks[i].hit === e.target) { mk0 = marks[i]; break; } }
+      if (!mk0) { return; }
+      var q = mk0.it, left = (q.span ? Math.min(q.x1, q.x2) : q.cx) - q.r - 3, right = (q.span ? Math.max(q.x1, q.x2) : q.cx) + q.r + 3;
+      ring.setAttribute('x', r1(left)); ring.setAttribute('y', r1(AXIS_Y - q.r - 3));
+      ring.setAttribute('width', r1(right - left)); ring.setAttribute('height', r1(2 * q.r + 6));
+      ring.setAttribute('rx', r1(q.r + 3));
+      ring.style.display = '';
+      svg.appendChild(ring);
+    });
+    svg.addEventListener('focusout', function () { ring.style.display = 'none'; calm(); });
+  }
+
+  C.layouts.push({
+    id: 'arcs',
+    title: 'Arcs',
+    blurb: 'Shows which skills keep coming back: an arc joins two steps of the same skill, and a taller arc means a longer wait between them.',
+    render: render
+  });
+})();
+/* KB-2389 capability timeline layout "bump" (Rank race).
+ * Self-contained: registers itself on window.CAPTL.layouts, draws inline SVG, no libs, no network.
+ * x = one column per day; y = rank of each capability by cumulative passed cards that day
+ * (rank 1 on top, ties broken by the lower capability number). One curved line per capability,
+ * a "#N" label at the right end (and at the left start when the root is >= 700 px wide),
+ * one hit-target circle (class "dot") per marker on the line at the marker "to" day.
+ * Everything is recomputed from root.clientWidth on each render call; fonts and dot radii are fixed px.
+ * Colours: host vars through style (var(--fg|--mut|--card|--capN|--ink-N, fallback)), see the LAYOUT CONTRACT in
+ * regen_cap_timeline.py. Bad data (no start / end / caps, marker of an unknown skill) is logged, not drawn.
+ */
+(function () {
+  var C = window.CAPTL = window.CAPTL || { layouts: [] };
+  if (!C.layouts) { C.layouts = []; }
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var DAY = 86400000;
+  var MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  var FG = 'var(--fg,#1d2420)';
+  var MUTED = 'var(--mut,#5d6a62)';
+  var CARD = 'var(--card,#fff)';
+  var FALLBACK_INK = 'var(--mut,#5d6a62)';
+  var MAX_H = 278;            // spec cap is 280 px for the whole svg
+  var PAD_TOP = 11;           // room for the largest dot radius (7) plus its 1.4 px ring and the focus ring
+  var PAD_BOTTOM = 28;        // axis line, ticks, date labels
+  var R_MAX = 7;
+  var LINE_W = 1.6;
+  var LINE_OP = 0.75;
+  var WIDE = 700;             // from this root width on, the #N label also shows at the left start
+
+  function utc(iso) {
+    var p = String(iso).split('-');
+    return Date.UTC(+p[0], +p[1] - 1, +p[2]);
+  }
+
+  /* fill / stroke values that are var() go through style: presentation attributes do not resolve var() */
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) {
+      if (!Object.prototype.hasOwnProperty.call(attrs, k)) { continue; }
+      var v = String(attrs[k]);
+      if ((k === 'fill' || k === 'stroke') && v.indexOf('var(') === 0) { e.style.setProperty(k, v); } else { e.setAttribute(k, v); }
+    }
+    if (parent) { parent.appendChild(e); }
+    return e;
+  }
+  function inkV(c) { return c.ink ? 'var(--ink-' + c.n + ',' + c.ink + ')' : FALLBACK_INK; }
+  function fillV(c) { return 'var(--cap' + c.n + ',' + (c.fill || '#d7ddd5') + ')'; }
+
+  function f(v) { return String(Math.round(v * 10) / 10); }
+
+  function render(root, data) {
+    while (root.firstChild) { root.removeChild(root.firstChild); }
+    var W = root.clientWidth;
+    root.dataset.w = String(W);
+    if (!data || !data.caps || !data.caps.length || !data.start || !data.end ||
+        isNaN(utc(data.start)) || isNaN(utc(data.end))) {
+      console.error('captl bump: data.start, data.end or data.caps is missing; nothing drawn');
+      root.setAttribute('data-err', 'data.start, data.end or data.caps is missing; nothing drawn');
+      return;
+    }
+    var drawW = W > 0 ? W : 600;
+
+    // ---- time axis: one column per day, end day fully shown
+    var t0 = utc(data.start);
+    var N = Math.max(1, Math.round((utc(data.end) - t0) / DAY) + 1);
+    function dayIdx(iso) {
+      var i = Math.round((utc(iso) - t0) / DAY);
+      return i < 0 ? 0 : (i > N - 1 ? N - 1 : i);
+    }
+
+    // ---- capabilities and their cumulative PASS counts per day (carried forward over missing days)
+    var caps = data.caps.slice().sort(function (a, b) { return a.n - b.n; });
+    var n = caps.length;
+    var byN = {};
+    var cumV = {};
+    caps.forEach(function (c) {
+      byN[c.n] = c;
+      var row = new Array(N);
+      var seen = {};
+      var pairs = (data.cum && data.cum[String(c.n)]) || [];
+      for (var q = 0; q < pairs.length; q++) {
+        var di = Math.round((utc(pairs[q][0]) - t0) / DAY);
+        if (di >= 0 && di < N) { seen[di] = pairs[q][1]; }
+      }
+      var last = 0;
+      for (var i = 0; i < N; i++) {
+        if (Object.prototype.hasOwnProperty.call(seen, i)) { last = seen[i]; }
+        row[i] = last;
+      }
+      cumV[c.n] = row;
+    });
+
+    // ---- rank per day: most passed cards first, ties by lower capability number
+    var rank = {};
+    caps.forEach(function (c) { rank[c.n] = new Array(N); });
+    for (var d = 0; d < N; d++) {
+      var order = caps.slice().sort(function (a, b) {
+        return (cumV[b.n][d] - cumV[a.n][d]) || (a.n - b.n);
+      });
+      for (var k = 0; k < order.length; k++) { rank[order[k].n][d] = k; }
+    }
+
+    // ---- geometry (recomputed on every call from the root width)
+    var wide = drawW >= WIDE;
+    var L = wide ? 30 : 8;
+    var R = 32;
+    var plotW = Math.max(120, drawW - L - R);
+    var colW = plotW / N;
+    var rs = n > 1 ? Math.min(18, Math.max(13, (MAX_H - PAD_TOP - PAD_BOTTOM) / (n - 1))) : 0;
+    var plotBottom = PAD_TOP + (n - 1) * rs;
+    var axisY = plotBottom + 10;
+    var H = Math.ceil(axisY + 18);
+    function X(i) { return L + (i + 0.5) * colW; }
+    function Y(r) { return PAD_TOP + r * rs; }
+
+    var svg = el('svg', {
+      width: drawW, height: H, role: 'group',
+      'aria-label': 'Rank race: capabilities ranked by passed cards per day'
+    });
+    svg.style.display = 'block';
+    svg.style.fontFamily = 'inherit';
+    svg.style.overflow = 'visible';
+    root.appendChild(svg);
+
+    // focus ring: dark outline on the focused dot (keyboard)
+    var st = el('style', {}, svg);
+    st.textContent = '.cbump-d:focus{outline:none;stroke:' + FG + ' !important;stroke-width:2.4}';
+
+    // ---- gap days: faint band over the whole column
+    var gaps = data.gaps || [];
+    var gl = el('g', { 'pointer-events': 'none' }, svg);
+    gaps.forEach(function (g) {
+      var gi = Math.round((utc(g) - t0) / DAY);
+      if (gi < 0 || gi >= N) { return; }
+      el('rect', {
+        x: f(L + gi * colW), y: 2, width: f(colW), height: f(axisY - 2),
+        fill: MUTED, 'fill-opacity': 0.1, 'pointer-events': 'none'
+      }, gl);
+    });
+
+    // ---- date axis
+    var ag = el('g', { 'pointer-events': 'none' }, svg);
+    el('line', {
+      x1: f(L), x2: f(L + plotW), y1: f(axisY), y2: f(axisY),
+      stroke: MUTED, 'stroke-opacity': 0.35, 'stroke-width': 1
+    }, ag);
+    var minGap = 46;                                    // px between date labels
+    var step = Math.max(1, Math.ceil(minGap / colW));
+    var labeled = [];
+    for (var li = 0; li < N; li += step) { labeled.push(li); }
+    var lastL = labeled[labeled.length - 1];
+    if (lastL !== N - 1 && (N - 1 - lastL) * colW >= minGap) { labeled.push(N - 1); }
+    var isLab = {};
+    labeled.forEach(function (i) { isLab[i] = true; });
+    for (var ti = 0; ti < N; ti++) {
+      var tl = isLab[ti] ? 5 : 2.5;
+      el('line', {
+        x1: f(X(ti)), x2: f(X(ti)), y1: f(axisY), y2: f(axisY + tl),
+        stroke: MUTED, 'stroke-opacity': isLab[ti] ? 0.6 : 0.35, 'stroke-width': 1
+      }, ag);
+    }
+    labeled.forEach(function (i) {
+      var dt = new Date(t0 + i * DAY);
+      var tx = el('text', {
+        x: f(X(i)), y: f(axisY + 16), 'text-anchor': 'middle',
+        'font-size': 10, fill: MUTED, 'font-family': 'inherit', 'pointer-events': 'none'
+      }, ag);
+      tx.textContent = MON[dt.getUTCMonth()] + ' ' + dt.getUTCDate();
+    });
+
+    // ---- one curved line per capability, then its #N labels
+    var lg = el('g', { 'pointer-events': 'none' }, svg);
+    var lines = [];
+    caps.forEach(function (c) {
+      var ink = inkV(c);
+      var rk = rank[c.n];
+      var p = 'M' + f(X(0)) + ' ' + f(Y(rk[0]));
+      for (var i = 1; i < N; i++) {
+        var x0 = X(i - 1), x1 = X(i), y0 = Y(rk[i - 1]), y1 = Y(rk[i]);
+        if (rk[i - 1] === rk[i]) {
+          p += 'H' + f(x1);
+        } else {
+          var dx = x1 - x0;
+          var xm = x0 + dx * 0.5;
+          p += 'H' + f(x0 + dx * 0.2) +
+            'C' + f(xm) + ' ' + f(y0) + ' ' + f(xm) + ' ' + f(y1) + ' ' + f(x0 + dx * 0.8) + ' ' + f(y1) +
+            'H' + f(x1);
+        }
+      }
+      var ln = el('path', {
+        d: p, fill: 'none', stroke: ink, 'stroke-width': LINE_W, opacity: LINE_OP,
+        'stroke-linejoin': 'round', 'stroke-linecap': 'round', 'pointer-events': 'none',
+        'data-line': c.n
+      }, lg);
+      lines.push(ln);
+
+      var right = el('text', {
+        x: f(X(N - 1) + 8), y: f(Y(rk[N - 1])), dy: '0.35em', 'text-anchor': 'start',
+        'font-size': 11, 'font-weight': 600, fill: ink, 'font-family': 'inherit',
+        'pointer-events': 'none'
+      }, lg);
+      right.textContent = '#' + c.n;
+      if (wide) {
+        var left = el('text', {
+          x: f(X(0) - 8), y: f(Y(rk[0])), dy: '0.35em', 'text-anchor': 'end',
+          'font-size': 11, 'font-weight': 600, fill: ink, 'font-family': 'inherit',
+          'pointer-events': 'none'
+        }, lg);
+        left.textContent = '#' + c.n;
+      }
+    });
+
+    // ---- marker dots on the line at the "to" day; big dots first so small ones stay on top
+    var marks = (data.markers || []).filter(function (m) {
+      if (byN[m.cap]) { return true; }
+      console.error('captl bump: marker ' + m.id + ' names skill #' + m.cap + ', which is not in data.caps; marker skipped');
+      return false;
+    });
+    marks.sort(function (a, b) { return (b.nPass - a.nPass) || (a.id < b.id ? -1 : 1); });
+    var dg = el('g', {}, svg);
+    marks.forEach(function (m) {
+      var c = byN[m.cap];
+      var i = dayIdx(m.to);
+      var cx = X(i), cy = Y(rank[m.cap][i]);
+      var r = Math.min(R_MAX, 2.5 + 0.9 * Math.sqrt(Math.max(0, m.nPass || 0)));
+      // light ring under the dot (not interactive), a pastel halo on first-ever passes
+      if (m.first) {
+        el('circle', {
+          cx: f(cx), cy: f(cy), r: f(r + 3.5), fill: fillV(c), 'fill-opacity': 0.9,
+          'pointer-events': 'none'
+        }, dg);
+      }
+      el('circle', { cx: f(cx), cy: f(cy), r: f(r + 1.4), fill: CARD, 'pointer-events': 'none' }, dg);
+      var when = m.from === m.to ? m.to : m.from + ' to ' + m.to;
+      // an empty tip is NOT papered over: the dot keeps data-tip="" (the checker counts it, the page selftest fails on it)
+      var tip = m.tip && String(m.tip).trim() ? m.tip : '';
+      if (!tip) { console.error('captl bump: marker ' + m.id + ' has an empty or missing tip'); }
+      // the dot itself carries a transparent stroke so the hover target is about 9 px in radius
+      var dot = el('circle', {
+        'class': 'dot cbump-d', cx: f(cx), cy: f(cy), r: f(r),
+        fill: inkV(c), stroke: 'transparent', 'stroke-width': f(Math.max(2, 2 * (9 - r))),
+        'pointer-events': 'all', tabindex: 0, role: 'button',
+        'aria-label': '#' + c.n + ' ' + (c.name || '') + ', ' + when + ', ' + m.nPass + ' passed',
+        'data-tip': tip, 'data-cap': c.n, 'data-m': m.id
+      }, dg);
+      dot.style.cursor = 'pointer';
+    });
+
+    // ---- interaction: hovering or focusing a dot highlights its line (who overtook whom)
+    function hi(cap) {
+      for (var q = 0; q < lines.length; q++) {
+        var on = cap !== null && lines[q].getAttribute('data-line') === String(cap);
+        lines[q].setAttribute('opacity', cap === null ? LINE_OP : (on ? 1 : 0.2));
+        lines[q].setAttribute('stroke-width', on ? 2.8 : LINE_W);
+      }
+    }
+    function capOf(e) {
+      var t = e.target && e.target.closest ? e.target.closest('.dot') : null;
+      return t ? t.getAttribute('data-cap') : null;
+    }
+    svg.addEventListener('mouseover', function (e) { hi(capOf(e)); });
+    svg.addEventListener('mouseleave', function () { hi(null); });
+    svg.addEventListener('focusin', function (e) { hi(capOf(e)); });
+    svg.addEventListener('focusout', function () { hi(null); });
+    // keyboard: Enter or Space on a dot opens the host tooltip the same way a click does
+    svg.addEventListener('keydown', function (e) {
+      if ((e.key === 'Enter' || e.key === ' ') && e.target && e.target.classList &&
+          e.target.classList.contains('dot')) {
+        e.preventDefault();
+        e.target.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+      }
+    });
+  }
+
+  C.layouts.push({
+    id: 'bump',
+    title: 'Rank race',
+    blurb: 'Shows who overtook whom: each line is a capability ranked by passed cards so far (top = most), and the dots mark when it improved.',
+    render: render
+  });
+})();
+(function(){
+var C=window.CAPTL=window.CAPTL||{layouts:[]};
+var dataEl=document.getElementById('captl-data');
+var data=JSON.parse(dataEl.textContent);
+var roots=[].slice.call(document.querySelectorAll('[data-captl-layout]'));
+function tokens(){var h=location.hash.replace(/^#/,'');return h?h.split('&'):[];}
+var wantTest=tokens().indexOf('captl-selftest')>=0;
+var sel=document.getElementById('captl-layout');
+var main=sel?document.getElementById('captl-root'):null;
+var blurb=document.getElementById('captl-blurb');
+function layoutOf(id){for(var i=0;i<C.layouts.length;i++){if(C.layouts[i].id===id)return C.layouts[i];}return null;}
+function scheme(){
+ var t=document.documentElement.getAttribute('data-theme');
+ if(t==='dark'||t==='light')return t;
+ return window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+}
+function hideTip(r){r.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));}
+var TT=/<span class="tt">[^<]*\d+ passed, \d+ failed<\/span>/;   // the when / X passed line build_tip writes into every tip
+function selftest(){
+ var t=document.getElementById('gtip');
+ roots.forEach(function(r){
+  var dots=[].slice.call(r.querySelectorAll('.dot[data-tip]')),ok=0,bad=[];
+  if(!t){r.setAttribute('data-selftest','fail:no gtip');return;}
+  dots.forEach(function(d){
+   d.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));
+   if(t.style.display==='block'&&t.innerHTML.indexOf('<b>#'+d.getAttribute('data-cap')+' ')===0&&TT.test(t.innerHTML))ok++;
+   else bad.push(d.getAttribute('data-m'));
+  });
+  hideTip(r);
+  dots.forEach(function(d){d.dispatchEvent(new MouseEvent('mouseleave'));});   // pointer leaves: layouts drop their hover emphasis
+  var sv=r.querySelector('svg');if(sv)sv.dispatchEvent(new MouseEvent('mouseleave'));
+  r.setAttribute('data-selftest',(dots.length>0&&ok===dots.length?'ok:':'fail:')+ok+'/'+dots.length+(bad.length?':'+bad.slice(0,5).join(','):''));
+ });
+}
+function drawRoot(r,force){
+ var w=r.clientWidth;
+ if(!force&&r.__captlW===w)return;
+ var id=r.getAttribute('data-captl-layout'),L=layoutOf(id);
+ r.setAttribute('data-layout',id||'');
+ if(!L){r.setAttribute('data-err','no layout');return;}
+ r.removeAttribute('data-err');
+ try{L.render(r,data);}catch(e){r.setAttribute('data-err',String(e&&e.message||e));}
+ r.__captlW=w;
+ r.setAttribute('data-iw',String(window.innerWidth));
+ r.setAttribute('data-cw',String(document.documentElement.clientWidth));
+ r.setAttribute('data-scheme',scheme());
+}
+function draw(force){
+ roots.forEach(function(r){drawRoot(r,force);});
+ if(wantTest)selftest();
+}
+roots.forEach(function(r){
+ r.addEventListener('focusin',function(e){if(e.target&&e.target.classList&&e.target.classList.contains('dot'))e.target.dispatchEvent(new MouseEvent('mouseover',{bubbles:true}));});
+ r.addEventListener('focusout',function(){hideTip(r);});
+});
+function known(id){for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===id)return true;}return false;}
+function pick(id){   // make `id` the current layout of the switchable root: attribute, select, one-line blurb
+ main.setAttribute('data-captl-layout',id);
+ sel.value=id;
+ var L=layoutOf(id);
+ if(blurb&&L&&L.blurb)blurb.textContent=L.blurb;
+}
+if(sel&&main){
+ var cur='lanes',want=null,tk=tokens();
+ for(var ti=0;ti<tk.length;ti++){if(tk[ti].indexOf('captl=')===0)want=tk[ti].slice(6);}
+ if(want!==null){if(known(want))cur=want;else console.error('captl: unknown layout "'+want+'" in the URL hash, using lanes');}
+ pick(cur);
+ sel.addEventListener('change',function(){
+  pick(sel.value);
+  draw(true);
+  var gt=document.getElementById('gtip');if(gt)gt.style.display='none';   // the hovered dot is gone after the redraw: do not leave its tip standing (selftest mode hides it in selftest())
+  try{history.replaceState(null,'','#'+(wantTest?'captl-selftest&':'')+'captl='+sel.value);}catch(e){}   // hash only; any other hash token is replaced
+ });
+}
+draw(true);
+var timer=0;
+function later(){clearTimeout(timer);timer=setTimeout(function(){draw(false);},60);}
+window.addEventListener('resize',later);
+window.addEventListener('load',function(){draw(false);});
+document.addEventListener('DOMContentLoaded',function(){draw(true);});
+if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(function(r){ro.observe(r);});}
+})();
+</script>
+</section>
+<div id="gtip" role="tooltip"></div>
+<script>(function(){var t=document.getElementById('gtip');function show(e){var s=e.target.closest('.dot[data-tip],.ring[data-tip]');if(!s){t.style.display='none';return}t.innerHTML=s.getAttribute('data-tip');t.style.display='block';var r=s.getBoundingClientRect(),w=t.offsetWidth,h=t.offsetHeight,x=Math.min(Math.max(8,r.left+r.width/2-w/2),innerWidth-w-8),y=r.bottom+8+h>innerHeight?r.top-h-8:r.bottom+8;t.style.left=x+'px';t.style.top=y+'px'}document.addEventListener('mouseover',show);document.addEventListener('click',show);document.addEventListener('scroll',function(){t.style.display='none'},true)})();</script>
+<!-- captl:end -->
+<h2>Accuracy by question type (older dev5 set, 5 reads)</h2>
+<table><thead><tr><th>Question type</th><th>Right</th></tr></thead><tbody><tr><td>who</td><td>7/8</td></tr><tr><td>who_list</td><td>5/5</td></tr><tr><td>how_many</td><td>1/1</td></tr><tr><td>what_color</td><td>2/3</td></tr><tr><td>where</td><td>3/5</td></tr><tr><td>what</td><td>4/7</td></tr><tr><td>why</td><td>0/4</td></tr><tr><td>what_after</td><td>0/3</td></tr><tr><td>what_did_x_do</td><td>0/3</td></tr><tr><td>when</td><td>0/1</td></tr><tr><td><b>total</b></td><td><b>22/40 (55 %, under the 85 % mark)</b></td></tr></tbody></table>
+<p>Most misses are confident wrong answers, not "I don't know" (17 of 18).</p>
+<h2>Update since 2026-11-07 (where accuracy stands now)</h2>
+<div class="viz"><div class="vhead">Right answers of 166 <span class="vkey"><i class="k k-good"></i>at or over bar <i class="k k-bad"></i>under bar <i class="k k-line"></i>bar 142 = 85 %</span></div>
+<div class="vrow"><div class="vlab">before 11-07: rules alone</div><div class="vtrk"><div class="vbar v-bad" style="width:63.9%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">106</span></div></div>
+<div class="vrow"><div class="vlab">before 11-07: shipped local</div><div class="vtrk"><div class="vbar v-bad" style="width:70.5%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">117</span></div></div>
+<div class="vrow"><div class="vlab">11-07: Claude real leg</div><div class="vtrk"><div class="vbar v-bad" style="width:75.3%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">125 · harm 11, FAIL</span></div></div>
+<div class="vrow"><div class="vlab">11-08: fix 1</div><div class="vtrk"><div class="vbar v-bad" style="width:80.1%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">133 · 80 calls, harm 0</span></div></div>
+<div class="vrow"><div class="vlab">11-08: paid haiku</div><div class="vtrk"><div class="vbar v-bad" style="width:83.7%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">139 · 34 calls, harm 2</span></div></div>
+<div class="vrow"><div class="vlab">11-08: Ornith-9B fallback (replays paid answers)</div><div class="vtrk"><div class="vbar v-bad" style="width:84.9%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">141 · 0 calls, FAIL by 1</span></div></div>
+<div class="vrow"><div class="vlab">11-16: R6 paid</div><div class="vtrk"><div class="vbar v-bad" style="width:82.5%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">137 · 127 calls</span></div></div>
+<div class="vrow"><div class="vlab">11-21: alone, reader up</div><div class="vtrk"><div class="vbar v-bad" style="width:70.5%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">117 · 0 calls</span></div></div>
+<div class="vrow"><div class="vlab">11-21: alone, reader off</div><div class="vtrk"><div class="vbar v-bad" style="width:63.9%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">106 · 0 calls</span></div></div>
+<div class="vrow"><div class="vlab">11-22: with Claude ladder (KB-3362)</div><div class="vtrk"><div class="vbar v-good" style="width:86.1%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">143 · 1 run, over bar by 1</span></div></div>
+<div class="vrow"><div class="vlab">ceiling, not real read</div><div class="vtrk"><div class="vbar v-dash" style="width:90.4%"></div><div class="vline" style="left:85.5%"></div><span class="vnum">150 · always-right Claude</span></div></div>
+<div class="vcap">Best real read 143 (test run with the Claude ladder, one run): one over the 85 % bar. Understudy alone: 106-117.</div></div>
+<div class="viz"><div class="vhead">Restated test: right of 160 <span class="vkey"><i class="k k-line"></i>bar 136</span></div>
+<div class="vrow"><div class="vlab">11-16: R6 paid</div><div class="vtrk"><div class="vbar v-bad" style="width:84.4%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">135 · miss by 1</span></div></div>
+<div class="vrow"><div class="vlab">11-22: with Claude ladder (KB-3362)</div><div class="vtrk"><div class="vbar v-good" style="width:87.5%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">140 · harm 0, Claude adds +36</span></div></div>
+</div>
+<div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438)</div><div class="gauge"><div class="g-used" style="width:85.6%"><span>428 used</span></div><div class="g-left" style="width:14.4%"><span>72</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div></div>
+<h2>Latest results (plain words)</h2>
+<div class="board">
+<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>8</b></div>
+<div class="chip ch-ok"><span>Claude at answer time, in tests</span><b>KB-3360 PASS</b></div>
+<div class="chip ch-ok"><span>Privacy toggle, default off</span><b>on: 0 calls</b></div>
+<div class="chip ch-ok"><span>Shared call cap 500</span><b>428 used</b></div>
+<div class="chip ch-ok"><span>What Claude adds, tests</span><b>KB-3362 PASS: +36 of 160</b></div>
+<div class="chip ch-ok"><span>Horse/duck fix</span><b>PASS: 76-79 of 91</b></div>
+<div class="chip ch-ok"><span>5-rung model ladder, tests</span><b>haiku → opus</b></div>
+<div class="chip ch-ok"><span>Exact sealed copies blocked</span><b>0 calls</b></div>
+<div class="chip ch-ok"><span>Paid-run safety stops</span><b>5 of 5 run pass</b></div>
+</div>
+<div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>6</b></div>
+<div class="chip ch-no"><span>85 % bar: understudy alone</span><b>117 vs bar 142; with Claude 143</b></div>
+<div class="chip ch-no"><span>Main machine live: counter file missing</span><b>all calls refused</b></div>
+<div class="chip ch-no"><span>Second machine: no live Claude wiring</span><b>not wired</b></div>
+<div class="chip ch-no"><span>Edited sealed copy leaked</span><b>5 of 8 asked</b></div>
+<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only</b></div>
+<div class="chip ch-no"><span>Live privacy log lines lost</span><b>lost on live</b></div>
+</div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>1</b></div>
+<div class="chip ch-wip"><span>Swap main machine checkout</span><b>waits on peer run</b></div>
+</div>
+<div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>3</b></div>
+<div class="chip ch-blk"><span>Rest of the Claude test (KB-3470)</span><b>waits: daily counter</b></div>
+<div class="chip ch-blk"><span>Live counter, both machines (KB-3438)</span><b>decided, not built</b></div>
+<div class="chip ch-blk"><span>Answer in top-5 rows</span><b>2 of 11</b></div>
+</div>
+</div>
+<h2>Where it stands</h2>
+<div class="viz"><div class="vhead">How one question is answered <span class="vkey"><i class="k k-ok"></i>working <i class="k k-no"></i>broken <i class="k k-un"></i>not measured</span></div><div class="flow"><div class="fmain">
+<div class="fnode fn-ok"><span>question</span><b>you ask</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>understudy alone</span><b>117 of 166</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>privacy check</span><b>on or sealed: stop</b></div>
+<div class="farr">↓</div>
+<div class="flive"><div class="ftag">live path, 75 s total</div>
+<div class="fnode fn-no"><span>haiku, low effort</span><b>main machine: refused</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-no"><span>sonnet, medium effort</span><b>second machine: not wired</b></div>
+</div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>answer</span><b>one line</b></div>
+</div><div class="ftest"><div class="ftag">test runs only</div>
+<div class="fnode fn-ok"><span>haiku low</span><b>47 of 74 first right</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>sonnet medium</span><b>15 of 61</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>sonnet xhigh</span><b>1 of 31</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>opus medium</span><b>0 of 9</b></div>
+<div class="farr">↓</div>
+<div class="fnode fn-ok"><span>opus xhigh</span><b>1 of 3</b></div>
+<div class="fnote">KB-3362: +36 of 160 over the understudy alone; top 3 steps 2 right of 42 calls</div></div></div></div>
+<div class="viz"><div class="vhead">Right by question type, current sets, 2026-11-07, % <span class="vkey"><i class="k k-good"></i>over 85 % <i class="k k-bad"></i>under <i class="k k-line"></i>85 %</span></div>
+<div class="vrow"><div class="vlab">after</div><div class="vtrk"><div class="vbar v-bad" style="width:62.5%"></div><div class="vline" style="left:85%"></div><span class="vnum">30/48</span></div></div>
+<div class="vrow"><div class="vlab">color</div><div class="vtrk"><div class="vbar v-bad" style="width:71.4%"></div><div class="vline" style="left:85%"></div><span class="vnum">10/14</span></div></div>
+<div class="vrow"><div class="vlab">did</div><div class="vtrk"><div class="vbar v-bad" style="width:54.8%"></div><div class="vline" style="left:85%"></div><span class="vnum">34/62</span></div></div>
+<div class="vrow"><div class="vlab">names</div><div class="vtrk"><div class="vbar v-good" style="width:100.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">4/4</span></div></div>
+<div class="vrow"><div class="vlab">number</div><div class="vtrk"><div class="vbar v-good" style="width:100.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">8/8</span></div></div>
+<div class="vrow"><div class="vlab">what</div><div class="vtrk"><div class="vbar v-bad" style="width:47.9%"></div><div class="vline" style="left:85%"></div><span class="vnum">23/48</span></div></div>
+<div class="vrow"><div class="vlab">when</div><div class="vtrk"><div class="vbar v-bad" style="width:81.8%"></div><div class="vline" style="left:85%"></div><span class="vnum">36/44</span></div></div>
+<div class="vrow"><div class="vlab">where</div><div class="vtrk"><div class="vbar v-bad" style="width:44.4%"></div><div class="vline" style="left:85%"></div><span class="vnum">8/18</span></div></div>
+<div class="vrow"><div class="vlab">who</div><div class="vtrk"><div class="vbar v-bad" style="width:72.2%"></div><div class="vline" style="left:85%"></div><span class="vnum">26/36</span></div></div>
+<div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
+<div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls.</div></div>
+<script>
+const UPDATED="2026-11-22 03:01 PST";
+const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
+const PIECES=[
+{id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
+{id:"repl",name:"Text REPL",lane:"chat",status:"done",chip:"done",what:"The text loop that handles every line.",how:"Sorts each line into: read a story, a question, a correction, or a command.",works:"Yes. Refuses lines that look like email, phone or passwords.",nums:"Tests green (48 unit tests at last check).",next:"Nothing planned.",to:["reader","typer","corr"]},
+{id:"reader",name:"Story reader",lane:"chat",status:"verify",chip:"testing: how many misses are a never-stored sentence; can a focused re-read fix them",what:"Reads a story file and remembers some sentences.",how:"Each pass keeps about 35 of 100 sentences by chance; read again to keep more.",works:"Yes. Refuses private and held-out folders.",nums:"A story of 11 lines kept 6, 4, 6 on three reads. Unique-sentence counting merged: wasted re-reads 97 -> 37.",next:"Re-reading is active: each read keeps only about 1 in 3 sentences (like a person skimming), so after 5 reads about 12 % of sentences were never stored. Extra study re-reads add missing sentences; so far net change about 0 (one set +1, one -1). Next: count how many misses are a never-stored sentence.",to:["store"]},
+{id:"store",name:"Store (u.db)",lane:"chat",status:"done",chip:"done",what:"The notebook where kept sentences and corrections live.",how:"A small SQLite file. Each fact has a strength and a rank.",works:"Yes. Corrections survive a restart (2 of 2).",nums:"Schema upgraded with source and rank columns.",next:"Nothing planned.",to:["rank"]},
+{id:"embed",name:"Embeddings / pgvector (optional)",lane:"chat",status:"done",chip:"done, optional",what:"An optional way to match sentences by meaning.",how:"Small model all-minilm turns text into numbers; pgvector can store them. Delete database understudy_vec to remove it.",works:"Works but is NOT load-bearing: it adds about nothing.",nums:"Embeddings on vs off: identical answers on all 4 test sets (96-121 embedding calls per run, 0 fallbacks).",next:"Keep optional; may drop.",to:["rank"]},
+{id:"typer",name:"Question typer",lane:"chat",status:"done",chip:"done",what:"Decides what kind of question it is.",how:"Looks at the words: who, who-list, what, color, how many, what after, what did X do, where, why, when.",works:"Yes, ten question types.",nums:"10 frames.",next:"\"after\" questions (what happened after X): own path, 27 questions, 14 right. Tried limiting it to the right story or sending it through normal ranking: fixes 0 of 11 misses, normal ranking would break 12 right answers. Not built (FAIL).",to:["rank"]},
+{id:"rank",name:"Ranking (names + facts)",lane:"chat",status:"blocked",chip:"scoring-term fixes: FAIL",what:"Picks the 3 best sentences for the question.",how:"Keyword match score (BM25), plus name matching, plus a fact rank bonus of up to plus or minus 0.2.",works:"Merged. Verifier broke it on purpose 7 times and the tests went red 7 of 7.",nums:"Blind set dev5: 15/40 at baseline. Story filter: 0 gain.",next:"Next: checking the step after ranking that picks the answer source. Story filter lever: FAIL. Tried filtering answers to the asked-about story. It gave 0 gain when questions follow their story. Remaining misses: 3 questions where the story guess picks the wrong story, 1 question no word matches. Story guessing: a perfect story guess would recover at most 2 answers (on the hard set); today's guesser can't reach those either, so not built. Where misses happen: most come after the right story is found. In 27 a wrong row from the same story wins (gold row rank 1-7); in 18 the right row is picked but the wrong words are taken from it. Tried changing one scoring weight at a time for the 27 same-story misses: best fixes 2 net (needed 4). In 17 of 27 the winning row simply repeats more of the question's words, so this is about picking the answer out, not weighting. Not built (FAIL). Picker FAIL: the 81 misses fail in five different places (13 answered by another route, 13 never stored or never ranked, 16 right sentence not first, 8 right sentence first but vote picks another, 26 right sentence found but wrong word pulled out); no single fix covers more than about a quarter. No-LLM study check: study's own quiz questions almost never ask for the word the test asks for (7 of 78); 15 times no-LLM study already gets the right word on the right sentence while the test question still misses. The gap is in how the test answer is pulled out, not in what study knows. No-LLM study ceilinged: a per-sentence answer memory built without an LLM fixes +2 net, a perfect one could fix +19 of 81 misses. Next: pick a safe rule for when that memory may override the vote (offline), then let study fill it with the small local LLM (qwen3.5:0.8b) when Ollama is free.",to:["extract"]},
+{id:"retr",name:"Retrieval (finding the right sentence)",lane:"chat",status:"verify",chip:"working, merged",what:"Finds the story sentence that answers the question.",how:"Ranking changed so story sentences win when they fit the question.",works:"stem-keyed index + mild short-sentence bias merged; multi-name who card merged; dev5 test set 22/40 right (was 17/40 before the multi-name fix, 14/40 at start), 0 answers lost, practice 33/60.",nums:"dev5 test set 22/40 = 55 % (was 17/40 before the multi-name fix). Practice 33/60.",next:"multi-name who card merged: a who question with several right names now answers with all of them; blind score at 5 reads is now 22 of 40 (55 %). The scorer changed: a several-names answer counts only when every name is there; under the new scorer the old code scored 20 of 40, so the fix itself added 2. checked: answers are already word-for-word the same on every run (17 different runs, 0 differences); guard tests added. Next: trim extra names (today each several-names answer lists 4 names, 2 right).",to:["rank"]},
+{id:"xt0",name:"Miss diagnosis (xt0)",lane:"tests",status:"done",chip:"done, GO",what:"Sorts every miss on the hard practice tier by cause.",how:"E = extractor missed the answer inside the right sentence; R = retrieval missed the right sentence; S = scoring or vote.",works:"Verdict GO: extraction is the biggest class.",nums:"Hard tier misses: E 18, R 11, RE 1, S 3.",next:"Extractor fixes first (see time-words box).",to:[]},
+{id:"xt1",name:"Time words (xt1)",lane:"chat",status:"verify",chip:"merged, default on",what:"Better handling of time words in when questions.",how:"Try 1 FAILED (old practice lost 1 item, 35 to 34). Try 2 split showed the last-noun fallback owned the loss. Try 3 = time words alone; the fallback sits behind its own flag, off.",works:"Time-word list now on by default (merge 79becbd). Practice2 hard 27 to 31 right, easy 41/46, dev5 22/40, old practice 35/60, 0 answers lost. Off switch UNDERSTUDY_XT1=0 kept as control.",nums:"Practice2 hard 27 to 31; 0 answers lost.",next:"Noun-phrase fallback still off. Follow-up (vote dump) waits.",to:["extract"]},
+{id:"namesmat",name:"Names material (NAMES_MAT)",lane:"study",status:"verify",chip:"merged, flag off",what:"Study grades names questions against the story's own material.",how:"Includes leave-one-out rows. Merged behind flag NAMES_MAT, off.",works:"Merged. The earlier second effect was wall-clock noise in the study picker (off runs 26/26/29 steps), not the flag.",nums:"Off runs: 26, 26, 29 steps.",next:"H' read FAIL: names calls right 13/265 to 209/265 (bar 212); 0 answers lost; answer counts flat (easy +1 after study, others same). Cause found: one shared store per set loses 2-7 answers per set to rows from other stories (dev5 22 to 15, old practice 35 to 33); earlier counts used one store per story. Next: fact-ranking card (pick the right story's row).",to:["marks"]},
+{id:"why",name:"why questions",lane:"chat",status:"verify",chip:"in progress",what:"Answering why questions (0 of 4 on the dev5 test set; 2 of 5 on the practice set).",how:"Built: why practice questions (self-study now reaches why; marks moved to 95-100 in a test run). These ship on. Tried: a better cause finder. It gained 1 of 4 dev5 why questions, but the line was 2 of 4, so it stays OFF.",works:"Failed, not shipped. Tried looking deeper than the top 3 sentences and not cutting to the top sentence: it changed 0 answers on any set (why-3 FAIL: 1 of 4 on the dev5 test set against a line of 2 of 4; no answers changed). Found: the right sentence sits at rank 3 and gets outvoted by higher-ranked ones.",nums:"why-3 FAIL: dev5 test set 1/4 vs line 2/4; deeper look changed 0 answers. Practice set why 2/5.",next:"Change how sentences vote (vote weighting). Parked (blocked) for future investigation.",to:["extract"]},
+{id:"extract",name:"Answer extractor",lane:"chat",status:"verify",chip:"extraction rule test: FAIL",what:"Pulls the short answer out of the chosen sentence.",how:"Typed rules for where, why, when and what-did-X-do, plus a bare-word junk filter.",works:"Working. Three fixes merged (word stems, name check, vote for first real name); multi-name who card merged. Blind test 22/40 (was 17/40 before the multi-name fix, 14/40 at start); 'who' questions 7/8 (was 3/8). Practice 31/60, junk answers 0. 22 of 40 = 55 %; goal passing mark is 85 %, so most work is still ahead.",nums:"Blind test 22/40 (was 17/40 before the multi-name fix). 'Who' 7/8 (was 3/8). Practice 31/60. Junk answers 0. Given the right sentence: where 1/7 to 4/7, why 1/5 to 3/5, when 0/2 to 2/2, what did X do 0/6 to 4/6.",next:"extraction rule test: FAIL (best +2 of needed +4); the fault is which sentence is chosen, not which word. what-after / what-did-X-do: STOPPED. Only 4 wrong practice items, and every idea tried on paper predicted net 0, so nothing was built. Earlier: retrieval card merged; multi-name who card merged (blind 22/40, see retrieval box); final sealed-set read at end of goal on a fresh set.",to:["guard"]},
+{id:"guard",name:"Junk guard",lane:"chat",status:"done",chip:"done",what:"Throws away answers that are clearly junk.",how:"Rejects function words, bare verbs and too-short or too-long answers. Each layer has its own test.",works:"Yes; verified by stubbing each layer (11 of 11 red).",nums:"11/11 stubs red.",next:"Widened with the extractor.",to:["reply"]},
+{id:"corr",name:"Corrections",lane:"chat",status:"done",chip:"done",what:"You can tell it the right answer.",how:"After a wrong answer, say no, then the answer. It stores it at top strength (10) and believes you like a small child.",works:"Yes, including reworded questions and after restart.",nums:"Strength 10.",next:"Nothing planned.",to:["store"]},
+{id:"reply",name:"Reply",lane:"chat",status:"done",chip:"done",what:"The one-line answer you see.",how:"Prefixed so you never mistake it for brainiac.",works:"Yes.",nums:"Prefix: [understudy, not brainiac]",next:"Nothing planned.",to:[]},
+{id:"child",name:"Study child",lane:"study",status:"verify",chip:"self-training tested for real",what:"A quiet helper process that studies when you are not talking.",how:"Low priority; pauses on any user line; takes a step only 3 seconds after a reply.",works:"Merged. Re-reads run in background; chat replies at most ~0.07 s slower while studying (limit 0.1 s). Re-reading adds sentences not yet kept (about 35% kept per read, full after ~10 reads). Found: each re-read re-rolled a small tie-breaker weight on recently seen sentences, so a few close questions flipped back and forth with more reads (blind 22 -> 20 by 15 reads, practice 34 -> 36 -> 34). One 'right' answer was luck (the right sentence matched no question words). FIXED: re-reading a sentence no longer makes it look new, so answers no longer flip after more reads. FIXED: background re-reading no longer changes which story the chat thinks you talked about last. Tested: same answers with and without a study re-read between. A test-only clock knob is also merged, so timing-based reads can be repeated exactly (it does not change normal use).",nums:"Chat slowdown at most ~0.07 s (limit 0.1 s); about 10 % of one CPU; under 40 MB memory.",next:"No-LLM self-training now tested for real (earlier tests skipped it): nets -4. It does notice its mistakes on the right sentences (65 of 78) but its fixes are filed too narrowly and too small to lift them (0 of 78); bigger or wider fixes make it worse (-4 to -16). Its stored shortcut answers were right 0 of 9 and broke 4 answers on one set (fix queued: drop them). Both fixes done (re-read no longer makes a sentence look new; background re-reads no longer change the last story). No-LLM study now PASSES the drop-corrections fix (dropf): study no longer saves its own guessed corrections; those caused 4 right answers to turn wrong on dev5 (21 again, was 17). Note: old saved corrections in existing stores still read; that fix is pending. Unique-sentence coverage (lever 3) MERGED: study counts unique sentences, so files with repeated sentences finish in 10 reads instead of never; wasted re-reads 97 -> 37.",to:["sdb","marks"]},
+{id:"sdb",name:"study.db",lane:"study",status:"done",chip:"done",what:"The study helper's own notebook.",how:"Separate SQLite file so study never touches chat data.",works:"Yes (commit 1: schema and stats).",nums:"6 stats tests, 6 break-it stubs red.",next:"Nothing planned.",to:["stats"]},
+{id:"marks",name:"Marks per topic",lane:"study",status:"done",chip:"done: passing mark fix merged",what:"A score for each story or topic.",how:"Starts at 85, plus 5 for each pass, cap 100; while Ollama grading is off, the cap is 85.",works:"Done with the study scheduler.",nums:"85 start, +5, cap 100 (cap 85 while Ollama grading is off).",next:"Passing mark was stuck at 85 without the LLM helper (start = ceiling). Fixed and merged: the passing mark now starts at 60 and rises toward 85 without an LLM; marks moved on every story. Nothing planned.",to:["rot"]},
+{id:"rot",name:"Rotation",lane:"study",status:"verify",chip:"pick order ON by default (merged 2ad3819)",what:"Chooses what to study next.",how:"Each story gets a priority = time since last study / waiting interval. The interval doubles every +10 mark points, so low-mark stories come back much sooner. Stories at 100 are skipped.",works:"Pick order is ON by default (merged 2ad3819). A lower mark is re-studied sooner. Resolved: marks can now climb, so lower-mark stories really get re-studied sooner.",nums:"Fake grader: mark vs. how-soon correlation -0.99..-0.91 at 25 stories and -0.82..-0.77 at 249 stories, 6/6 seeds, same at 3 s and 30 s per step (before the fix: 0.00, i.e. plain taking turns). Fake-harness read: weak story picked 9x as often as strong. Always-failed vs always-passed story picks: 9.0x (25 stories, 1000 steps), 4.1x (249 stories, 4500 steps). Every always-passed story reached 100 (steps 563-632 at 25 stories; 5613-6481 at 249).",next:"Pick order stays on. It matters now that LLM study is on (marks differ).",to:["probe"]},
+{id:"probe",name:"Self-test probes",lane:"study",status:"verify",chip:"10/10 frames, ON by default",what:"Asks itself questions in other words.",how:"Paraphrase questions with the answer word hidden; score only the probe.",works:"Verified and merged; ON by default (commit 072c758). Probe frames now cover 10 of 10 question types, including when, after, names and what-added; they were built behind a switch and the switch is now on. In the study test all 10 of 10 question types now get self-test questions and marks rise (85 to 90/95). Answers are unchanged with the switch on or off. Coverage was 6 of 10 (why added earlier), now 10 of 10, confirmed by an independent checker who broke each guard and saw the tests go red.",nums:"10 of 10 frames, on by default; marks 85 to 90/95; answers unchanged on or off. Names-in-own-story switch: wrong-story grading 0/15 off to 12/15 on (default off; harm check clean but one-story stores, follow-up open).",next:"Probes are ON by default (merged 072c758). Names questions: a new switch grades them against the story's own sentences (merged a2db922, default OFF). In a real study with many stories, grading names against the wrong story went 0/15 right (off) to 12/15 (on). Harm check done: no harm (answers the same off and on, all 3 sets), but that test kept one story per store, so it never exercised the case the switch fixes. Switch stays OFF. A follow-up checks why names study steps still differed (27 vs 29).",to:["marks","ladder"]},
+{id:"ladder",name:"LLM helper ladder",lane:"study",status:"verify",chip:"study LLM ON by default (merged f4149f1)",what:"Optional small helpers for harder paraphrases.",how:"Study asks in order: a small local model first (the ladder starts at qwen3.5:0.8b, because all-minilm is an embedding model: it turns text into numbers and cannot write answers), only when Ollama is free; then Claude haiku; then sonnet as backup. Per-hour caps. Honest limit: the held-out sealed set was never sent to the model, so the model path has no held-out check yet. Ollama (the local AI helper) answers one question at a time for everyone, so a chat question can wait behind a grading call that already holds it.",works:"Study LLM ON by default (merged f4149f1). Marks now climb past 85 to 100 (the real study loop with a fake grader: correlation -0.87 between mark and how often a story is picked). Harm check: practice answers held 16/28 -> 16/28 with it on and with it off, read where strong stories really got fewer re-reads (3 vs 20+). Claude backup steps (haiku, sonnet) run outside the Ollama lock: they are rare (capped 20 / 5 per hour) and chat never waits on them. Measured with self-study running: chat replies not slowed beyond the limit, study used under a quarter of one CPU, memory 51 MB. Study raised its own self-test mark (85 -> 100 while grading was on). The blind score drop (22 -> 21 of 40) turned out NOT to come from the grader: same drop with the grader off and with a random fake grader. Shared-queue cost, measured when study and chat overlapped (18 of 48 chat probes): median wait 289 ms, worst 1186 ms. Study also holds the shared queue slightly too long (614 ms vs 600 ms limit). About 280 ms of every grading call is the shared Ollama server re-preparing a model it already has loaded, so shorter answers barely help.",nums:"Real-Ollama check of the shipping setup PASSED: a study mark reached 90, 9 qwen calls, 0 failures, 0 Claude calls (presence check, not accuracy). Caps 600 / 120 / 20 / 5 per hour (all-minilm / qwen3.5:0.8b / haiku / sonnet). Chat wait with cancel-on-chat: p95 419 ms, worst 503 ms (was p95 763 ms, worst 1186 ms before).",next:"Study LLM is ON by default (merged f4149f1); marks can climb to 100. Non-interference evidence: all model calls go through one lock (never 2 at once); 7 waits, 0 timeouts, median about 400 ms; under real contention, chat calls cut in ahead of study twice and study re-asked both; study calls abort when chat needs the model. Cancel on chat is DONE and merged (main 60d102e): study watches the shared Ollama queue; when a chat question waits there, study's answer-check call is closed first, then the one-at-a-time lock is freed, so chat goes next. Study's half-done check gives no result (no mark change). Measured: chat wait p95 763 -> 419 ms, worst 1186 -> 503 ms; 10 of 10 aborts let the next call start cleanly; marks unchanged over the 10 aborts. Still open: a real-Ollama check of the shipping setup. Also open: find why the shared Ollama server re-prepares the model on each call; if that can't be fixed from here, grade with the fast embedding model first and ask qwen only when unsure.",to:["probe"]},
+{id:"stats",name:"Stats",lane:"study",status:"verify",chip:"confidence gap: calib FAIL",what:"Counts of what was answered and studied.",how:"Commands stats on and stats print a line.",works:"Yes.",nums:"Part of commit 1.",next:"Self-confidence runs 38-42 points above real accuracy on the hard sets; card queued. Feed to brainiac live mode (later).",to:["live"]},
+{id:"dev",name:"Dev sets",lane:"tests",status:"done",chip:"done",what:"Practice question sets used while building.",how:"Run after each change and compared to the last row.",works:"Yes.",nums:"dev2 18/20 now. Practice2 easy tier: 46 items, 41/46 right; hard tier: 60 items, 27/60 right.",next:"practice2 is too easy (41/46). Hard tier merged (6562d74): 60 items with little word overlap with the question, 27/60 right. A by-type diagnosis on it is running.",to:[]},
+{id:"dev5",name:"Blind dev5",lane:"tests",status:"done",chip:"done",what:"A set the builder does not look at.",how:"40 items over 8 stories, read by someone else.",works:"Yes; used for baseline and for the extractor read.",nums:"15/40 baseline-era.",next:"Last blind read: 10 of 40 (two fixes, no change). Try 3 must show at least 1 fixed answer on paper before building; else move to retrieval.",to:[]},
+{id:"sealed3",name:"Sealed3 final read",lane:"tests",status:"planned",chip:"planned",what:"One last exam by a writer who never saw the code.",how:"Questions stay sealed until the final read; one shot.",works:"Not yet.",nums:"Earlier sealed test: FAIL 7/23.",next:"A fresh never-seen question set, built at the end of the goal by a helper that never saw the code or practice questions; read once, counts only. (The two older sealed sets were already used.)",to:[]},
+{id:"live",name:"Live attribution stats",lane:"link",status:"blocked",chip:"backlog",what:"Show how much brainiac answered itself vs how much the understudy did (live-mode attribution stats).",how:"Needs routing between them, which does not exist yet.",works:"Not started.",nums:"In backlog.",next:"Wait for routing.",to:[]},
+{id:"probecache",name:"Answer cache from study (probecache)",lane:"study",status:"blocked",chip:"FAIL",what:"A shortcut: study saves answers it finds, so chat can reuse them without asking a model.",how:"The cache is filled from study self-test questions, with no language model involved.",works:"Tested; it does not pay off.",nums:"Best net gain +2 questions. With perfect answers in the cache it could be +19.",next:"Verdict FAIL. The gap (+2 vs +19) says answer quality is the limit (our guess), so the next checks try a model as answer writer.",to:["cachegate"]},
+{id:"cachegate",name:"Cache gate (cachegate)",lane:"study",status:"verify",chip:"gate G4 picked",what:"A rule for when chat may trust the cache.",how:"Picked gate G4: use the cache only when the answer vote is split (2 or more candidate answers).",works:"Picked on paper. Not built yet.",nums:"Best case +11 questions right, 2 harmed.",next:"This was a pick, not a build. It sets where the model checks below are aimed.",to:["llmgen"]},
+{id:"llmgen",name:"Local model fills cache (llmgen)",lane:"study",status:"blocked",chip:"FAIL",what:"A small local model (qwen3.5:0.8b) writes the answers that go into the cache.",how:"The model reads the story sentence and writes a short answer.",works:"Tested; not good enough.",nums:"Right on 8 of 19 gold sentences. Net gain +1. The harm bound was broken: it said 0 harmed but one set showed 2, because the bound assumed perfect answers.",next:"Verdict FAIL. Lesson: a harm bound must use the real answer writer, not perfect answers.",to:["llmgen2"]},
+{id:"llmgen2",name:"Who / what only, bigger model (llmgen2)",lane:"study",status:"blocked",chip:"FAIL",what:"A second try: limit the model to who and what questions, and try a bigger local model (qwen3.5:2b).",how:"Same cache fill, narrower question types, bigger model.",works:"Tested; still not enough.",nums:"Who / what only: +2. Bigger model: 8 of 17 right, net up to +2. On split-vote questions it was almost always wrong, which is exactly where the gate G4 wants help.",next:"Verdict FAIL. Next: use the model at answer time on split votes (answertime).",to:["answertime"]},
+{id:"answertime",name:"Model at answer time (answertime)",lane:"study",status:"verify",chip:"answertime PASS, built",what:"Ask the local model when chat has a split vote, instead of filling a cache ahead of time.",how:"The local model picks among understudy's own candidate answers when its vote is split. The split-vote gate is today's confidence gate: no split means no model call, so the fastest reply is unchanged. Uncontested answers skip the model at this step. Contested answers wait at most 3.0 s, with lock wait at most 1.0 s, shrinking as vote margin grows (margin .5: 2.5 s, .8: 1.0 s, .89: 0.55 s); margin .9 or more skips the model. On committed test sets most contested votes are close: 37 contested, 35 under margin .5, 0 skipped, so the speedup rarely applies. Real qwen speed against shorter waits is not measured.",works:"PASS and built. 3 safety tests, each shown load-bearing by removing the guard.",nums:"+5 right, 0 made wrong (easy +2, old +3). Answer time p95 0.75 s (limit 3.0 s, shrinks with margin).",next:"On by default (see chat model default on).",to:["reply"]},
+{id:"atflip",name:"Chat model default on (atflip)",lane:"chat",status:"verify",chip:"built, on by default (merged 45cc382)",what:"Makes the answertime model pick the default for chat.",how:"dev5 checked at all 5 asks: 0 right answers turned wrong. Setting on by default; 0 turns it off. Tests pin it to 0 so baselines reproduce (4/4).",works:"Merged at 18:28. Verifier: 3 of 3 safety checks went red with the guard removed; the suite pin shown load-bearing.",nums:"0 right answers turned wrong at 5 of 5 asks.",next:"On by default now.",to:["reply"]},
+{id:"calib",name:"Confidence check (calib)",lane:"study",status:"blocked",chip:"FAIL: self-test scores do not track per-story accuracy (calib4). Question probes closed.",what:"Does the study helper know how sure it should be?",how:"Compared its self-confidence with its real accuracy on four test sets.",works:"No. Confidence does not follow real accuracy.",nums:"On one set real accuracy rose 37.8 to 45.8 %, but confidence stayed at 79.5. Confidence was 30 to 40 points too high on 2 of 4 sets. None of 5 fixes met the bar.",next:"Verdict FAIL. Meaning: study runs and its passing marks rise and rotate, but it picks which story to re-read nearly at random. Try 1 void: the model wrote only 'Who', 0/96 usable questions. Try 2 ran later: self-test scores still did not track per-story accuracy (calib4, below). Self-posed question probes are closed.",to:["stats","calib4"]},
+{id:"calib4",name:"Confidence check, try 4 (calib4)",lane:"study",status:"blocked",chip:"FAIL: scores did not track accuracy",what:"Last try at making the helper's own test scores say how well it knows each story.",how:"Compared self-test scores with real per-story accuracy after removing the difference between sets.",works:"No. Self-test scores did not follow per-story accuracy.",nums:"Rank correlation 0.094 after removing set differences, p 0.383 (not distinguishable from chance).",next:"Self-posed question probes are closed. Other ways to pick stories are below.",to:["confauc"]},
+{id:"confauc",name:"Vote margin as confidence (confauc)",lane:"study",status:"blocked",chip:"no clean verdict",what:"Does the gap between the top two answer votes show when an answer is likely right?",how:"Scored the margin by AUC (0.5 = chance, 1.0 = perfect) and compared it with a blind stand-in score.",works:"Looked useful, but not proven.",nums:"AUC 0.736. Beat the blind stand-in on only 1 of 4 sets. Control checks fell outside their expected band.",next:"No clean verdict. Margin is not used to pick stories (see targetread).",to:["targetread"]},
+{id:"targetread",name:"Re-read by vote margin (targetread, targetread2)",lane:"study",status:"blocked",chip:"FAIL: re-reading helps, margin does not pick",what:"Re-read the stories the vote margin says it knows least.",how:"Compared re-reading chosen by margin against re-reading random stories, 5 seeds (a seed is one repeat run with a different random start).",works:"Re-reading itself works; the margin pick does not.",nums:"Re-reading adds right answers: mean +7.6 of 108 held-out over 5 seeds. Margin pick +2.40 vs random +2.18.",next:"FAIL. Next: pick by how much of a story the store already holds (covmark).",to:["seedcheck"]},
+{id:"seedcheck",name:"Answer-time pick, seed check (seedcheck)",lane:"chat",status:"verify",chip:"holds on 5 seeds",what:"Does the answer-time model pick (answertime) help on other seeds, not just the default?",how:"Ran 5 seeds with the pick on and off.",works:"Yes, it holds.",nums:"Net +5, +5, +4, +7, +6 (mean +5.4). Right turned wrong: 0. Wrong turned right: 27. Correction: the default seed was lucky (125 of 206 right with the pick off). Typical seeds score 111-116 with it off and 117-123 with it on.",next:"Quote typical seeds, not the default seed.",to:["covmark"]},
+{id:"covmark",name:"Coverage picks re-reads (covmark)",lane:"study",status:"verify",chip:"PASS, narrowly",what:"Re-read first the stories whose sentences the store holds least of (lowest coverage).",how:"Compared against random and shuffled picks over the same seeds.",works:"Yes, narrowly.",nums:"Lowest-coverage pick +3.80, bar 3.77, random +2.18, shuffled +1.80. Without one seed: +3.0 vs +2.04. Coverage after 5 reads 0.88, after 10 reads 0.99. Ceiling: re-reading every story reaches about 126-128 of 206 (about 62 %) on typical seeds, so re-reading alone does not reach 100 %. Cause of the remaining misses not measured.",next:"Next: make coverage the story's passing mark (markcov).",to:["markcov"]},
+{id:"markcov",name:"Coverage as passing mark (markcov)",lane:"study",status:"done",chip:"merged, on by default",what:"Study re-reads stories until the store holds 100 percent of each story's sentences, lowest coverage first. A story at 100 leaves the rotation. A story whose file goes missing stays in rotation and is never shown as 100.",how:"Tried on 5 seeds with held-out questions, against no study and study without the answer pick. A separate verifier re-ran it and removed each fix to confirm its test fails. Idle load measured for 60 s with every story at 100.",works:"Yes. Full stack (study plus answer pick) beats no study.",nums:"Mean rights over 5 seeds: 133.0 of 206 with the full stack vs 119.4 without. 9 of 10 question types up: who +11, after +10, what +8, where +7, why +7, when +4, color +2, names +1, number +1. did -2 of 148 (inside the noise range). Idle at all-100: 0.3 % CPU over 60 s.",next:"Fixed: a missing story file steps once per interval, 576 -> 1 steps in 60 s, CPU 5.3 % -> 0.30 %, live stories never wait; a restored file resumes within one interval. The all-at-100 idle state has a committed test. A self-posed test as the mark did not track accuracy in four tries, so the mark is store coverage.",to:[]},
+{"id": "satread", "name": "Time to saturation, real qwen (satread)", "lane": "study", "status": "done", "chip": "done: time measured, CPU line FAIL", "what": "Measured on the real clock how long study takes to finish every story, and how a real small model behaves at answer time.", "how": "31 stories, 5 reads each, real work only. Then real qwen3.5:0.8b on the default seed with no study, study-free stack.", "works": "Time: yes. Study CPU line: missed.", "nums": "All 31 stories reach mark 100 in 456 s (7.6 min), 70 steps, all real work. This is not a from-zero time: mean mark was already 93.8 at 69 s. From 1 read the upper bound is 11.3 min or less, and 3 of 31 stories got no rows. Study CPU FAIL: mean 24.3 %, max 86.9 %, line 20 % or less. Real qwen: rights 125 -> 130 (old +3, easy +2, dev5 0, hard 0), 35 calls per leg, median about 410-490 ms, p95 780 ms or less, max 1278 ms, with 2 models loaded. Chat-confidence switch on vs off: identical, vote confidence never reaches .9 in these sets.", "next": "Study CPU is above its line; a lower-priority study child is queued (niceread).", "to": ["niceread"]},
+{"id": "confmark", "name": "Confidence-triggered re-study (confmark)", "lane": "study", "status": "blocked", "chip": "FAIL at step 0", "what": "Re-read a story again when its answers look unsure, even after it is fully stored.", "how": "At full storage, re-read a low-margin story and see whether any stored answer digest changes.", "works": "No. Nothing moved.", "nums": "Re-read at saturation moved 0 of 60 digests. Vote-margin confidence is at most .80 over 160 stories and never reaches 100.", "next": "Closed. See the measured limit in the barmark box.", "to": ["barmark"]},
+{"id": "barmark", "name": "Per-story rising bar (barmark)", "lane": "study", "status": "blocked", "chip": "merged, default off, no flip", "what": "Each story keeps a passing bar that rises with its coverage. It is bookkeeping only: it gates and orders nothing.", "how": "The bar comes from coverage, not from accuracy or confidence. A front slot (study the low-margin story first) was tried on the real answer path.", "works": "Bookkeeping works and costs nothing. The front slot does not help.", "nums": "Rights 128.4 with it on and off on the saturated stack; steps equal (92, 105, 69, 118, 101). Iteration 1 FAIL: the bar kept stories eligible at coverage 100, 97 -> 263 steps. Front slot below coverage 100: fires 22 times over 8 legs, order changed 6, rights net -3 (3 worse, 1 better). At saturation it fires 0 times. No flip. Measured limit: confidence-triggered re-study was built twice (confmark gate, barmark front slot) and both read 0 or below.", "next": "barmark-3 queued: strip the front slot.", "to": []},
+{"id": "reask", "name": "End-state re-ask", "lane": "chat", "status": "blocked", "chip": "loses rights; retrieval card queued", "what": "Ask the question again at the end, after study, and take the new answer.", "how": "Re-run the answer path on the final store and compare with the first answer.", "works": "No. It loses more than it gains.", "nums": "Rights 128.4 -> 119.2. Right turned wrong 53, wrong turned right 7, of 1030. Of the 53 right-to-wrong flips, 47 come from the last-read story and turn state at the end; later rows alone cause 2. (An older note said the rest came from pooled later stories: that was wrong.) Names: 26 of 26 flips have no story cue in the question.", "next": "Names flips are re-ask order, not a store fault: the question does not say which story. Retrieval step 0 (below) counted where the misses sit.", "to": ["retr"]},
+{"id": "onemodel", "name": "Only one Ollama model loaded (onemodel)", "lane": "study", "status": "done", "chip": "done: merged on main, default on", "what": "Keep only one local model in memory at a time, so memory stays free.", "how": "Before another understudy model loads, the resident one is unloaded (inside the shared Ollama lock). It unloads again at exit.", "works": "Yes. A separate verifier confirmed it. Answer digests unchanged; the verifier's stubs go red.", "nums": "Outside 1 s sampler, default config: max 1 model loaded (max 1 of 98 samples). Flag-off control: 2 at 75 of 98. Digests on = off (dev5 21, old 34, hard 29, easy 41).", "next": "Limits: eviction is by model name, so the understudy unloads brainiac's qwen3.5:0.8b between brainiac calls (brainiac's next call loads it cold). Brainiac's qwen3.5:2b is outside the rule, so 2 models can still show; only the server setting OLLAMA_MAX_LOADED_MODELS=1 covers that, the user's option. all-minilm is no longer the default study grader (it cannot paraphrase, and swapping costs time); UNDERSTUDY_STUDY_EMBED=1 brings it back. Open: swap cost once a fact is taught (197 per hour at 1 question per 30 s) and a test that pins the wait for a model to be gone.", "to": []},
+{"id": "niceread", "name": "Lower priority for the study child (niceread)", "lane": "study", "status": "planned", "chip": "queued", "what": "Run the quiet study process at the lowest CPU priority so chat never waits.", "how": "Start the study child with a low scheduling priority.", "works": "Not built yet.", "nums": "Target: mean study CPU 20 % or less (satread read 24.3 %).", "next": "Queued.", "to": []},
+{"id": "retr0", "name": "Retrieval step 0", "lane": "chat", "status": "done", "chip": "done: diagnosis, no build", "what": "Counted where the remaining misses sit on the answer side, before building anything.", "how": "44 legs through the real answer path, no writes: the saturated stack on 4 sets, with each lever handed its best case.", "works": "Yes, as a count. No code changed.", "nums": "Saturated rights 128.4 of 206. Miss budget per seed 77.6: right row on top but still wrong 38.4 (loose bound), right row below top 18.0, after path 12.4, no gold row 8.0, names 0.8. Closed in real form: tie-break, story scope, isolation, type routing.", "next": "After-path step 0 next (bound 12.4, hard part 8.4). Accuracy is unchanged by this read.", "to": ["rerank0", "afterpath"]},
+{"id": "rerank0", "name": "Rerank step 0", "lane": "chat", "status": "blocked", "chip": "FAIL: closed, no build", "what": "Asked whether any real feature can re-rank the top rows and reach part of the gain from putting gold first.", "how": "Fit 7168 forms on 3 sets and read the held set, with shuffled shams and a blind control.", "works": "No. The clause is missed even in-sample.", "nums": "Oracle gold first: +18.0 per seed. Real re-rank: best held-out +0.4, in-sample +3.8. Net per seed, cross-fit: 2, 1, 0, 2, -3. Clause needed +5 on every seed: not met. dev5 not moved.", "next": "Closed, no build. Accuracy unchanged.", "to": []},
+{"id": "afterpath", "name": "afterpath step 0", "lane": "chat", "status": "blocked", "chip": "closed: no real lever, no build", "what": "Asked whether any real change fixes the 'what happened after X' misses, and why many right-row answers still come out wrong.", "how": "20 first-pass legs (4 sets x 5 seeds), 432 forms of the after path run end to end, plus forced single-row extraction for each miss. Counts only.", "works": "No. No real form reaches +5 on every seed. A planted control was seen, so the test could have passed.", "nums": "After misses 12.4 per seed; real forms reach 2.4; best held-out net -1 on every seed against +5 needed; planted control seen +6..+11. Forced extraction: of 38.4 gold-on-top misses, 33.2 have no single top-8 row the current extractor reads right; gold row alone right 3.0, wrong 29.6.", "next": "Closed, no build. Accuracy unchanged. Next: D4 extraction step 0.", "to": ["d4step0"]},
+{"id": "d4step0", "name": "D4 extraction step 0", "lane": "chat", "status": "done", "chip": "closed: step 0 read", "what": "Sorted the extraction misses by failure class: are the answer words in the row, or not?", "how": "Counts only, on the saturated stack.", "works": "Yes, read.", "nums": "Right row ranked first, rules never pull right word 21.6/seed; gold outvoted 6.0/seed; no candidate 5.2/seed.", "next": "qreach count, then qfree build.", "to": []},
+{"id": "qreach", "name": "qreach count", "lane": "chat", "status": "done", "chip": "closed: +5.80/seed hard only", "what": "Counted what a local model reading the top 3 rows could gain on contested hard items.", "how": "Hard items only; the other sets are untouched.", "works": "Yes, read.", "nums": "qwen reading top-3 rows on contested hard items nets +5.80/seed (range +3.65..+7.15), harm 7/22 rights, p95 549 ms.", "next": "qfree build.", "to": []},
+{"id": "bindtable", "name": "bindtable", "lane": "chat", "status": "blocked", "chip": "closed, dead: best +2..+3, dev5 0", "what": "Asked whether rule-side fixes (binder shapes) can lift accuracy.", "how": "Counted the best rule-side fixes per seed.", "works": "Yes, read.", "nums": "Rule-side fixes best +2..+3/seed, dev5 0; binder shapes harm 12/seed.", "next": "Dead; no build.", "to": []},
+{"id": "qfree", "name": "qfree build", "lane": "chat", "status": "blocked", "chip": "FAIL: closed, stays OFF: failed held-out check", "what": "Local model writes a free-text answer on contested hard items, behind a flag.", "how": "Only hard items go to the model; flag off by default.", "works": "No. Gain was real in-sample but calls timed out.", "nums": "qwen free-text answer on contested hard items: +6,+6,+5,+8,+4 rights per seed (in-sample, 12 items), harm 6 of 21 rights, held sets 0 qwen calls. FAIL: while study holds Ollama, 13 of 40 chat calls timed out at 3.0 s (slow-end 3036 ms). Timed-out calls keep the old answer. Stays OFF: failed held-out check.", "next": "qfree-2.", "to": ["qfree2"]},
+{"id": "qfree2", "name": "qfree-2", "lane": "chat", "status": "done", "chip": "done: PASS, merged, chat-first ON by default (chat never swaps models: 0 swaps vs 24-26 without it)", "what": "qfree2 PASS: chat gets Ollama first, study pays the model reload. Chat swaps 0 (vs 24-26 with it off), chat p95 0.8-1.8 s. Merged; chat-first ON by default (chat never swaps models: 0 swaps vs 24-26 without it).", "how": "Read with a real study leg running and the embed worst case.", "works": "Yes. PASS.", "nums": "Chat swaps 0 (vs 24-26 with it off), chat p95 0.8-1.8 s. Cost: study embeds wait while chat is active (keyword search fallback until next refill).", "next": "qheld: first held-out check.", "to": ["qheld"]},
+{"id": "qheld", "name": "qheld", "lane": "chat", "status": "blocked", "chip": "FAIL: held-out check", "what": "held-out check FAIL: local qwen answers on unseen question sets. dev5 +3, old -7, easy +10 (only 2 questions x 5 seeds); wrong-after-fire 19 of 32 = 0.59, bar 0.49. Free-text qwen answer stays off.", "how": "One run, counts only.", "works": "No. FAIL.", "nums": "dev5 +3, old -7, easy +10 (only 2 questions x 5 seeds); wrong-after-fire 19 of 32 = 0.59, bar 0.49. Hover: local models only (cloud calls 0, enforced in code), counts only, sealed never used; these sets now burned for this lever family.", "next": "binder recall.", "to": ["binder"]},
+{"id": "binder", "name": "binder recall", "lane": "chat", "status": "blocked", "chip": "FAIL: ceiling measured", "what": "Rule-based answer finder ceiling measured: fixing every extraction class at once could add at most ~16 right answers per seed, ~70 % overall; no single fix moves the \"old\" set.", "how": "Counts only.", "works": "No. FAIL.", "nums": "Rule-based answer finder ceiling measured: fixing every extraction class at once could add at most ~16 right answers per seed, ~70 % overall; no single fix moves the \"old\" set.", "next": "self-test mark.", "to": ["selfmark"]},
+{"id": "selfmark", "name": "self-test mark", "lane": "chat", "status": "blocked", "chip": "FAIL: self-test mark", "what": "Tried using understudy's own practice-question score per story as its confidence; re-reading raised that score in 10 of 16 stories but changed 0 real test answers; low practice score did not predict wrong answers. Lesson: its practice questions copy what it trains on.", "how": "Counts only.", "works": "No. FAIL.", "nums": "Re-read raised practice score in 10 of 16 stories, 0 real test answers changed.", "next": "re-read with local LLM.", "to": ["ladderre"]},
+{"id": "ladderre", "name": "re-read with local LLM", "lane": "chat", "status": "blocked", "chip": "FAIL: re-read with local LLM", "what": "Re-reading with local LLM helper on (2,382 local calls) changed 0 real test answers, same as with it off; the re-read only stores practice-question notes, nothing the answer step uses to pick a different answer.", "how": "Counts only.", "works": "No. FAIL.", "nums": "Re-read with local LLM helper on (2,382 local calls) changed 0 real test answers, same as with it off.", "next": "study write vs answer key.", "to": ["writekey"]},
+{"id": "writekey", "name": "study write vs answer key", "lane": "chat", "status": "done", "chip": "done: diagnosis", "what": "Sorted the 93 still-wrong questions by why re-reading can't fix them. Biggest group (32): the right story never got a ranking boost under the kind of question asked. Planting the boost by hand fixes 22 questions, but the real system can only boost after it notices it was wrong.", "how": "Counts only.", "works": "Diagnosis finished.", "nums": "93 still wrong; biggest group 32; hand-planted boost fixes 22.", "next": "Check whether study can notice its own mistakes.", "to": ["detect"]},
+{"id": "detect", "name": "can study notice mistakes", "lane": "chat", "status": "done", "chip": "done: diagnosis", "what": "Checked whether study can notice its own mistakes. Where it does practice a weak question, its own grading said 'right' every time while the real test was wrong, so nothing triggered extra study there.", "how": "Counts only.", "works": "Done.", "nums": "Read.", "next": "See the grading gap box.", "to": ["gradegap"]},
+{"id": "gradegap", "name": "why grading said right", "lane": "chat", "status": "done", "chip": "done: diagnosis", "what": "Found why study's grading said 'right': about half the time the practice question differs from the test question, about a third of the time the grader was too lenient (accepted answers with extra words). The small local model's 'wrong' calls were mostly noise.", "how": "Counts only.", "works": "Done.", "nums": "Read.", "next": "Try a stricter grader.", "to": ["strictgrade"]},
+{"id": "strictgrade", "name": "stricter grader", "lane": "chat", "status": "blocked", "chip": "FAIL: too many false alarms", "what": "Stricter self-grading would flag too many right answers (34 % false alarms) and could fix only 2-3 test items; nothing built.", "how": "Offline check only.", "works": "No.", "nums": "34 % false alarms; 2-3 items fixable.", "next": "Superseded by the answer-time fix (parasel).", "to": ["reachcap"]},
+{"id": "reachcap", "name": "rotation reach and fix cap", "lane": "chat", "status": "done", "chip": "done: diagnosis", "what": "Checked whether study's practice rotation reaches every topic (yes, within 13 rounds) and how many wrong test answers the whole self-check -> re-rank loop could ever fix: 3 of 93. That loop works but is capped; next fix must work at answer time.", "how": "Counts only.", "works": "Yes, but capped.", "nums": "Every topic reached within 13 rounds; at most 3 of 93 wrong answers fixable.", "next": "Answer-time fix (parasel).", "to": ["parasel"]},
+{"id": "parasel", "name": "answer-time wording fix", "lane": "chat", "status": "done", "chip": "done: stopped at step 0", "what": "Answer-time wording fix: the 29 cases were only 7 distinct questions, under the bar of 10, so nothing was built. A perfect ranker would have fixed 5 of them.", "how": "Step 0 count only.", "works": "Stopped at step 0.", "nums": "29 cases = 7 distinct questions (bar 10); perfect ranker fixes 5.", "next": "Map all errors (errmap).", "to": ["errmap"]},
+{"id": "errmap", "name": "error map (errmap)", "lane": "chat", "status": "done", "chip": "done: missed by one", "what": "Listed all 93 wrong answers by where they go wrong. Built a ranking fix: +2 right answers, needed +3 - missed by one. Kept switched off.", "how": "One run over all 93 wrong answers.", "works": "Yes, read.", "nums": "+2 right answers, needed +3.", "next": "Check the test itself (namesart).", "to": ["namesart"]},
+{"id": "namesart", "name": "test order fix (namesart)", "lane": "tests", "status": "done", "chip": "done: test fix", "what": "Found the test asked 'who are the characters?' after reading a different story. Fixed the test order; correct answers per run went from about 120 to about 124, wrong items 93 -> 88. This was a test fix, not learning.", "how": "Compared runs before and after the order fix.", "works": "Yes.", "nums": "About 120 -> about 124 right per run; 93 -> 88 wrong.", "next": "Find what makes study hurt (harmsrc).", "to": ["harmsrc"]},
+{"id": "harmsrc", "name": "harm source (harmsrc)", "lane": "study", "status": "done", "chip": "done: harm checked", "what": "Checked what self-study changes: it fixes at least 52 items and breaks at most 7. Self-study helps far more than it hurts. 9 more items looked broken but were a test-order quirk, not study.", "how": "Switched study steps on one at a time.", "works": "Yes.", "nums": "Fixes at least 52, breaks at most 7; 9 more were a test-order quirk.", "next": "Find the clue that ranks the right sentence first (hitorder).", "to": ["hitorder"]},
+{"id": "hitorder", "name": "right-sentence ranking (hitorder)", "lane": "study", "status": "done", "chip": "done: no clue works", "what": "Looked for a simple clue (sentence position, length, shared words) that picks the right sentence over a wrong one. None works: each one either breaks about half the answers that are right today, or fixes at most 4 of 26.", "how": "Tried each clue against the ranked sentences.", "works": "No clue found.", "nums": "26 questions affected; best clue fixes at most 4.", "next": "Map the answer pull-out misses (extstep0).", "to": ["extstep0"]},
+{"id": "extstep0", "name": "pull-out miss map (extstep0)", "lane": "chat", "status": "done", "chip": "done: misses mapped", "what": "Mapped the 32 questions where the right sentence is found but the answer is pulled out wrong. Biggest group with one cause has 9 questions, below the bar of 10 for a fix. The answer is in the sentence 155 of 160 times; the pull-out step misses it. Recount on the corrected question order is running.", "how": "Grouped the 32 misses by cause.", "works": "Yes.", "nums": "32 questions; biggest group 9 (bar 10); answer in sentence 155 of 160.", "next": "Recount on corrected order (askfix).", "to": ["prodread"]},
+{"id": "prodread", "name": "real helper read (prodread)", "lane": "chat", "status": "done", "chip": "done: measured", "what": "Measured with the real local AI helpers on: 126 of 206 right (61 %), vs 123 with helpers off; difference is within normal run-to-run spread. Extra study rounds after the 5 reads changed 0 answers: the missing answers are already in the text, the pull-out step is what fails. Claude never called; at most 1 local model loaded at a time.", "how": "Ran the full test with helpers on and off.", "works": "Yes.", "nums": "126 of 206 (61 %) vs 123 off; extra study changed 0 answers.", "next": "Check the hourly allowance (capshare).", "to": ["capshare"]},
+{"id": "capshare", "name": "allowance check (capshare)", "lane": "chat", "status": "done", "chip": "done: no clash", "what": "Checked whether background study can use up the chat's hourly AI allowance. It cannot: chat and study keep separate counters in separate processes.", "how": "Read how each side counts its calls.", "works": "Yes.", "nums": "Separate counters, separate processes.", "next": "Recount errors (askfix).", "to": ["askfix"]},
+{"id": "askfix", "name": "error recount (askfix)", "lane": "chat", "status": "done", "chip": "done: merged", "what": "Re-counted the error map with one fixed question order for all tests.", "how": "Recount by cause, same order everywhere.", "works": "Yes, merged.", "nums": "Misses no card has looked at: 19 -> 14.", "next": "Done.", "to": ["newheld"]},
+{"id": "newheld", "name": "new held-out set", "lane": "chat", "status": "blocked", "chip": "blocked: needs fresh unseen questions", "what": "Any further answer-time-LLM test needs a fresh unseen question set; all current held-out sets used up.", "how": "Counts only.", "works": "Waiting.", "nums": "All current held-out sets used up.", "next": "Wait for a fresh set.", "to": []},
+{"id": "claudeat", "name": "Claude at answer time (KB-3360)", "lane": "chat", "status": "done", "chip": "PASS: tests only, cap 500", "what": "Lets the understudy ask Claude when it answers test questions, with a privacy switch.", "how": "Privacy switch default off; switch on = 0 Claude calls. One shared cap for all Claude calls.", "works": "Yes, in tests. Live use is not wired yet.", "nums": "Cap 500 calls, 428 used; privacy on: 0 calls.", "next": "Live counter (KB-3438).", "to": ["claudegain"]},
+{"id": "claudegain", "name": "what Claude adds (KB-3362)", "lane": "tests", "status": "done", "chip": "PASS: 143 of 166", "what": "Measures how many more answers are right with Claude than with the understudy alone, per model and effort.", "how": "Understudy alone first, then a ladder of Claude models in tests (one real run).", "works": "Yes, in tests: Claude adds 36 right answers of 160, harm 0.", "nums": "140 of 160 (bar 136), 143 of 166 (bar 142, over by 1). 184 of 200 calls used. Most first-right answers come from the cheapest step (47 of 74).", "next": "Two side reads need more calls (KB-3470).", "to": ["claudemore"]},
+{"id": "claudemore", "name": "rest of the Claude test (KB-3470)", "lane": "tests", "status": "blocked", "chip": "waits: daily counter", "what": "Two side reads of KB-3362: the best possible score on the 23 questions Claude still missed, and a repeat with per-question history on.", "how": "Same test set, more Claude calls.", "works": "Not started.", "nums": "16 calls left of 200; up to 115 needed.", "next": "Waits for the daily counter reset (KB-3438).", "to": []},
+{"id": "horseduck", "name": "horse/duck fix (KB-3374, KB-3380)", "lane": "chat", "status": "done", "chip": "PASS: 76-79 of 91", "what": "Stops the helper repeating an old subject (asked about one animal, it answered about another).", "how": "Fixed how a fact from the chat is matched to the asked subject.", "works": "Yes (both cards PASS).", "nums": "76-79 of 91 right, was 22-31.", "next": "Done.", "to": []},
+{"id": "wtswap", "name": "checkout swap (KB-3406)", "lane": "link", "status": "blocked", "chip": "waits: peer run", "what": "Moves the main machine's understudy copy to the agreed version.", "how": "Swap after a peer run ends; keep any unique work on a branch.", "works": "Waiting.", "nums": "1 machine not on the agreed version.", "next": "Swap when the peer run ends.", "to": []},
+{"id": "livecount", "name": "live Claude counter (KB-3438)", "lane": "link", "status": "blocked", "chip": "decided: daily reset, not built", "what": "One shared Claude call counter for live use on both machines.", "how": "Decided: the 500 cap resets every day (UTC), one counter shared by both machines; when the counter cannot be reached, calls are refused. Design approved.", "works": "Not yet: live Claude calls are refused today.", "nums": "Live calls today: 0 (all refused). Build not started.", "next": "Build waits on the checkout swap (KB-3406).", "to": ["claudemore"]},
+];
+const LBL={done:"done",verify:"built, verifying",planned:"planned",blocked:"blocked / backlog",now:"being worked on now"};
+document.getElementById("upd").textContent=UPDATED;
+const lanes=document.getElementById("lanes"),ov=document.getElementById("ov"),ovb=document.getElementById("ovb");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+for(const L in LANES){const d=document.createElement("div");d.className="lane";d.innerHTML="<h3>"+esc(LANES[L])+"</h3><div class='row'></div>";
+ const row=d.lastChild;
+ PIECES.filter(p=>p.lane===L).forEach(p=>{const b=document.createElement("button");b.className="box s-"+p.status;b.id="b-"+p.id;b.tabIndex=0;
+  b.innerHTML="<b>"+esc(p.name)+"</b><i>"+esc(p.chip)+"</i>";
+  b.addEventListener("mouseenter",()=>{clearTimeout(hideT);if(!sticky)show(p,b)});
+  b.addEventListener("mouseleave",()=>{if(!sticky){clearTimeout(hideT);hideT=setTimeout(hide,300)}});
+  b.addEventListener("focus",()=>{sticky=true;show(p,b)});
+  b.addEventListener("click",e=>{e.stopPropagation();sticky=true;show(p,b)});
+  row.appendChild(b)});lanes.appendChild(d)}
+function show(p,b){ovb.innerHTML="<h4>"+esc(p.name)+" <span class='pill s-"+p.status+"'>"+esc(LBL[p.status])+"</span></h4><p><b>What:</b> "+esc(p.what)+"</p><p><b>How:</b> "+esc(p.how)+"</p><p><b>Works now:</b> "+esc(p.works)+"</p><p><b>Numbers:</b> "+esc(p.nums)+"</p><p><b>Next:</b> "+esc(p.next)+"</p>";
+ ov.style.display="block";const r=b.getBoundingClientRect(),w=ov.offsetWidth,h=ov.offsetHeight,vw=innerWidth,vh=innerHeight;
+ let x=Math.min(Math.max(8,r.left),vw-w-8),y=r.bottom+6;if(y+h>vh-8)y=Math.max(8,r.top-h-6);if(y+h>vh-8)y=8;
+ ov.style.left=x+"px";ov.style.top=y+"px"}
+let sticky=false,hideT=null;
+function hide(){clearTimeout(hideT);sticky=false;ov.style.display="none"}
+document.getElementById("x").onclick=hide;document.addEventListener("click",e=>{if(!ov.contains(e.target))hide()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")hide()});
+document.getElementById("lanes").addEventListener("mouseleave",()=>{});
+function arrows(){const svg=document.getElementById("arrows"),wr=document.getElementById("dwrap").getBoundingClientRect();
+ svg.querySelectorAll("line").forEach(n=>n.remove());
+ PIECES.forEach(p=>p.to.forEach(t=>{const a=document.getElementById("b-"+p.id),c=document.getElementById("b-"+t);if(!a||!c)return;
+  const A=a.getBoundingClientRect(),C=c.getBoundingClientRect();
+  let ax=A.left+A.width/2-wr.left,ay=A.top+A.height/2-wr.top,cx=C.left+C.width/2-wr.left,cy=C.top+C.height/2-wr.top;
+  const dx=cx-ax,dy=cy-ay,k=Math.min(A.width/2/Math.abs(dx||1e-6),A.height/2/Math.abs(dy||1e-6));
+  const k2=Math.min(C.width/2/Math.abs(dx||1e-6),C.height/2/Math.abs(dy||1e-6));
+  const l=document.createElementNS("http://www.w3.org/2000/svg","line");
+  l.setAttribute("x1",ax+dx*k);l.setAttribute("y1",ay+dy*k);l.setAttribute("x2",cx-dx*k2-dx*0.0);l.setAttribute("y2",cy-dy*k2);
+  l.setAttribute("stroke-width","1.6");l.setAttribute("marker-end","url(#ah)");svg.appendChild(l)}))}
+addEventListener("resize",arrows);addEventListener("load",arrows);arrows();
+</script></body></html>
