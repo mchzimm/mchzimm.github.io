@@ -27,7 +27,7 @@ td,.tip,.card{overflow-wrap:anywhere}
 @media(max-width:600px){body{font-size:16px}th.eta,td.eta{display:none}}
 </style></head><body><main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html" style="color:inherit;text-decoration:none">Can brainiac learn from its understudy's corrections?</a></h1>
-<p class="sub">Goal: when the understudy (a small local helper model) corrects brainiac, brainiac learns it and gives the better answer next time. As of <time data-t="2026-11-22T13:44Z">2026-11-22 13:44 UTC</time>. Updated <span id="upd"><time data-t="2026-11-22T13:44Z">2026-11-22 13:44 UTC</time></span>.</p>
+<p class="sub">Goal: when the understudy (a small local helper model) corrects brainiac, brainiac learns it and gives the better answer next time. As of <time data-t="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time>. Updated <span id="upd"><time data-t="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></span>.</p>
 <div class="card"><b>Short answer: goal MET (2026-11-21 10:30 PST).</b> Brainiac does learn what the understudy teaches, and in live chat it now shows its own learned answer (KB-3290, on by default since KB-3306) and keeps its own right answer when the judge agrees (KB-3326, on by default since KB-3338: 2 of 32 right answers rewritten, was 15 of 31). Was failing: a correction did not reliably <i>fix</i> a wrong answer. KB-3358 now passes it: correction then right 5/5 sound, 5/5 color, 5/5 food. Grading a chat reply right/wrong fixed 0 of 2 wrong replies (KB-3320 failed), and wrong animal sounds came back round after round even though the helper corrected them each time. The cause is found: a correction for one animal overwrote a shared one-word memory, so the next animal answered wrong. The fix (KB-3342) read well live (25 of 25 animal-sound answers right; fix off 0 of 21 vs on 21 of 21; saved copy 10 of 10; colors 8 of 8), the first pass was withdrawn (on for everything broke 4 older tests). KB-3358 retried it for corrections only and passed (own right answers shown 8 of 10, was 0 of 28). <b>Since then:</b> showing the graded own answer is on by default (KB-3388); the grader now may not give top marks to a false answer (KB-3448, on by default); wrong own answers are held back when the helper is busy (shown 0 of 456, was 252 of 596).</div>
 
 <div class="card" id="kb3342chart"><b>KB-3342 in numbers</b>
@@ -257,7 +257,7 @@ td,.tip,.card{overflow-wrap:anywhere}
 <p><span class="lab">Root cause / evidence:</span> Follow-up of KB-3342; the two-word memory survives a wrong grade today.</p>
 <p><span class="lab">Next step / ETA:</span> Blocked until a wrong reply can stay uncorrected.</p>
 <p class="upd">last updated <time data-upd="2026-11-21T07:42Z">2026-11-21 07:42 UTC</time></p></div></td></tr>
-<tr tabindex="0" aria-describedby="tip40" data-tip="tip40"><td class="n">40</td><td><span class="chip c-fail">FAIL: not readable</span></td><td>Check that a passed own answer does not leak into the next answer (KB-3364)<br><small class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></small></td><td class="eta">closed</td>
+<tr tabindex="0" aria-describedby="tip40" data-tip="tip40"><td class="n">40</td><td><span class="chip c-fail">FAIL: not readable</span></td><td>Check that a passed own answer does not leak into the next answer (KB-3364)<br><small class="upd">last updated <time data-upd="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></small></td><td class="eta">closed</td>
 <td class="tipcell"><div role="tooltip" id="tip40" class="tip"><b>Check that a passed own answer does not leak into the next answer (KB-3364)</b>
 <p>Three of four checks passed. The leak check could not be read: the control (switch off) showed 2.1 % carryover, not the expected ~13 %, and had 8 events (needs 30).</p>
 <p><span class="lab">Next step / ETA:</span> Card closed after its tries ran out. Carryover itself is KB-3376 (row 53).</p>
@@ -267,12 +267,12 @@ td,.tip,.card{overflow-wrap:anywhere}
 <p>3 legs on and 3 off side by side: showing the graded own answer did not make later answers worse. Switched on by default.</p>
 <p><span class="lab">Next step / ETA:</span> Done. Live since the next restart.</p>
 <p class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></p></div></td></tr>
-<tr tabindex="0" aria-describedby="tip42" data-tip="tip42"><td class="n">42</td><td><span class="chip c-fail">FAIL</span></td><td>Showing the own answer changes only what you see? (KB-3386)<br><small class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></small></td><td class="eta">closed</td>
+<tr tabindex="0" aria-describedby="tip42" data-tip="tip42"><td class="n">42</td><td><span class="chip c-fail">FAIL</span></td><td>Showing the own answer changes only what you see? (KB-3386)<br><small class="upd">last updated <time data-upd="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></small></td><td class="eta">closed</td>
 <td class="tipcell"><div role="tooltip" id="tip42" class="tip"><b>Showing the own answer changes only what you see? (KB-3386)</b>
 <p>No: 17 of 150 drafts differed with showing on vs off (sham 3 of 150), so showing also changes what brainiac does next.</p>
 <p><span class="lab">Next step / ETA:</span> Closed; KB-3388 then showed the change is not harmful.</p>
 <p class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></p></div></td></tr>
-<tr tabindex="0" aria-describedby="tip43" data-tip="tip43"><td class="n">43</td><td><span class="chip c-fail">no: score and confidence do not tell</span></td><td>Can the grader&#x27;s score or confidence tell right from wrong at grade 7? (KB-3366, KB-3372)<br><small class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></small></td><td class="eta">closed</td>
+<tr tabindex="0" aria-describedby="tip43" data-tip="tip43"><td class="n">43</td><td><span class="chip c-fail">no: score and confidence do not tell</span></td><td>Can the grader&#x27;s score or confidence tell right from wrong at grade 7? (KB-3366, KB-3372)<br><small class="upd">last updated <time data-upd="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></small></td><td class="eta">closed</td>
 <td class="tipcell"><div role="tooltip" id="tip43" class="tip"><b>Can the grader&#x27;s score or confidence tell right from wrong at grade 7? (KB-3366, KB-3372)</b>
 <p>At grade 7, 24 right and 5 wrong answers got identical part scores (KB-3366). The grader&#x27;s own confidence did not separate them either (KB-3372 FAIL: right 11 of 17 vs wrong 6 of 14 marked unsure, 62 real calls).</p>
 <p><span class="lab">Next step / ETA:</span> Closed; the cause was found next (row 44).</p>
@@ -287,11 +287,11 @@ td,.tip,.card{overflow-wrap:anywhere}
 <p>Same inputs: top marks for right answers 14 of 34, was 21 of 34. Checked: not caused by local settings leaking into the grader request. Over 10 repeats 70 of 170.</p>
 <p><span class="lab">Next step / ETA:</span> Done (diagnosis). The shift sits on the grader side.</p>
 <p class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></p></div></td></tr>
-<tr tabindex="0" aria-describedby="tip46" data-tip="tip46"><td class="n">46</td><td><span class="chip c-fail">FAIL: not readable</span></td><td>Ask the grader again when it is unsure (KB-3446)<br><small class="upd">last updated <time data-upd="2026-11-22T11:00Z">2026-11-22 11:00 UTC</time></small></td><td class="eta">closed</td>
+<tr tabindex="0" aria-describedby="tip46" data-tip="tip46"><td class="n">46</td><td><span class="chip c-fail">FAIL: not readable</span></td><td>Ask the grader again when it is unsure (KB-3446)<br><small class="upd">last updated <time data-upd="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></small></td><td class="eta">closed</td>
 <td class="tipcell"><div role="tooltip" id="tip46" class="tip"><b>Ask the grader again when it is unsure (KB-3446)</b>
 <p>Read twice (150 and 210 calls): too few right answers at grade 7 to read (11 of 90). The harm side was never reached.</p>
-<p><span class="lab">Next step / ETA:</span> Re-check after the sonnet-first grader is built: KB-3468 (blocked, waits for KB-3474, row 47).</p>
-<p class="upd">last updated <time data-upd="2026-11-22T11:08Z">2026-11-22 11:08 UTC</time></p></div></td></tr>
+<p><span class="lab">Next step / ETA:</span> Re-check after the sonnet-first grader is built: KB-3468 FAIL (19:33 UTC): fresh read KB-3514 FAIL (1 true-but-off-question pair newly shown), KB-3516 FAIL (the grader's why does not separate the leak pairs).</p>
+<p class="upd">last updated <time data-upd="2026-11-22T22:15Z">2026-11-22 22:15 UTC</time></p></div></td></tr>
 <tr tabindex="0" aria-describedby="tip47" data-tip="tip47"><td class="n">47</td><td><span class="chip c-fix">test fix found, being built</span></td><td>Grader passes true-sounding wrong answers (KB-3466, KB-3474)<br><small class="upd">last updated <time data-upd="2026-11-22T11:13Z">2026-11-22 11:13 UTC</time></small></td><td class="eta">queued (KB-3474)</td>
 <td class="tipcell"><div role="tooltip" id="tip47" class="tip"><b>Grader passes true-sounding wrong answers (KB-3466, KB-3474)</b>
 <p>A wrong answer that is a true sentence (it does not answer the question) got full marks in 2 of 6 tries. KB-3466 passed: with sonnet grading first, 0 of 12 wrong answers were shown and 23 of 24 right ones kept.</p>
