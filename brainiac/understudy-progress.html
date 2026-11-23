@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-23 09:11 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-23 09:44 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1846,7 +1846,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 </div>
 <div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>10</b></div>
 <div class="chip ch-wip"><span>Live app caps soft (KB-3602)</span><b>round 4: brainiac live app caps soft; budget 0 = off</b></div>
-<div class="chip ch-wip"><span>Next 0-call lever (KB-3608)</span><b>design for the remaining asks; deployable 137/166, 134/160 vs goal 142/136</b></div>
+<div class="chip ch-wip"><span>Next 0-call lever (KB-3608)</span><b>verified tuning read; frozen report-only for 11-24: knob off 146/166 143/160, on 147/166 144/160, +1 (old:17), harm 0, falsify OK, sha a8fb484; held-out read after the 11-24 gate and on each confirm cache</b></div>
 <div class="chip ch-wip"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
 <div class="chip ch-wip"><span>Full paid run 1 (KB-3510)</span><b>Stage 2 FAIL: E-off 138/135 vs gate 145/139; E stays off; next paid read 11-24 UTC (fresh trigger-all recording)</b></div>
 <div class="chip ch-wip"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>flag off, not passed/adopted; follow-up check done: 2 env settings tested in 4 combos (wrong haiku-only setting throws replay out), replay command + settings locked before run 1; 10 new tests, each red when its safeguard breaks; 89 tests pass; tool frozen; next: replay after paid runs 1 and 2</b></div>
@@ -1916,7 +1916,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-23 09:11 PST";
+const UPDATED="2026-11-23 09:44 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
