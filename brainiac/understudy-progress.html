@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-23 00:33 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-23 00:54 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1787,7 +1787,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438) · 2026-11-23 UTC: 431/500; counter file missing on main machine</div><div class="gauge"><div class="g-used" style="width:86.2%"><span>431 used</span></div><div class="g-left" style="width:13.8%"><span>69</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
-<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>34</b></div>
+<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>35</b></div>
 <div class="chip ch-ok"><span>Paid diagnostic harness (KB-3532)</span><b>DONE, 0 calls: verified at 0d4d3e2; 8/8 guards falsified, suite 273 OK, run-1 replay identical on all 166 asks</b></div>
 <div class="chip ch-ok"><span>E-on replay, safer variant, fake-answer test (KB-3542)</span><b>DONE, 0 calls: E-on keeps all 6 stage-1 fixes; V1 ships, V2 report-only (breaks hard59); sham test 4 per seed vs 2.8</b></div>
 <div class="chip ch-ok"><span>Paid stage 1 on 10 targets (KB-3538)</span><b>DONE, GO: 35 calls (counter 223/500); wider trigger fixed 6 of 10 (after-kind 3/5, confident 2/4, hard25 1/1); 0 unread; same prompts as run 1, run 1 files untouched</b></div>
@@ -1822,6 +1822,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>Rebuilt C6d sham (KB-3564)</span><b>DONE, PASS, 0 calls: read 2 UNREADABLE (all seeds void on hard:40); read 3 seeds 120-219 symmetric exclusion: S2 total W-&gt;R 5 in [1,9], void 0; tool adopted for 11-24 UTC C6d</b></div>
 <div class="chip ch-ok"><span>Prompt-invariant margin lever, candidate arm (d) (KB-3570)</span><b>Done, report-only: M2 -&gt; arm (d) candidate; M1 -&gt; KB-3574</b></div>
 <div class="chip ch-ok"><span>Per-question progress chart (KB-3572)</span><b>Done: chart published</b></div>
+<div class="chip ch-ok"><span>Per-set progress lines + answers overlay (KB-3580)</span><b>Done: per-set gain lines + answers overlay</b></div>
 </div>
 <div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>10</b></div>
 <div class="chip ch-no"><span>Paid stage 2 trigger (KB-3544)</span><b>FAIL 11-23 05:25 UTC, 0 calls: after-kind + confident E-off 138/166, 135/160 vs gate 145/139; E net -1 (harms 4), stays off; KE 141/138 PASS, cl.19 166/166, cl.20 MATCH</b></div>
@@ -1835,9 +1836,8 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Live privacy log lines lost</span><b>lost on live</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 </div>
-<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>10</b></div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>9</b></div>
 <div class="chip ch-wip"><span>Dress rehearsal of the 11-24 read chain, d7 copy (KB-3568)</span><b>0 calls: V0 comparator identical 166/166; completeness check written; staging + C6d tools on branch kb3568 (9fa4861f7); arm (b) on d7 misses only hard:40 keep-6 rungs (expected, keep-3 recording); verification pending</b></div>
-<div class="chip ch-wip"><span>Per-set progress lines + answers overlay (KB-3580)</span><b>In progress: one line per set + all right answers; 166 rows kept under details</b></div>
 <div class="chip ch-wip"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
 <div class="chip ch-wip"><span>Full paid run 1 (KB-3510)</span><b>Stage 2 FAIL: E-off 138/135 vs gate 145/139; E stays off; next paid read 11-24 UTC (fresh trigger-all recording)</b></div>
 <div class="chip ch-wip"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>flag off, not passed/adopted; follow-up check done: 2 env settings tested in 4 combos (wrong haiku-only setting throws replay out), replay command + settings locked before run 1; 10 new tests, each red when its safeguard breaks; 89 tests pass; tool frozen; next: replay after paid runs 1 and 2</b></div>
@@ -1903,7 +1903,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-23 00:33 PST";
+const UPDATED="2026-11-23 00:54 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
