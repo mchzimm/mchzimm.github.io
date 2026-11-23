@@ -1785,7 +1785,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">11-16: R6 paid</div><div class="vtrk"><div class="vbar v-bad" style="width:84.4%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">135 · miss by 1</span></div></div>
 <div class="vrow"><div class="vlab">11-22: with Claude ladder (KB-3362)</div><div class="vtrk"><div class="vbar v-good" style="width:87.5%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">140 · harm 0, Claude adds +36</span></div></div>
 </div>
-<div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438) · 2026-11-23 UTC: 431/500; counter file missing on main machine</div><div class="gauge"><div class="g-used" style="width:86.2%"><span>431 used</span></div><div class="g-left" style="width:13.8%"><span>69</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div></div>
+<div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438) · 2026-11-23 UTC: 431/500; counter file missing on main machine</div><div class="gauge"><div class="g-used" style="width:86.2%"><span>431 used</span></div><div class="g-left" style="width:13.8%"><span>69</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div><div class="vcap">2026-11-23: 431 booked + 41 unbooked helper calls (KB-3462 legs) = 472/500; no paid read today</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
 <div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>38</b></div>
@@ -1829,7 +1829,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>Per-set progress lines + answers overlay (KB-3580)</span><b>Done: per-set gain lines + answers overlay</b></div>
 </div>
 <div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>11</b></div>
-<div class="chip ch-no"><span>PICK lever, 0-call d7 read (KB-3592)</span><b>FAIL, 0 calls: PICK (final by rung agreement): d7 0-call read N165 142 vs 145 off, net -3, harm 6: FAIL; at equiv 0 rungs never agree, so it only picked the earliest rung</b></div>
+<div class="chip ch-no"><span>PICK lever, 0-call d7 read (KB-3592)</span><b>FAIL, 0 calls: PICK (final by rung agreement): d7 0-call read N165 142 vs 145 off, net -3, harm 6: FAIL; agreement already stops the climb; PICK only changed no-agreement asks, falling back to the earliest rung</b></div>
 <div class="chip ch-no"><span>Paid stage 2 trigger (KB-3544)</span><b>FAIL 11-23 05:25 UTC, 0 calls: after-kind + confident E-off 138/166, 135/160 vs gate 145/139; E net -1 (harms 4), stays off; KE 141/138 PASS, cl.19 166/166, cl.20 MATCH</b></div>
 <div class="chip ch-no"><span>6-token cap (C6) not adopted (KB-3534)</span><b>VOID as written, 0 calls: 3 real gains (hard 16/21/31), random-filler control 0.05; precision 0.233 and margin 2.95 vs 3 lines failed</b></div>
 <div class="chip ch-no"><span>Acceptance levers replay (KB-3524)</span><b>FAIL own gate, 0 calls: strict 140/166, 137/160 vs margin 145/139; no paid run</b></div>
@@ -1841,7 +1841,9 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Live privacy log lines lost</span><b>lost on live</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 </div>
-<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>8</b></div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>10</b></div>
+<div class="chip ch-wip"><span>Abstain-agree lever (KB-3596)</span><b>when local abstains, climb until two rungs agree; knob default off; built at 0 calls; paid read 11-24 only after the gate, cap 40, report-only</b></div>
+<div class="chip ch-wip"><span>Check read tools judge the day in UTC (KB-3598)</span><b>paid day starts 16:00 PST</b></div>
 <div class="chip ch-wip"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
 <div class="chip ch-wip"><span>Full paid run 1 (KB-3510)</span><b>Stage 2 FAIL: E-off 138/135 vs gate 145/139; E stays off; next paid read 11-24 UTC (fresh trigger-all recording)</b></div>
 <div class="chip ch-wip"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>flag off, not passed/adopted; follow-up check done: 2 env settings tested in 4 combos (wrong haiku-only setting throws replay out), replay command + settings locked before run 1; 10 new tests, each red when its safeguard breaks; 89 tests pass; tool frozen; next: replay after paid runs 1 and 2</b></div>
@@ -1852,7 +1854,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-wip"><span>Live counter, both machines (KB-3438)</span><b>3 gaps fixed, independently verified (tests pass on 2nd machine); real counter file switch held until the KB-3498 plumbing says safe</b></div>
 </div>
 <div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>12</b></div>
-<div class="chip ch-blk"><span>ABS + NONE-W levers (KB-3594)</span><b>Backlog: needs paid replies; scoping ABS/NONE-W levers at 0 calls</b></div>
+<div class="chip ch-blk"><span>ABS + NONE-W levers (KB-3594)</span><b>scoped (0 calls): held old:10/11/39 unreachable (gold never in prompt); real ABS upside hard:3, hard:13 -&gt; KB-3596; NONE-W no lever under ~117 calls</b></div>
 <div class="chip ch-blk"><span>Containment (E) rule (KB-3540)</span><b>R2 committed (0a69a7c34): sham retired; E judged on stage-2 run by real replay at after-kind + confident, at most 1 lost right answer</b></div>
 <div class="chip ch-blk"><span>New C6 test (KB-3536)</span><b>waits: first full paid run; rule committed before any paid run</b></div>
 <div class="chip ch-blk"><span>Paid run, counter switch, code swap</span><b>waits: KB-3552 deploy (KB-3562 knob and KB-3564 sham done); plan 11-24 UTC recording trigger-all keep 6 E-off; gate on arm (b) only (C6 pass + &gt;=145/166 and &gt;=139/160); earliest confirms 11-25 / 11-26 UTC, 1 per day; calls today 431/500</b></div>
@@ -1908,7 +1910,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-23 02:47 PST";
+const UPDATED="2026-11-23 03:00 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
