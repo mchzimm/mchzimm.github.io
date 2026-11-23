@@ -1785,7 +1785,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">11-16: R6 paid</div><div class="vtrk"><div class="vbar v-bad" style="width:84.4%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">135 · miss by 1</span></div></div>
 <div class="vrow"><div class="vlab">11-22: with Claude ladder (KB-3362)</div><div class="vtrk"><div class="vbar v-good" style="width:87.5%"></div><div class="vline" style="left:85.0%"></div><span class="vnum">140 · harm 0, Claude adds +36</span></div></div>
 </div>
-<div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438) · 2026-11-23 UTC: 431/500; counter file missing on main machine</div><div class="gauge"><div class="g-used" style="width:86.2%"><span>431 used</span></div><div class="g-left" style="width:13.8%"><span>69</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div><div class="vcap">2026-11-23: 431 booked + 41 unbooked helper calls (KB-3462 legs) = 472/500; no paid read today</div></div>
+<div class="viz"><div class="vhead">Claude calls: cap 500, lifetime today (daily reset decided, not built: KB-3438) · 2026-11-23 UTC: 431/500; counter file missing on main machine</div><div class="gauge"><div class="g-used" style="width:86.2%"><span>431 used</span></div><div class="g-left" style="width:13.8%"><span>69</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left after</div><div class="vcap">daily cap 500 booked (enforced) · 540 approved real-spend (user cap rule 2026-11-23) · 431 booked + 41 unbooked = 472 real at 14:15 UTC · KB-3596 paid read running (cap 40)</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
 <div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>39</b></div>
@@ -1842,8 +1842,9 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Live privacy log lines lost</span><b>lost on live</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 </div>
-<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>9</b></div>
-<div class="chip ch-wip"><span>Abstain-agree lever (KB-3596)</span><b>abstain-agree knob built + verified (kb3596@acafe67, 12 guard stubs red); 0-call d7 replay off=on 146/166, 143/160, 0 changed (no deeper rungs cached); paid read 11-24 after gate, cap 40, &lt;= 30 rungs</b></div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>10</b></div>
+<div class="chip ch-wip"><span>Daily Claude cap as a parameter (KB-3600)</span><b>daily Claude cap as a parameter (0 calls)</b></div>
+<div class="chip ch-wip"><span>Abstain-agree lever (KB-3596)</span><b>abstain-agree knob built + verified (kb3596@acafe67, 12 guard stubs red); 0-call d7 replay off=on 146/166, 143/160, 0 changed (no deeper rungs cached); paid read running (cap 40, &lt;= 30 rungs)</b></div>
 <div class="chip ch-wip"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
 <div class="chip ch-wip"><span>Full paid run 1 (KB-3510)</span><b>Stage 2 FAIL: E-off 138/135 vs gate 145/139; E stays off; next paid read 11-24 UTC (fresh trigger-all recording)</b></div>
 <div class="chip ch-wip"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>flag off, not passed/adopted; follow-up check done: 2 env settings tested in 4 combos (wrong haiku-only setting throws replay out), replay command + settings locked before run 1; 10 new tests, each red when its safeguard breaks; 89 tests pass; tool frozen; next: replay after paid runs 1 and 2</b></div>
@@ -1858,7 +1859,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-blk"><span>Containment (E) rule (KB-3540)</span><b>R2 committed (0a69a7c34): sham retired; E judged on stage-2 run by real replay at after-kind + confident, at most 1 lost right answer</b></div>
 <div class="chip ch-blk"><span>New C6 test (KB-3536)</span><b>waits: first full paid run; rule committed before any paid run</b></div>
 <div class="chip ch-blk"><span>Paid run, counter switch, code swap</span><b>waits: KB-3552 deploy (KB-3562 knob and KB-3564 sham done); plan 11-24 UTC recording trigger-all keep 6 E-off; gate on arm (b) only (C6 pass + &gt;=145/166 and &gt;=139/160); earliest confirms 11-25 / 11-26 UTC, 1 per day; calls today 431/500</b></div>
-<div class="chip ch-blk"><span>11-24 UTC deciding recording rule (KB-3566)</span><b>Rule committed (7fa582fbc); waits UTC 11-24 (16:00 PST): trigger-all keep-6 recording, cap 490, max 2 pre-registered resumes; none complete = INCOMPLETE, not FAIL; gate arm (b) G3 &gt;= 145/166 and &gt;= 139/160 + C6; prep 0 calls: keep-3-only misses 0, spend est 388-389; addendum 1 committed 4f11e42db: read order, tool shas, coverage clause; recording 2026-11-24 16:00 PST</b></div>
+<div class="chip ch-blk"><span>11-24 UTC deciding recording rule (KB-3566)</span><b>Rule committed (7fa582fbc); waits UTC 11-24 (16:00 PST): trigger-all keep-6 recording, cap 490, max 2 pre-registered resumes; none complete = INCOMPLETE, not FAIL; gate arm (b) G3 &gt;= 145/166 and &gt;= 139/160 + C6; prep 0 calls: keep-3-only misses 0, spend est 388-389; addendum 1 committed 4f11e42db: read order, tool shas, coverage clause; recording 2026-11-24 16:00 PST; move to today NO-GO (cap literal 500 + complete.py:64); recording 16:00 PST</b></div>
 <div class="chip ch-blk"><span>Full paid N166 read</span><b>run 1 NOT READ (easy void); next run waits stage 1 (KB-3538), hollow-test fixes and quota; runs on maxbookpro, window 2</b></div>
 <div class="chip ch-blk"><span>Rest of the Claude test (KB-3470)</span><b>waits: daily counter</b></div>
 <div class="chip ch-blk"><span>Answer in top-5 rows (as of 11-15, KB-2907)</span><b>2 of 11</b></div>
@@ -1910,7 +1911,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-23 03:14 PST";
+const UPDATED="2026-11-23 06:21 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
