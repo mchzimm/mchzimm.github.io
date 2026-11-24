@@ -63,7 +63,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 05:20 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 05:23 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -167,116 +167,33 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <p>One circle, over and over: read, keep the pieces, notice what is missing, ask, learn the answer, and tidy up while resting.</p>
 </div>
 
-<h2 id="steps">3. The steps</h2>
+<h2 id="steps">3. All the steps</h2>
 <p>The plan climbs one step at a time; some steps run side by side.</p>
-<div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">being built or checked</span><span class="chip c-wait">waiting</span></div>
+<div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
 <svg viewBox="0 0 360 448" role="img" aria-labelledby="steps-t">
-<title id="steps-t">Staircase of the plan's steps, from the bottom: one done, three being built or checked, the rest waiting</title>
+<title id="steps-t">Staircase of the plan's steps, from the bottom: one done, two running, the rest waiting</title>
 <rect x="103" y="8" width="253" height="32" rx="8" class="st-wait"/><text x="115" y="29" class="t-s">Always on</text><text x="346" y="29" text-anchor="end" class="t-n">waiting</text>
 <rect x="94" y="44" width="262" height="32" rx="8" class="st-wait"/><text x="106" y="65" class="t-s">Live numbers view</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
 <rect x="85" y="80" width="271" height="32" rx="8" class="st-wait"/><text x="97" y="101" class="t-s">Make room to grow</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
 <rect x="76" y="116" width="280" height="32" rx="8" class="st-wait"/><text x="88" y="137" class="t-s">Tidy up while resting</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
 <rect x="67" y="152" width="289" height="32" rx="8" class="st-wait"/><text x="79" y="173" class="t-s">Ask you</text><text x="346" y="173" text-anchor="end" class="t-n">waiting</text>
-<rect x="58" y="188" width="298" height="32" rx="8" class="st-wait"/><text x="70" y="209" class="t-s">Notice a gap, ask itself</text><text x="346" y="209" text-anchor="end" class="t-n">waiting</text>
-<rect x="49" y="224" width="307" height="32" rx="8" class="st-fix"/><text x="61" y="245" class="t-k">Day-dream: replay</text><text x="346" y="245" text-anchor="end" class="t-k">testing</text>
+<rect x="58" y="188" width="298" height="32" rx="8" class="st-wait"/><text x="70" y="209" class="t-s">Notice a gap</text><text x="346" y="209" text-anchor="end" class="t-n">waiting</text>
+<rect x="49" y="224" width="307" height="32" rx="8" class="st-fix"/><text x="61" y="245" class="t-k">Day-dream: replay</text><text x="346" y="245" text-anchor="end" class="t-k">design</text>
 <rect x="40" y="260" width="316" height="32" rx="8" class="st-wait"/><text x="52" y="281" class="t-s">Thinking ladder: 6 rungs</text><text x="346" y="281" text-anchor="end" class="t-n">waiting</text>
-<rect x="31" y="296" width="325" height="32" rx="8" class="st-fix"/><text x="43" y="317" class="t-k">Practice stories (helper AI)</text><text x="346" y="317" text-anchor="end" class="t-k">checking</text>
-<rect x="22" y="332" width="334" height="32" rx="8" class="st-wait"/><text x="34" y="353" class="t-s">Learn sentence shapes</text><text x="346" y="353" text-anchor="end" class="t-n">waiting</text>
-<rect x="13" y="368" width="343" height="32" rx="8" class="st-fix"/><text x="25" y="389" class="t-k">Read stories, measure growth</text><text x="346" y="389" text-anchor="end" class="t-k">in progress</text>
+<rect x="31" y="296" width="325" height="32" rx="8" class="st-wait"/><text x="43" y="317" class="t-s">Stories to pieces</text><text x="346" y="317" text-anchor="end" class="t-n">waiting</text>
+<rect x="22" y="332" width="334" height="32" rx="8" class="st-wait"/><text x="34" y="353" class="t-s">How sentences start</text><text x="346" y="353" text-anchor="end" class="t-n">waiting</text>
+<rect x="13" y="368" width="343" height="32" rx="8" class="st-fix"/><text x="25" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">in progress</text>
 <rect x="4" y="404" width="352" height="32" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
 </svg>
-<p>Day-dreaming was tested on paper first. First small test (1 story): replaying beat a pretend replay on pairs it had heard, not on pairs it never heard. The bigger test comes after the quota reset.</p>
+<p>Only counting is done. Reading and day-dreaming are running; every other step waits its turn.</p>
 </div>
 
-<h2 id="now">4. Where we are now</h2>
-<p>We read it a story and, word by word, ask it to guess the next word.</p>
-<div class="card">
-<svg viewBox="0 0 360 370" role="img" aria-labelledby="now-t">
-<title id="now-t">Next-word guesses on the same story and on a new story, and memory cells before and after reading</title>
-<text x="8" y="18" class="t-h">Same story, read twice</text>
-<rect x="8" y="28" width="344" height="24" rx="5" class="trk"/><rect x="8" y="28" width="33.03" height="24" rx="5" class="b-base"/>
-<text x="49" y="45" class="t-s">first read: 70</text><text x="346" y="45" text-anchor="end" class="t-n">of 729</text>
-<rect x="8" y="58" width="344" height="24" rx="5" class="trk"/><rect x="8" y="58" width="75.5" height="24" rx="5" class="b-res"/>
-<text x="91.5" y="75" class="t-s">second read: 160</text><text x="346" y="75" text-anchor="end" class="t-n">of 729</text>
-<text x="8" y="102" class="t-n">remembering this story, not understanding</text>
-<text x="8" y="122" class="t-n">(an earlier run got 165)</text>
-<text x="8" y="156" class="t-h">A new story</text>
-<rect x="8" y="166" width="344" height="24" rx="5" class="trk"/><rect x="8" y="166" width="33.03" height="24" rx="5" class="b-base"/>
-<text x="49" y="183" class="t-s">no stories first: 70</text><text x="346" y="183" text-anchor="end" class="t-n">of 729</text>
-<rect x="8" y="196" width="344" height="24" rx="5" class="trk"/><rect x="8" y="196" width="31.62" height="24" rx="5" class="b-res"/>
-<text x="47.6" y="213" class="t-s">after 5 baby stories: 67</text><text x="346" y="213" text-anchor="end" class="t-n">of 729</text>
-<text x="8" y="240" class="t-n">not better on new stories yet</text>
-<text x="8" y="274" class="t-h">Memory cells</text>
-<rect x="8" y="284" width="238.71" height="24" rx="5" class="b-base"/><text x="16" y="301" class="t-k">start: 26,035</text>
-<rect x="8" y="314" width="344" height="24" rx="5" class="b-res"/><text x="16" y="331" class="t-k">after 29 stories: 37,519</text>
-<text x="8" y="358" class="t-n">first run, counted the older way</text>
-</svg>
-<p>Same story: better, because it remembers that story, not because it understands. New story: not better yet. The bigger checks, after more stories, are not read yet.</p>
-</div>
-
-<h2 id="snags">5. Three snags</h2>
-<div class="card">
-<h3>It stops listening after 200 characters</h3>
-<svg viewBox="0 0 360 124" role="img" aria-labelledby="snag1-t">
-<title id="snag1-t">A long line is cut after 200 characters; the end is never heard</title>
-<text x="258" y="18" text-anchor="middle" class="t-n">200 characters</text>
-<rect x="8" y="34" width="44" height="24" rx="6" class="blk"/>
-<rect x="58" y="34" width="30" height="24" rx="6" class="blk"/>
-<rect x="94" y="34" width="56" height="24" rx="6" class="blk"/>
-<rect x="156" y="34" width="38" height="24" rx="6" class="blk"/>
-<rect x="200" y="34" width="48" height="24" rx="6" class="blk"/>
-<line x1="258" y1="26" x2="258" y2="70" class="cut"/>
-<rect x="268" y="34" width="36" height="24" rx="6" class="blk-lost"/>
-<rect x="310" y="34" width="42" height="24" rx="6" class="blk-lost"/>
-<text x="128" y="88" text-anchor="middle" class="t-s">heard</text>
-<text x="310" y="88" text-anchor="middle" class="t-n">never heard</text>
-<text x="258" y="114" text-anchor="middle" class="t-cut">✂</text>
-</svg>
-<p>Long lines get cut, so it never hears their ends. A fix is built and tested behind a switch (off by default; when on, it hears lines up to 1000 characters). The independent check is waiting.</p>
-<p class="sub" id="heard-loss">Story words lost to the cut (a line's first 200 letters count, its "max says" start too): baby stories 0 %, preschool stories 3.28 %, grade-school stories 6.12 %.</p>
-</div>
-<div class="card">
-<h3>It counts its own notes as heard</h3>
-<svg viewBox="0 0 360 142" role="img" aria-labelledby="snag2-t">
-<title id="snag2-t">brainiac's own note is counted as fed, but it was never heard</title>
-<defs><marker id="ah3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ahd"/></marker></defs>
-<ellipse cx="36" cy="66" rx="28" ry="22" class="brn"/>
-<path class="brl" d="M36,46 C29,56 43,62 36,70 C29,78 42,82 36,87"/>
-<rect x="72" y="44" width="124" height="40" rx="12" class="bub2"/>
-<text x="134" y="69" text-anchor="middle" class="t-nd">brainiac look</text>
-<line x1="198" y1="56" x2="222" y2="36" class="arw" marker-end="url(#ah3)"/>
-<line x1="198" y1="72" x2="222" y2="92" class="arw" marker-end="url(#ah3)"/>
-<rect x="226" y="10" width="128" height="40" rx="10" class="box-ok"/>
-<text x="290" y="35" text-anchor="middle" class="t-nd">counted as fed ✓</text>
-<rect x="226" y="78" width="128" height="40" rx="10" class="box-bad"/>
-<text x="290" y="103" text-anchor="middle" class="t-nd">never heard ✗</text>
-<text x="180" y="136" text-anchor="middle" class="t-n">the reading run stopped after 10 clean stories</text>
-</svg>
-<p>When brainiac does something, it writes a note about it. Those notes were counted as fed to it, but it never heard them. That stopped the reading run. Filed, not fixed yet.</p>
-</div>
-<div class="card">
-<h3>Two identical runs end a hair apart</h3>
-<svg viewBox="0 0 360 128" role="img" aria-labelledby="snag3-t">
-<title id="snag3-t">Two runs of the same program on the same input end with slightly different numbers</title>
-<text x="180" y="16" text-anchor="middle" class="t-n">same program, same input</text>
-<rect x="8" y="26" width="150" height="64" rx="12" class="box"/>
-<text x="83" y="50" text-anchor="middle" class="t-nd">run A</text>
-<text x="83" y="76" text-anchor="middle" class="t-h">0.2860388</text>
-<rect x="202" y="26" width="150" height="64" rx="12" class="box"/>
-<text x="277" y="50" text-anchor="middle" class="t-nd">run B</text>
-<text x="277" y="76" text-anchor="middle" class="t-h">0.2860562</text>
-<text x="180" y="68" text-anchor="middle" class="t-ne">≠</text>
-<text x="180" y="116" text-anchor="middle" class="t-n">typical gap: less than 1 in 10,000</text>
-</svg>
-<p>Two runs of the same program on the same input end a hair apart. This is older than the new code. One guess, not tested yet: the order things are visited, or timing.</p>
-</div>
-
-<h2 id="next">6. What's next</h2>
+<h2 id="next">4. What's next</h2>
 <ol class="next">
-<li>Check the long-line fix and fix the note counting, then finish the story run and see if new stories go better.</li>
-<li>Check the practice-story tool, then write real practice stories.</li>
-<li>Run the bigger day-dream test, then teach it to notice gaps and ask.</li>
+<li>Finish the reading check (KB-3712, read 5) and see its verdict.</li>
+<li>Then the sentence steps: stories to pieces (KB-3720), how sentences start (KB-3726).</li>
+<li>Then the thinking ladder, starting with its first rung.</li>
 </ol>
 
 <footer>More pictures: <a href="https://mchzimm.github.io/brainiac/">all brainiac pages</a> · <a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html">goal progress</a> · <a href="https://mchzimm.github.io/brainiac/eli5-brainiac-chat-path.html">chat path</a>. Cards behind this page: KB-3658 KB-3708 KB-3712 KB-3720 KB-3722 KB-3726 KB-3728 KB-3730 KB-3732 KB-3734 KB-3738 KB-3740 KB-3742 KB-3756 KB-3760 KB-3762 KB-3764 KB-3704 KB-3758</footer>
