@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 15:16 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 15:18 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -161,7 +161,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="8" y="26" width="344" height="30" rx="8" class="st-wait"/><text x="18" y="46" class="t-s">Thinking ladder, 6 rungs</text><text x="342" y="46" text-anchor="end" class="t-n">waiting</text>
 <text x="8" y="84" class="t-h">B. Forming sentences</text>
 <rect x="8" y="92" width="344" height="30" rx="8" class="st-ok"/><text x="18" y="112" class="t-k">Reading grows the brain</text><text x="342" y="112" text-anchor="end" class="t-k">done</text>
-<rect x="8" y="126" width="110" height="30" rx="8" class="st-ok"/><text x="16" y="146" class="t-s">Stories to pieces</text>
+<rect x="8" y="126" width="110" height="30" rx="8" class="st-wait"/><text x="16" y="146" class="t-s">Stories to pieces</text>
 <rect x="124" y="126" width="110" height="30" rx="8" class="st-wait"/><text x="132" y="146" class="t-s">How to start</text>
 <rect x="240" y="126" width="112" height="30" rx="8" class="st-wait"/><text x="248" y="146" class="t-s">Lean to wins</text>
 <text x="8" y="184" class="t-h">C. Story elements</text>
@@ -261,7 +261,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="18" y="332" width="324" rx="8" class="st-ok"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">done</text><text x="346" y="353" text-anchor="end" class="t-k">found a problem</text>
 <rect x="25" y="296" width="310" rx="8" class="st-ok"/><text x="37" y="317" class="t-k">Stop step repeatable (KB-3828)</text><text x="346" y="317" text-anchor="end" class="t-k">done</text>
 <rect x="32" y="260" width="296" rx="8" class="st-ok"/><text x="44" y="281" class="t-k">Mid-run lookups check (KB-3832)</text><text x="346" y="281" text-anchor="end" class="t-k">done</text>
-<rect x="39" y="224" width="282" rx="8" class="st-ok"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-k">done</text>
+<rect x="39" y="224" width="282" rx="8" class="st-fix"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-k">running</text>
 <rect x="46" y="188" width="268" rx="8" class="st-wait"/><text x="58" y="209" class="t-s">How sentences start (KB-3726)</text><text x="346" y="209" text-anchor="end" class="t-n">waiting</text>
 <rect x="53" y="152" width="254" rx="8" class="st-wait"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-n">waiting</text>
 <rect x="60" y="116" width="240" rx="8" class="st-wait"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
@@ -274,13 +274,13 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="109" y="-136" width="142" rx="8" class="st-wait"/><text x="121" y="-115" class="t-s">Live numbers view</text><text x="346" y="-115" text-anchor="end" class="t-n">waiting</text>
 <rect x="116" y="-172" width="128" rx="8" class="st-wait"/><text x="128" y="-151" class="t-s">Always on</text><text x="346" y="-151" text-anchor="end" class="t-n">waiting</text>
 </svg>
-<p>Counting and reading are done. The same-run check is done and found a problem: a clean-up step at stop is timed by the wall clock, so it asks a different number of words each time. Done: with the test switch on, the stop step now asks the same words every run (32 of 32, nothing left over). Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run). Done: stories to pieces (KB-3720). Same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</p>
+<p>Counting and reading are done. The same-run check is done and found a problem: a clean-up step at stop is timed by the wall clock, so it asks a different number of words each time. Done: with the test switch on, the stop step now asks the same words every run (32 of 32, nothing left over). Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run). Step 1 done: same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</p>
 </div>
 
 <h2 id="next">4. What's next</h2>
 <ol class="next">
 <li>Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run).</li>
-<li>Done: stories to pieces (KB-3720). Same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</li>
+<li>Step 1 done: same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</li>
 <li>Next: pin one small energy number that still drifts with the clock, then turn the new reading path on (KB-3720).</li>
 <li>Then the sentence steps: how sentences start (KB-3726), which words matter (KB-3728).</li>
 <li>Then day-dreaming replay (KB-3730), asking itself questions (KB-3738), asking you (KB-3740).</li>
