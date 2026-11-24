@@ -63,7 +63,66 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 01:19 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 05:21 PST</span></p>
+
+<h2 id="idea">The big idea</h2>
+<p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
+
+<h2 id="four">The 4 parts</h2>
+<div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
+<div class="card">
+<svg viewBox="0 0 360 330" role="img" aria-labelledby="four-t">
+<title id="four-t">Four lanes. Logic ladder: waiting. Sentences: first step running, three waiting. Story elements: waiting. Questions: waiting.</title>
+<text x="8" y="18" class="t-h">A. Own logic</text>
+<rect x="8" y="26" width="344" height="30" rx="8" class="st-wait"/><text x="18" y="46" class="t-s">Thinking ladder, 6 rungs</text><text x="342" y="46" text-anchor="end" class="t-n">waiting</text>
+<text x="8" y="84" class="t-h">B. Forming sentences</text>
+<rect x="8" y="92" width="344" height="30" rx="8" class="st-fix"/><text x="18" y="112" class="t-k">Reading grows the brain</text><text x="342" y="112" text-anchor="end" class="t-k">running</text>
+<rect x="8" y="126" width="110" height="30" rx="8" class="st-wait"/><text x="16" y="146" class="t-s">Stories to pieces</text>
+<rect x="124" y="126" width="110" height="30" rx="8" class="st-wait"/><text x="132" y="146" class="t-s">How to start</text>
+<rect x="240" y="126" width="112" height="30" rx="8" class="st-wait"/><text x="248" y="146" class="t-s">Lean to wins</text>
+<text x="8" y="184" class="t-h">C. Story elements</text>
+<rect x="8" y="192" width="344" height="30" rx="8" class="st-wait"/><text x="18" y="212" class="t-s">Who, where, what happened, in order</text><text x="342" y="212" text-anchor="end" class="t-n">waiting</text>
+<text x="8" y="250" class="t-h">D. Asking questions</text>
+<rect x="8" y="258" width="110" height="30" rx="8" class="st-wait"/><text x="16" y="278" class="t-s">Notice a gap</text>
+<rect x="124" y="258" width="110" height="30" rx="8" class="st-wait"/><text x="132" y="278" class="t-s">Ask you</text>
+<rect x="240" y="258" width="112" height="30" rx="8" class="st-wait"/><text x="248" y="278" class="t-s">How to ask</text>
+<text x="8" y="316" class="t-n">Nothing here is marked done yet.</text>
+</svg>
+</div>
+
+<div class="card">
+<h3>A. Own logic structures</h3>
+<p><b>Means:</b> brainiac builds its own kinds of thinking, not ones we code.</p>
+<p><b>How:</b> a ladder of 6 rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.</p>
+<p><b>Now:</b> waiting. It starts after the sentence steps.</p>
+</div>
+<div class="card">
+<h3>B. Forming sentences</h3>
+<p><b>Means:</b> brainiac says more than one word, and says it well.</p>
+<p><b>How:</b> four steps. (1) Reading grows the brain (KB-3712). (2) Stories feed its piece store (KB-3720). (3) It learns how sentences start (KB-3726). (4) It leans toward topics that paid off (KB-3728).</p>
+<p><b>Now:</b> step 1 is running; the final check is not in yet. In the last read, a copy fed 29 stories grew by 11,201 cells; a copy fed nothing stayed flat. Steps 2 to 4 wait. Today only 3 of 65 replies are 3 or more words that name the thing.</p>
+</div>
+<div class="card">
+<h3>C. Story elements</h3>
+<p><b>Means:</b> a retold story names who, where, and what happened, in order.</p>
+<p><b>How:</b> the order-and-cause rung plus a who/what/where rung. A new check (KB-3798): retell or continue a story naming a character, a place, and 2 events in order.</p>
+<p><b>Now:</b> waiting. The check is written down, not run.</p>
+</div>
+<div class="card">
+<h3>D. Asking questions, and how to ask</h3>
+<p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
+<p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
+<p><b>Now:</b> waiting. The check is written down, not run.</p>
+</div>
+<div class="card">
+<h3>Behind the scenes</h3>
+<p><b>Idle replay</b> (KB-3730): thinks over what it learned while idle. Design step running.</p>
+<p><b>Sleep tidy-up</b> (KB-3742): smaller and faster, same answers. Waiting.</p>
+<p><b>Live growth numbers</b> (KB-3732): watch the cells grow. Waiting.</p>
+</div>
+
+<h2 id="where">Where it lives</h2>
+<p>Inside brainiac itself, no separate copy. Each step is tried on a copy of the brain, behind a switch that is off by default.</p>
 
 <h2 id="dream">1. The dream</h2>
 <div class="card">
