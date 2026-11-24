@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 06:03 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 13:00 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -255,29 +255,34 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p>The plan climbs one step at a time; some steps run side by side.</p>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
-<svg viewBox="0 0 360 448" role="img" aria-labelledby="steps-t">
-<title id="steps-t">Staircase of the plan's steps, from the bottom: two done, one running, the rest waiting</title>
-<rect x="103" y="8" width="253" height="32" rx="8" class="st-wait"/><text x="115" y="29" class="t-s">Always on</text><text x="346" y="29" text-anchor="end" class="t-n">waiting</text>
-<rect x="94" y="44" width="262" height="32" rx="8" class="st-wait"/><text x="106" y="65" class="t-s">Live numbers view</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
-<rect x="85" y="80" width="271" height="32" rx="8" class="st-wait"/><text x="97" y="101" class="t-s">Make room to grow</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
-<rect x="76" y="116" width="280" height="32" rx="8" class="st-wait"/><text x="88" y="137" class="t-s">Tidy up while resting</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
-<rect x="67" y="152" width="289" height="32" rx="8" class="st-wait"/><text x="79" y="173" class="t-s">Ask you</text><text x="346" y="173" text-anchor="end" class="t-n">waiting</text>
-<rect x="58" y="188" width="298" height="32" rx="8" class="st-wait"/><text x="70" y="209" class="t-s">Notice a gap</text><text x="346" y="209" text-anchor="end" class="t-n">waiting</text>
-<rect x="49" y="224" width="307" height="32" rx="8" class="st-fix"/><text x="61" y="245" class="t-k">Day-dream: replay</text><text x="346" y="245" text-anchor="end" class="t-k">design</text>
-<rect x="40" y="260" width="316" height="32" rx="8" class="st-wait"/><text x="52" y="281" class="t-s">Thinking ladder: 6 rungs</text><text x="346" y="281" text-anchor="end" class="t-n">waiting</text>
-<rect x="31" y="296" width="325" height="32" rx="8" class="st-wait"/><text x="43" y="317" class="t-s">Stories to pieces</text><text x="346" y="317" text-anchor="end" class="t-n">waiting</text>
-<rect x="22" y="332" width="334" height="32" rx="8" class="st-wait"/><text x="34" y="353" class="t-s">How sentences start</text><text x="346" y="353" text-anchor="end" class="t-n">waiting</text>
-<rect x="13" y="368" width="343" height="32" rx="8" class="st-ok"/><text x="25" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
+<svg viewBox="0 0 360 552" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: two done, one running, the rest waiting</title>
 <rect x="4" y="404" width="352" height="32" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
+<rect x="11" y="368" width="338" height="32" rx="8" class="st-ok"/><text x="23" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
+<rect x="18" y="332" width="324" height="32" rx="8" class="st-fix"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">running</text>
+<rect x="25" y="296" width="310" height="32" rx="8" class="st-wait"/><text x="37" y="317" class="t-s">Stories to pieces (KB-3720)</text><text x="346" y="317" text-anchor="end" class="t-n">waiting</text>
+<rect x="32" y="260" width="296" height="32" rx="8" class="st-wait"/><text x="44" y="281" class="t-s">How sentences start (KB-3726)</text><text x="346" y="281" text-anchor="end" class="t-n">waiting</text>
+<rect x="39" y="224" width="282" height="32" rx="8" class="st-wait"/><text x="51" y="245" class="t-s">Which words matter (KB-3728)</text><text x="346" y="245" text-anchor="end" class="t-n">waiting</text>
+<rect x="46" y="188" width="268" height="32" rx="8" class="st-wait"/><text x="58" y="209" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="209" text-anchor="end" class="t-n">waiting</text>
+<rect x="53" y="152" width="254" height="32" rx="8" class="st-wait"/><text x="65" y="173" class="t-s">Asking itself (KB-3738)</text><text x="346" y="173" text-anchor="end" class="t-n">waiting</text>
+<rect x="60" y="116" width="240" height="32" rx="8" class="st-wait"/><text x="72" y="137" class="t-s">Asking you (KB-3740)</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
+<rect x="67" y="80" width="226" height="32" rx="8" class="st-wait"/><text x="79" y="101" class="t-s">Thinking ladder: 6 rungs</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
+<rect x="74" y="44" width="212" height="32" rx="8" class="st-wait"/><text x="86" y="65" class="t-s">Notice a gap</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
+<rect x="81" y="8" width="198" height="32" rx="8" class="st-wait"/><text x="93" y="29" class="t-s">Tidy up while resting</text><text x="346" y="29" text-anchor="end" class="t-n">waiting</text>
+<rect x="88" y="-28" width="184" height="32" rx="8" class="st-wait"/><text x="100" y="-7" class="t-s">Make room to grow</text><text x="346" y="-7" text-anchor="end" class="t-n">waiting</text>
+<rect x="95" y="-64" width="170" height="32" rx="8" class="st-wait"/><text x="107" y="-43" class="t-s">Live numbers view</text><text x="346" y="-43" text-anchor="end" class="t-n">waiting</text>
+<rect x="102" y="-100" width="156" height="32" rx="8" class="st-wait"/><text x="114" y="-79" class="t-s">Always on</text><text x="346" y="-79" text-anchor="end" class="t-n">waiting</text>
 </svg>
-<p>Counting and reading are done. Day-dreaming is running; every other step waits its turn.</p>
+<p>Counting and reading are done. The same-run check is running; every other step waits its turn.</p>
 </div>
 
 <h2 id="next">4. What's next</h2>
 <ol class="next">
-<li>Next: the sentence steps: stories to pieces (KB-3720), then how sentences start (KB-3726).</li>
+<li>Now: the same-run check (KB-3772): why two identical test runs give slightly different numbers.</li>
+<li>Then the sentence steps: stories to pieces (KB-3720), how sentences start (KB-3726), which words matter (KB-3728).</li>
+<li>Then day-dreaming replay (KB-3730), asking itself questions (KB-3738), asking you (KB-3740).</li>
 <li>Then the thinking ladder, starting with its first rung.</li>
 </ol>
+<p>Asking questions comes after brainiac learns how sentences start and which words matter.</p>
 
 <footer>More pictures: <a href="https://mchzimm.github.io/brainiac/">all brainiac pages</a> · <a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html">goal progress</a> · <a href="https://mchzimm.github.io/brainiac/eli5-brainiac-chat-path.html">chat path</a>. Cards behind this page: KB-3808 KB-3658 KB-3708 KB-3712 KB-3720 KB-3722 KB-3726 KB-3728 KB-3730 KB-3732 KB-3734 KB-3738 KB-3740 KB-3742 KB-3756 KB-3760 KB-3762 KB-3764 KB-3704 KB-3758</footer>
 </main>
