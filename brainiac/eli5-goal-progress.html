@@ -27,7 +27,7 @@ td,.tip,.card{overflow-wrap:anywhere}
 @media(max-width:600px){body{font-size:16px}th.eta,td.eta{display:none}}
 </style></head><body><main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html" style="color:inherit;text-decoration:none">Can brainiac learn from its understudy's corrections?</a></h1>
-<p class="sub">Goal: when the understudy (a small local helper model) corrects brainiac, brainiac learns it and gives the better answer next time. As of <time data-t="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time>. Updated <span id="upd"><time data-t="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time></span>.</p>
+<p class="sub">Goal: when the understudy (a small local helper model) corrects brainiac, brainiac learns it and gives the better answer next time. As of <time data-t="2026-11-24T02:48Z">2026-11-24 02:48 UTC</time>. Updated <span id="upd"><time data-t="2026-11-24T02:48Z">2026-11-24 02:48 UTC</time></span>.</p>
 <div class="card"><b>Short answer: goal MET (2026-11-21 10:30 PST).</b> Brainiac does learn what the understudy teaches, and in live chat it now shows its own learned answer (KB-3290, on by default since KB-3306) and keeps its own right answer when the judge agrees (KB-3326, on by default since KB-3338: 2 of 32 right answers rewritten, was 15 of 31). Was failing: a correction did not reliably <i>fix</i> a wrong answer. KB-3358 now passes it: correction then right 5/5 sound, 5/5 color, 5/5 food. Grading a chat reply right/wrong fixed 0 of 2 wrong replies (KB-3320 failed), and wrong animal sounds came back round after round even though the helper corrected them each time. The cause is found: a correction for one animal overwrote a shared one-word memory, so the next animal answered wrong. The fix (KB-3342) read well live (25 of 25 animal-sound answers right; fix off 0 of 21 vs on 21 of 21; saved copy 10 of 10; colors 8 of 8), the first pass was withdrawn (on for everything broke 4 older tests). KB-3358 retried it for corrections only and passed (own right answers shown 8 of 10, was 0 of 28). <b>Since then:</b> showing the graded own answer is on by default (KB-3388); the grader now may not give top marks to a false answer (KB-3448, on by default); wrong own answers are held back when the helper is busy (shown 0 of 456, was 252 of 596).</div>
 
 <div class="card" id="kb3342chart"><b>KB-3342 in numbers</b>
@@ -362,11 +362,11 @@ td,.tip,.card{overflow-wrap:anywhere}
 <p>Fixed: kb3546 tests use a unique id; merged bf4024379; 0 regressions.</p>
 <p><span class="lab">Next step / ETA:</span> None.</p>
 <p class="upd">last updated <time data-upd="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time></p></div></td></tr>
-<tr tabindex="0" aria-describedby="tip61" data-tip="tip61"><td class="n">61</td><td><span class="chip c-wait">waiting (not started)</span></td><td>Proto tests do not compile (KB-3642)<br><small class="upd">last updated <time data-upd="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time></small></td><td class="eta">backlog</td>
+<tr tabindex="0" aria-describedby="tip61" data-tip="tip61"><td class="n">61</td><td><span class="chip c-ok">done (pass)</span></td><td>Proto tests do not compile (KB-3642)<br><small class="upd">last updated <time data-upd="2026-11-24T02:48Z">2026-11-24 02:48 UTC</time></small></td><td class="eta">done</td>
 <td class="tipcell"><div role="tooltip" id="tip61" class="tip"><b>Proto tests do not compile (KB-3642)</b>
 <p>Found by KB-3630: error E0063, missing field in the test initializer.</p>
-<p><span class="lab">Next step / ETA:</span> Not started.</p>
-<p class="upd">last updated <time data-upd="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time></p></div></td></tr>
+<p><span class="lab">Next step / ETA:</span> Fixed: proto tests compile again, 24/24; merged 55c28b93b.</p>
+<p class="upd">last updated <time data-upd="2026-11-24T02:48Z">2026-11-24 02:48 UTC</time></p></div></td></tr>
 <tr tabindex="0" aria-describedby="tip62" data-tip="tip62"><td class="n">62</td><td><span class="chip c-wait">waiting (not started)</span></td><td>5 order-dependent test failures (KB-3644)<br><small class="upd">last updated <time data-upd="2026-11-24T00:57Z">2026-11-24 00:57 UTC</time></small></td><td class="eta">backlog</td>
 <td class="tipcell"><div role="tooltip" id="tip62" class="tip"><b>5 order-dependent test failures (KB-3644)</b>
 <p>Found by KB-3630: pass alone, fail in the full suite.</p>
