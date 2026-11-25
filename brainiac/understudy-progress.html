@@ -1900,7 +1900,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Main machine live: counter file missing</span><b>all calls refused</b></div>
 <div class="chip ch-no"><span>Second machine: no live Claude wiring</span><b>not wired</b></div>
 <div class="chip ch-no"><span>Edited sealed copy leaked</span><b>5 of 8 asked</b></div>
-<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only</b></div>
+<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only; privacy on does not stop fill Claude call (KB-3962, fix building)</b></div>
 <div class="chip ch-no"><span>Live privacy log lines lost</span><b>fixed in code (KB-3056, merged 14d269369); live after rebuild from main + restart</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 <div class="chip ch-no"><span>Yes/no verify question on Claude answers (KB-3718)</span><b>Done, NO-GO (measured, 336 calls): sonnet with source text caught 11 of 25 wrong, wrongly rejected 3 right; haiku 16 right rejected for 16 caught; no source text: mostly "cannot verify"; best gain +2, same as always asking a stronger model; no flag built</b></div>
@@ -1915,9 +1915,9 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 </div>
 <div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>4</b></div>
 <div class="chip ch-wip"><span>Right answer swapped by helper: checking a second route</span><b>KB-3462 · horse case fixed earlier</b></div>
-<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: read running</b></div>
+<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: privacy on does not stop fill Claude call; fix building</b></div>
 <div class="chip ch-wip"><span>Sealed check of outgoing prompt (KB-3408)</span><b>In Progress: building</b></div>
-<div class="chip ch-wip"><span>Counter path at call time (KB-3414)</span><b>In Progress: verifying</b></div>
+<div class="chip ch-wip"><span>Counter path at call time (KB-3414)</span><b>In Progress: verifier passed; one-line test fix before merge</b></div>
 </div>
 <div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>12</b></div>
 <div class="chip ch-blk"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
