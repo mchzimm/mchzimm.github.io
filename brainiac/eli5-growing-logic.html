@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 19:32 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 20:04 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -196,7 +196,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> waiting. The check is written down, not run.</p>
+<p><b>Now:</b> waiting. The check is written down, not run. Asking itself (KB-3738) now waits on KB-3858.</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
@@ -255,7 +255,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p>The plan climbs one step at a time; some steps run side by side.</p>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
-<svg viewBox="0 -216 360 660" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: two done, two running, the rest waiting</title>
+<svg viewBox="0 -288 360 732" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 5 done, 2 running, 4 not passed, the rest (9) waiting</title>
 <rect x="4" y="404" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
 <rect x="11" y="368" width="338" height="30" rx="8" class="st-ok"/><text x="23" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
 <rect x="18" y="332" width="324" height="30" rx="8" class="st-ok"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">done</text><text x="346" y="353" text-anchor="end" class="t-k">found a problem</text>
@@ -263,7 +263,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="32" y="260" width="296" height="30" rx="8" class="st-ok"/><text x="44" y="281" class="t-k">Mid-run lookups check (KB-3832)</text><text x="346" y="281" text-anchor="end" class="t-k">done</text>
 <rect x="39" y="224" width="282" height="30" rx="8" class="box-bad"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-cut">did not pass</text>
 <rect x="46" y="188" width="268" height="30" rx="8" class="box-bad"/><text x="58" y="209" class="t-k">How sentences start (KB-3726)</text><text x="346" y="209" text-anchor="end" class="t-cut">did not pass</text>
-<rect x="53" y="152" width="254" height="30" rx="8" class="st-fix"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-n">working</text>
+<rect x="53" y="152" width="254" height="30" rx="8" class="box-bad"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-cut">not yet</text>
 <rect x="60" y="116" width="240" height="30" rx="8" class="st-wait"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
 <rect x="67" y="80" width="226" height="30" rx="8" class="st-wait"/><text x="79" y="101" class="t-s">Asking itself (KB-3738)</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
 <rect x="74" y="44" width="212" height="30" rx="8" class="st-wait"/><text x="86" y="65" class="t-s">Asking you (KB-3740)</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
@@ -273,6 +273,8 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="102" y="-100" width="156" height="30" rx="8" class="st-wait"/><text x="114" y="-79" class="t-s">Make room to grow</text><text x="346" y="-79" text-anchor="end" class="t-n">waiting</text>
 <rect x="109" y="-136" width="142" height="30" rx="8" class="st-wait"/><text x="121" y="-115" class="t-s">Live numbers view</text><text x="346" y="-115" text-anchor="end" class="t-n">waiting</text>
 <rect x="116" y="-172" width="128" height="30" rx="8" class="st-wait"/><text x="128" y="-151" class="t-s">Always on</text><text x="346" y="-151" text-anchor="end" class="t-n">waiting</text>
+<rect x="4" y="-280" width="352" height="30" rx="8" class="box-bad"/><text x="16" y="-259" class="t-k">Choosing inside the brain (KB-3854)</text><text x="346" y="-259" text-anchor="end" class="t-cut">not passed</text>
+<rect x="4" y="-244" width="352" height="30" rx="8" class="st-fix"/><text x="16" y="-223" class="t-s">Brain-made pick (KB-3858)</text><text x="346" y="-223" text-anchor="end" class="t-n">working</text>
 <rect x="123" y="-208" width="114" height="30" rx="8" class="st-fix"/><text x="135" y="-187" class="t-s">Old answers (KB-3850)</text><text x="346" y="-187" text-anchor="end" class="t-n">working</text>
 </svg>
 <p>Counting and reading are done. The same-run check is done and found a problem: a clean-up step at stop is timed by the wall clock, so it asks a different number of words each time. Done: with the test switch on, the stop step now asks the same words every run (32 of 32, nothing left over). Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run). Step 1 done: same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</p>
@@ -287,8 +289,10 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-ok">KB-3844 done</span> A bigger reward did not make brainiac score better on new things, but a smaller one helped it keep more old answers (34 of 63 instead of 8).</p>
 <p><span class="chip c-ok">KB-3842 done</span> We built a test of what brainiac already knew. After reading new stories it lost most of its old next-word answers (it kept 8 of 63, then 0 after lots of re-reading), so story reading stays off in the live brain for now.</p>
 <p><span class="chip c-fail">KB-3848 not yet</span> A gentler learning step kept more old answers (57 of 63, needs 60) but learned new things less, and over a long run it still forgot (44 of 63).</p>
-<p><span class="chip c-fix">KB-3850 working</span> Looking for a brain-like way, like replay or sleep, to keep old answers while still learning new ones.</p>
-<p><span class="chip c-fix">KB-3728 working</span> Brainiac gives value to words that paid off and uses it to choose what to read next.</p>
+<p><span class="chip c-fix">KB-3850 working</span> Idea tried on paper: a quick notebook by day, copied to long memory in sleep. It did not hold old answers. The best-case check says keeping both is possible; next: find a rule that does it without knowing the test.</p>
+<p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
+<p><span class="chip c-fix">KB-3858 working</span> Design a pick the brain makes itself (nothing built yet).</p>
+<p><span class="chip c-fail">KB-3728 not yet</span> Brainiac learned that paid words are worth more, but that did not yet change what it chooses to read.</p>
 </div>
 
 <h2 id="next">4. What's next</h2>
