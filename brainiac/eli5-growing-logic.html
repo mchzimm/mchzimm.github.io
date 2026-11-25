@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 11:35 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 11:54 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -215,7 +215,7 @@ var N=[
 ['map','Change map','w','KB-3918','A check of which changes can reach answers: none of the four tried passed.','done (diagnosis)'],
 ['selfq','Self-questions','t','KB-3922','Asks itself about a gap, then learns the answer like a chat turn.','failed, switched off'],
 ['trig','When to ask','p','KB-3924','Learns by itself when to ask, instead of a rule we wrote.','planned'],
-['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','waiting on KB-3922'],
+['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','waiting on KB-3944'],
 ['askyou','Asking you','p','KB-3740','When it cannot answer its own question, it asks you.','waiting on KB-3922'],
 ['sleep','Sleep tidy-up','p','KB-3742','Tidies memory while resting: smaller, faster, same answers.','planned'],
 ['ladder','Thinking ladder','p','KB-3744 to KB-3754','Six rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.','planned'],
@@ -316,7 +316,7 @@ svg._nodes=nodes;
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> waiting. The check is written down, not run. Asking itself (KB-3738) now waits on decision after KB-3918 count.</p>
+<p><b>Now:</b> waiting. The check is written down, not run. Asking itself (KB-3738) now waits on KB-3944 (learn how to word questions).</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
@@ -444,13 +444,15 @@ svg._nodes=nodes;
 <p><span class="chip c-ok">KB-3914 done</span> Checked on old runs: making the brain wait for the whole line made it worse (6 vs 10 right picks), because waiting brings back the long-line bias. Idea closed. Changing how the brain reads its drive does not help; the drive itself is too weak at pick time. (replay on old logs)</p>
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
 <p><span class="chip c-fail">KB-3922 failed</span> second design round ran: taught 1 of 20 new questions, same as a swapped-answer sham (1), so no real learning yet. Found: the taught sentence IS remembered, but brainiac only finds it when the question's last word sits right before the answer in that sentence (13 of 18 hits that way vs 2 of 62 otherwise). Tested: shaped questions 9 of 20; question+answer pairs 7 of 20 reworded (19 same wording); told as plain chat 6. Words brainiac picks itself: 1, 1 and 3 of 20 (needs 5). Closed: did not pass. Reworded questions mostly use other words, and replies wander across lines.</p>
-<p><span class="chip c-fix">in progress</span> KB-3940: teach replies to stay on one line. Step 1: find why the answer word gets skipped.</p>
+<p><span class="chip c-fix">in progress</span> KB-3940: teach replies to stay on one line. Found: a one-word memory note, overwritten by the last line, beats the right answer word (same cause as KB-3926). Word-pair notes would not fix it, so not built. Next: find when the note should win and when it should not.</p>
+<p><span class="chip c-wait">waiting</span> KB-3738: brainiac asks itself questions. Found: today the teacher decides when it asks, and in the test every question had one shape ('what happened after ...'). Waits for KB-3944.</p>
+<p><span class="chip c-fix">in progress</span> KB-3944: learn how to word questions from questions it hears (who, where, why ...). Step 1: give it a story with many question shapes and count how many shapes it uses.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
 <p><span class="chip c-fail">KB-3918 done, diagnosis</span> design read: no tested change passes; answers also read a slot store, story sharing never writes it.</p>
 <p><span class="chip c-fail">KB-3916 failed</span> synapse protection kept 25 of 63 old answers at best (need 60); longer context cells 3 of 47 (need 44).</p>
-<p><span class="chip c-wait">KB-3738 waiting</span> waits on KB-3922 route.</p>
+<p><span class="chip c-wait">KB-3738 waiting</span> waits on KB-3944 (learn how to word questions).</p>
 <p><span class="chip c-wait">KB-3740 waiting</span> waits on KB-3922 route.</p>
 <p><span class="chip c-ok">KB-3864 closed: diagnosis</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-ok">KB-3892 closed: diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
