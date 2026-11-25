@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 22:59 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 23:03 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -301,7 +301,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fix">KB-3850 working</span> Idea tried on paper: a quick notebook by day, copied to long memory in sleep. It did not hold old answers. Rules for protecting word memories, picked without peeking at the test, also lost new learning. Next: a different memory store.</p>
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
-<p><span class="chip c-fix">KB-3884 running</span> checked: even word-next-to-word links can pick the paid side (16 and 19 of 20), so the signal is reachable; now picking fresh story pairs for the real test and finding where the spread lost it.</p>
+<p><span class="chip c-fix">KB-3884 running</span> correction: the word-next-to-word count (16 and 19) did not check out; one-direction links get only 13 on one side, under the bar; the brain's real picks ignore pay so far; next: pick fresh story pairs by same-sentence count, fix the glance (KB-3898), then log what the spread does word by word.</p>
 <p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
 <p><span class="chip c-fail">KB-3864 diagnosis, not passed</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-fail">KB-3892 parked, diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
