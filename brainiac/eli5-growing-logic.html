@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 20:04 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 20:16 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -289,9 +289,9 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-ok">KB-3844 done</span> A bigger reward did not make brainiac score better on new things, but a smaller one helped it keep more old answers (34 of 63 instead of 8).</p>
 <p><span class="chip c-ok">KB-3842 done</span> We built a test of what brainiac already knew. After reading new stories it lost most of its old next-word answers (it kept 8 of 63, then 0 after lots of re-reading), so story reading stays off in the live brain for now.</p>
 <p><span class="chip c-fail">KB-3848 not yet</span> A gentler learning step kept more old answers (57 of 63, needs 60) but learned new things less, and over a long run it still forgot (44 of 63).</p>
-<p><span class="chip c-fix">KB-3850 working</span> Idea tried on paper: a quick notebook by day, copied to long memory in sleep. It did not hold old answers. The best-case check says keeping both is possible; next: find a rule that does it without knowing the test.</p>
+<p><span class="chip c-fix">KB-3850 working</span> Idea tried on paper: a quick notebook by day, copied to long memory in sleep. It did not hold old answers. A paper check shows keeping both is just possible if the brain protects the right word rows. Next: can it find those rows by itself?</p>
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
-<p><span class="chip c-fix">KB-3858 working</span> Design a pick the brain makes itself (nothing built yet).</p>
+<p><span class="chip c-fix">KB-3858 working</span> Plan on paper: words race to be picked, the most valued one wins first. Nothing built yet; paper checks come first.</p>
 <p><span class="chip c-fail">KB-3728 not yet</span> Brainiac learned that paid words are worth more, but that did not yet change what it chooses to read.</p>
 </div>
 
