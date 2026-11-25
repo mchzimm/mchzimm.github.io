@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 00:57 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 01:17 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -255,7 +255,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p>The plan climbs one step at a time; some steps run side by side.</p>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
-<svg viewBox="0 -616 360 1060" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 8 done, 3 running, 7 not passed, the rest (10) waiting</title>
+<svg viewBox="0 -616 360 1060" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 9 done, 2 running, 7 not passed, the rest (10) waiting</title>
 <rect x="4" y="404" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
 <rect x="11" y="368" width="338" height="30" rx="8" class="st-ok"/><text x="23" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
 <rect x="18" y="332" width="324" height="30" rx="8" class="st-ok"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">done</text><text x="346" y="353" text-anchor="end" class="t-k">found a problem</text>
@@ -283,13 +283,15 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="4" y="-460" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-439" class="t-k">Frozen glance changes next-word guesses (KB-3894)</text><text x="346" y="-439" text-anchor="end" class="t-k">done</text>
 <rect x="4" y="-496" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-475" class="t-k">Glance leaks fix (KB-3898)</text><text x="346" y="-475" text-anchor="end" class="t-k">PASS</text>
 <rect x="4" y="-532" width="352" height="30" rx="8" class="st-wait"/><text x="16" y="-511" class="t-s">Rerun drift check (KB-3900)</text><text x="346" y="-511" text-anchor="end" class="t-n">waiting</text>
-<rect x="4" y="-604" width="352" height="30" rx="8" class="st-fix"/><text x="16" y="-583" class="t-s">Why the test drops after sharing (KB-3902)</text><text x="346" y="-583" text-anchor="end" class="t-n">running</text>
+<rect x="4" y="-604" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-583" class="t-k">Why the test drops after sharing (KB-3902)</text><text x="346" y="-583" text-anchor="end" class="t-k">done</text>
 </svg>
 <p>Counting and reading are done. The same-run check is done and found a problem: a clean-up step at stop is timed by the wall clock, so it asks a different number of words each time. Done: with the test switch on, the stop step now asks the same words every run (32 of 32, nothing left over). Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run). Step 1 done: same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</p>
 <p><span class="chip c-ok">KB-3834 done</span> REST + food delay count brain steps in test mode; two runs match 65/65.</p>
 <p><span class="chip c-wait">KB-3836 backlog</span> auto-save every 60 s -&gt; count steps in test mode.</p>
 <p><span class="chip c-fail">KB-3720 done, did not pass</span> Step 2: story share learning built and stored, but it is left off: re-reading the same stories after a restart wore the answer score down from 111 to 101 (needed 106). Follow-up KB-3838; now waits on KB-3850. Waits on KB-3892.</p>
-<p><span class="chip c-fix">KB-3902 running</span> remembering after restart: <s>the early drop holds, about 111 to 99 by R400</s>. New stops show score jumping 98-122 between stops 8-16 ticks apart; start 111 is the 2nd of 14: churn, not proven loss. Harm bar (101 vs 106 at R1600) stays NOT MET on record. Independent check running.</p>
+<p><span class="chip c-ok">KB-3902 done</span> Checked: probe score swings 98-122 from stop to stop (same stop always same number), so the 5-point harm bar can't be read; harm bar NOT MET, no harm or recovery claim. Next: KB-3904 window read.</p>
+<p><span class="chip c-fix">KB-3904</span> running: harm read averaged over many stops.</p>
+<p><span class="chip c-wait">KB-3906 backlog</span></p>
 <p><span class="chip c-ok">verified</span> Same build: trace memory off raises answers 62 to 72 of 81. The trace alone costs 10 hits.</p>
 <p><span class="chip c-fail">KB-3726 did not pass</span> openers worked, but own lines still copy short heard bits (also with the feature off).</p>
 <p><span class="chip c-fail">KB-3840 did not pass</span> We tested every word-picking tweak on paper, and none stops brainiac from repeating pieces of sentences it heard; almost every line it says with 3 or more words holds such a piece.</p>
@@ -303,7 +305,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
 <p><span class="chip c-fix">KB-3884 running</span> correction: the word-next-to-word count (16 and 19) did not check out; one-direction links get only 13 on one side, under the bar; the brain's real picks ignore pay so far; next: pick fresh story pairs by same-sentence count, fix the glance (KB-3898), then log what the spread does word by word. Two fresh story pairs picked and checked for the final test.</p>
-<p><span class="chip c-fix">KB-3884 running</span> F8 verified: on 120 offers the paid signal is not dead; paid line gets more drive in 53 of 60 swapped pairs, picks 71/120 right at the bar; mostly the direct training effect, spread itself unproven. Next: spread-only read + more seeds.</p>
+<p><span class="chip c-fix">KB-3884 running</span> F9 checked: paid pick sits right at the bar (9-13 per seed vs 11), combined 10 = not alive yet. Value does spread to other words (proven), but mostly after the race already stopped. Next: F10 checks where the race should stop + a clean rebuild.</p>
 <p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
 <p><span class="chip c-fail">KB-3864 diagnosis, not passed</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-fail">KB-3892 parked, diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
