@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-25 13:33 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-25 13:35 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -188,9 +188,11 @@ function gain(l,j){return l.v[j][1]?l.v[j][0]-f0(l):null}
 function drawSum(){
  var G=goal(),W=Math.max(280,Math.round(sum.clientWidth||600)),sm=W<480,L=sm?40:50,R=sm?14:22,T=16,B=36,H=sm?270:320,ans=LN[LN.length-1];
  var gnote=(function(){var best=null,bj=-1;C.forEach(function(c,j){if(j>=NB&&ans.v[j][1]&&(best===null||ans.v[j][0]>best)){best=ans.v[j][0];bj=j}});
-  var bs=best===null?"no paid run measured":"best run "+best+"/"+ans.v[bj][1];
-  if(!G)return {t:"goal bar not readable from page text; "+bs,met:null};
-  return best!==null&&best>=G.a?{t:"goal met: "+bs+" (bar "+G.a+"/"+G.an+")",met:true}:{t:"no deployable run has passed yet: "+bs+" (bar "+G.a+"/"+G.an+")",met:false}})();
+  var bs=best===null?"no paid run plotted":"best plotted run "+best+"/"+ans.v[bj][1];
+  if(!G)return {t:"goal bar not readable from page text",d:bs,met:null};
+  var P=null,el=document.querySelectorAll(".vcap");for(var i=0;i<el.length&&!P;i++){var m=/p1 (\d+)\/\d+ (\d+)\/\d+, p2 (\d+)\/\d+ (\d+)\/\d+/.exec(el[i].textContent);if(m)P={a:Math.min(+m[1],+m[3]),b:Math.min(+m[2],+m[4]),hi:Math.max(+m[1],+m[3])}}
+  if(P&&P.a>=G.a&&P.b>=G.b)return {t:"goal met: both runs >= bar (lowest "+P.a+"/"+G.an+", bar "+G.a+"/"+G.an+")",d:"best "+P.hi+"/"+G.an+"; 160 leg lowest "+P.b+", bar "+G.b+"; the pair is not plotted, the chart shows earlier runs",met:true};
+  return {t:"no deployable run pair has passed yet",d:(P?"pair lowest "+P.a+"/"+G.an+", ":"")+bs+", bar "+G.a+"/"+G.an,met:false}})();
  var gg=G?G.a-f0(ans):null,mn=0,mx=0;LN.forEach(function(l){C.forEach(function(c,j){var g=gain(l,j);if(g!==null){mn=Math.min(mn,g);mx=Math.max(mx,g)}})});
  if(gg!==null)mx=Math.max(mx,gg);var lo=Math.min(-4,mn-2),hi=mx+(sm?9:7);
  var yp=function(g){return T+(hi-g)/(hi-lo)*(H-T-B)},xs=C.map(function(c,j){return L+8+j*(W-L-R-16)/Math.max(1,C.length-1)});
@@ -1918,7 +1920,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>More late-grade cases held (KB-3472)</span><b>PASS</b></div>
 <div class="chip ch-blk"><span>Rung cost lever M1 (KB-3574)</span><b>Backlog: M1 rung cost, needs masked-span guard</b></div>
 <div class="chip ch-ok"><span>Page overflows at 375 px (KB-3576)</span><b>Fixed, measured: page width 2475 -> 360 px at 375 px (chip text now wraps)</b></div>
-<div class="chip ch-ok"><span>Goal note vanishes with goal line (KB-3586)</span><b>Fixed, measured: note stays when goal text is unreadable; reads the runs, so now says goal met (best 142/166); error text printed, not [object Object]</b></div>
+<div class="chip ch-ok"><span>Goal note vanishes with goal line (KB-3586)</span><b>Fixed, measured: note stays when goal text is unreadable; says goal met only when both runs of the pair are at or above the bar (lowest 142/166); error text printed, not [object Object]</b></div>
 <div class="chip ch-blk"><span>Late pass on an already closed turn still shown (KB-3484)</span><b>Backlog: not built</b></div>
 </div>
 </div>
@@ -1964,7 +1966,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-25 13:33 PST";
+const UPDATED="2026-11-25 13:35 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
