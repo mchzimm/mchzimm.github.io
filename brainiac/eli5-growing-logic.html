@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 09:59 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 10:23 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -443,7 +443,7 @@ svg._nodes=nodes;
 <p><span class="chip c-ok">KB-3912 done</span> Checked against shuffled-pay brains: average-per-word scoring did no better than chance on the one set tested (a tie, borderline). At the point where the brain actually picks, it barely helped. No flag runs; idea closed. (replay on old logs)</p>
 <p><span class="chip c-ok">KB-3914 done</span> Checked on old runs: making the brain wait for the whole line made it worse (6 vs 10 right picks), because waiting brings back the long-line bias. Idea closed. Changing how the brain reads its drive does not help; the drive itself is too weak at pick time. (replay on old logs)</p>
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
-<p><span class="chip c-fix">KB-3922 started</span> check: clean old-answer baseline on this brain copy is 45 of 47; plain chat lines cost only 1 old answer however many; chat lines that reuse an old answer's cue word cost more -&gt; next: second design round with fresh questions.</p>
+<p><span class="chip c-fix">KB-3922 started</span> second design round ran: taught 1 of 20 new questions, same as a swapped-answer sham (1), so no real learning yet; asking the same question back right after teaching gave 2. Old answers kept (45 of 47). Next: find whether the taught line is stored at all, then test one cause at a time.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
 <p><span class="chip c-fail">KB-3918 done, diagnosis</span> design read: no tested change passes; answers also read a slot store, story sharing never writes it.</p>
