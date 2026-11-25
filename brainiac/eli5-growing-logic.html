@@ -8,7 +8,34 @@
 *{box-sizing:border-box}
 html{background:var(--bg)}
 body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.45 system-ui,sans-serif}
-main{max-width:760px;margin:0 auto;padding:20px 16px 56px}
+main{max-width:none;margin:0;padding:20px 16px 56px}
+section{min-width:0}
+.row{display:grid;grid-template-columns:minmax(0,1fr);gap:0 28px;align-items:start}
+@media(min-width:1100px){.row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+p{max-width:110ch}
+.pic svg{max-width:540px;margin:4px auto}
+.four-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:0 14px;align-items:start}
+.c-chk{background:var(--chk)}
+.stairs{list-style:none;margin:0;padding:0}
+.stairs li{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 10px;min-width:0;background:var(--tipbg);border:1px solid var(--line);border-left:8px solid var(--wait);border-radius:8px;padding:5px 10px;margin:6px 0}
+.stairs li.s-ok{border-left-color:var(--ok)}.stairs li.s-fix{border-left-color:var(--fix)}.stairs li.s-bad{border-left-color:var(--fail)}.stairs li.s-wait{border-left-style:dashed}
+.stairs .nm{flex:1 1 12em;min-width:0;overflow-wrap:anywhere;color:var(--ink);font-size:.95rem}
+#s-steps .chip{white-space:normal;overflow-wrap:anywhere;max-width:100%}
+#s-steps p{overflow-wrap:anywhere}
+.pm-wrap{position:relative}
+#pm-svg{touch-action:none;user-select:none;-webkit-user-select:none}
+.pm-l{stroke:var(--line);stroke-width:1.4}
+.pm-n circle{stroke:var(--bg);stroke-width:2;cursor:grab}
+.pm-n:focus{outline:none}.pm-n:focus circle{stroke:var(--link);stroke-width:3}
+.pm-n text{font-size:12px;fill:var(--dim);pointer-events:none;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
+.pm-n.lbl-off text{display:none}
+.pm-w{fill:var(--ok)}.pm-t{fill:var(--chk)}.pm-b{fill:var(--fail)}
+.pm-n circle.pm-p{fill:var(--card);stroke:var(--wait);stroke-dasharray:4 3}
+#pm-svg.hl .pm-n{opacity:.18}#pm-svg.hl .pm-l{opacity:.08}
+#pm-svg.hl .pm-n.on{opacity:1}#pm-svg.hl .pm-n.on text{display:block;fill:var(--ink)}
+#pm-svg.hl .pm-l.on{opacity:1;stroke:var(--chk);stroke-width:2}
+.pm-tip{display:none;position:fixed;left:0;top:0;z-index:10;max-width:min(300px,calc(100vw - 32px));background:var(--tipbg);color:var(--tipink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.85rem;line-height:1.35;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+.pm-tip b{display:block;font-size:.95rem}.pm-tip div{margin:3px 0}.pm-tip .pm-d{color:var(--dim)}
 h1{font-size:1.8rem;line-height:1.2;margin:.2em 0 .3em}
 h1 a{color:inherit;text-decoration:none}
 h2{font-size:1.3rem;margin:1.5em 0 .4em}
@@ -79,11 +106,15 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 09:45 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 09:59 PST</span></p>
 
+<section id="s-idea">
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
+</section>
 
+<div class="row">
+<section id="s-growth">
 <h2 id="growth">How it has grown so far</h2>
 <div class="card" id="gh">
 <p>Each line is one kind of brain part. When a line climbs, brainiac grew. Move over the chart (or tap it, or use the arrow keys) to see the numbers at that moment.</p>
@@ -151,10 +182,99 @@ var snap=null;try{snap=JSON.parse(document.getElementById('gh-snap').textContent
 function fb(){if(snap)draw(snap,'saved copy in this page');else sum.textContent='Growth data could not be loaded.'}
 if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.json',{cache:'no-store'}).then(function(x){if(!x.ok)throw 0;return x.json()}).then(function(d){if(!d||!d.rows||!d.rows.length)throw 0;draw(d,'')}).catch(fb);else fb();
 })();</script>
+</section>
 
+<section id="s-map">
+<h2 id="map">How the parts connect</h2>
+<div class="card" id="pm">
+<p>Each dot is one part of brainiac. A line means two parts feed each other. Bigger dots have more lines. Move over a dot (or tap it) to see what it does; drag a dot to pull the web around.</p>
+<div class="legend"><span class="chip c-ok">working or done</span><span class="chip c-chk">testing now</span><span class="chip c-wait">planned</span><span class="chip c-fail">blocked: did not pass, switched off</span></div>
+<div class="pm-wrap"><svg id="pm-svg" role="img" aria-label="Web of brainiac's parts: chat in and out, the reply maker, the answer store, word chains, story reading, the saved brain file, and the plan steps that connect to them. Each dot can be focused with Tab to read its details."></svg></div>
+<div id="pm-tip" class="pm-tip" role="status" aria-live="polite"></div>
+<p class="gh-note">Green parts run in the live brain today. Red parts were built and tested, did not pass, and stay switched off.</p>
+</div>
+<script id="pm-js">(function(){
+var NS='http://www.w3.org/2000/svg',svg=document.getElementById('pm-svg'),tip=document.getElementById('pm-tip');
+var ST={w:'working or done',t:'testing now',p:'planned',b:'blocked: did not pass, switched off'};
+var N=[
+['in','Chat in','w','','Where the words you type come in.','working in the live brain'],
+['reply','Reply maker','w','','Picks the next word, again and again, to build an answer.','working in the live brain'],
+['out','Chat out','w','','Where brainiac’s answer goes back to you.','working in the live brain'],
+['learn','Learn from each turn','w','','After each chat turn, brainiac learns from what was said.','working in the live brain'],
+['ans','Answer store','w','KB-2370','Remembers answers to things it was asked before.','working in the live brain'],
+['surp','Surprise signal','w','KB-2370','Notices words that are new or unexpected.','working in the live brain'],
+['chain','Word chains','w','','Keeps chains of words that follow each other.','working in the live brain'],
+['read','Story reading','w','KB-2571','Reads stories all day, dozens of sentences a second.','working in the live brain'],
+['grow','Growth counter','w','KB-3712','Counts the new cells and links that reading makes.','done'],
+['save','Saved brain file','w','','The one brain file. Never wiped; it keeps growing.','working in the live brain'],
+['same','Same-run check','w','KB-3772','Makes sure the same test run twice gives the same brain.','done'],
+['share','Story sharing','b','KB-3720','Would copy what it reads into its word chains. Old answers wore away, so it stays off.','did not pass, switched off'],
+['start','Sentence openers','b','KB-3726','Would learn how sentences start. Its own lines still copy heard bits.','did not pass, switched off'],
+['val','Word liking','b','KB-3728','Would lean toward words that paid off. It did not change what it picks yet.','not passed yet, switched off'],
+['replay','Day-dream replay','b','KB-3730','Would think over what it learned while idle. No gain, so it stays off.','failed, switched off'],
+['map','Change map','w','KB-3918','A check of which changes can reach answers: none of the four tried passed.','done (diagnosis)'],
+['selfq','Self-questions','t','KB-3922','Asks itself about a gap, then learns the answer like a chat turn.','being tested on a brain copy'],
+['trig','When to ask','p','KB-3924','Learns by itself when to ask, instead of a rule we wrote.','planned'],
+['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','waiting on KB-3922'],
+['askyou','Asking you','p','KB-3740','When it cannot answer its own question, it asks you.','waiting on KB-3922'],
+['sleep','Sleep tidy-up','p','KB-3742','Tidies memory while resting: smaller, faster, same answers.','planned'],
+['ladder','Thinking ladder','p','KB-3744 to KB-3754','Six rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.','planned'],
+['plan','Growing-logic plan','w','KB-3658','The plan that ties these parts together.','in progress']];
+var E='in-reply reply-out in-learn learn-ans learn-chain surp-ans surp-selfq ans-reply chain-reply read-share share-chain read-grow start-chain start-reply val-chain replay-chain replay-askself selfq-out selfq-learn trig-selfq selfq-askyou askself-askyou askyou-out sleep-chain sleep-save chain-save ans-save same-save grow-save map-share map-start map-val map-replay ladder-chain plan-share plan-start plan-val plan-replay plan-selfq plan-trig plan-askself plan-askyou plan-sleep plan-ladder plan-map plan-same plan-grow'.split(' ');
+var ix={},nodes=N.map(function(a,i){ix[a[0]]=i;return{i:i,id:a[0],name:a[1],s:a[2],card:a[3],eli:a[4],st:a[5],deg:0,x:0,y:0,vx:0,vy:0,fx:null}});
+var links=E.map(function(p){var q=p.split('-'),a=nodes[ix[q[0]]],b=nodes[ix[q[1]]];a.deg++;b.deg++;return{a:a,b:b}});
+nodes.forEach(function(n){n.r=5+3*Math.sqrt(n.deg)});
+var W=720,H=520,alpha=1,raf=0,drag=null,cur=-1;
+function mk(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e}
+function size(){var w=Math.max(280,Math.round(svg.parentNode.clientWidth||720)),h=w<600?Math.round(Math.max(420,w*1.25)):Math.round(Math.min(620,Math.max(460,w*0.68)));
+if(W&&nodes[0].x){var sx=w/W,sy=h/H;nodes.forEach(function(n){n.x*=sx;n.y*=sy})}W=w;H=h;svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('height',H)}
+function tick(){var k=Math.min(W,H),rep=k*k*0.012,L0=k*0.13,i,j,a,b,dx,dy,d2,d,f;
+for(i=0;i<nodes.length;i++)for(j=i+1;j<nodes.length;j++){a=nodes[i];b=nodes[j];dx=b.x-a.x;dy=b.y-a.y;d2=dx*dx+dy*dy||0.01;d=Math.sqrt(d2);f=rep/d2*alpha;a.vx-=dx/d*f;a.vy-=dy/d*f;b.vx+=dx/d*f;b.vy+=dy/d*f}
+links.forEach(function(l){dx=l.b.x-l.a.x;dy=l.b.y-l.a.y;d=Math.sqrt(dx*dx+dy*dy)||0.01;f=(d-L0)*0.06*alpha;l.a.vx+=dx/d*f;l.a.vy+=dy/d*f;l.b.vx-=dx/d*f;l.b.vy-=dy/d*f});
+nodes.forEach(function(n){n.vx+=(W/2-n.x)*0.012*alpha;n.vy+=(H/2-n.y)*0.012*alpha;if(n.fx!=null){n.x=n.fx;n.y=n.fy;n.vx=n.vy=0;return}n.vx*=0.6;n.vy*=0.6;n.x+=n.vx;n.y+=n.vy;var m=n.r+8;n.x=Math.max(m+30,Math.min(W-m-30,n.x));n.y=Math.max(m,Math.min(H-m-14,n.y))});alpha*=0.985}
+var gl=mk('g',{}),gn=mk('g',{});
+links.forEach(function(l){l.el=mk('line',{'class':'pm-l'},gl)});
+nodes.forEach(function(n){var g=mk('g',{'class':'pm-n',tabindex:'0',role:'button','aria-label':n.name+': '+n.eli+' Status: '+n.st+(n.card?'. Card '+n.card:'')},gn);n.el=g;
+mk('circle',{r:n.r.toFixed(1),'class':'pm-'+n.s},g);n.tx=mk('text',{'text-anchor':'middle',y:(n.r+13).toFixed(1)},g);n.tx.textContent=n.name;
+g.addEventListener('pointerenter',function(e){show(n,e.clientX,e.clientY)});
+g.addEventListener('pointermove',function(e){if(!drag||drag===n)show(n,e.clientX,e.clientY)});
+g.addEventListener('pointerleave',function(e){if(e.pointerType==='mouse'&&drag!==n)hide()});
+g.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();drag=n;try{g.setPointerCapture(e.pointerId)}catch(x){}var p=pt(e);n.fx=p.x;n.fy=p.y;show(n,e.clientX,e.clientY);heat(0.3)});
+g.addEventListener('focus',function(){var b=n.el.getBoundingClientRect();show(n,b.right,b.bottom)});
+g.addEventListener('blur',hide)});
+function pt(e){var b=svg.getBoundingClientRect();return{x:(e.clientX-b.left)*W/b.width,y:(e.clientY-b.top)*H/b.height}}
+svg.addEventListener('pointermove',function(e){if(!drag)return;var p=pt(e);drag.fx=p.x;drag.fy=p.y;show(drag,e.clientX,e.clientY);heat(0.15)});
+function up(e){if(!drag)return;var n=drag;drag=null;n.fx=n.fy=null;if(e.pointerType==='mouse'){var t=document.elementFromPoint(e.clientX,e.clientY);if(!t||!n.el.contains(t))hide()}}
+svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
+document.addEventListener('pointerdown',function(e){if(!svg.contains(e.target))hide()});
+window.addEventListener('scroll',function(){if(cur>=0&&!drag)hide()},{passive:true});
+function nb(n){var s={};s[n.i]=1;links.forEach(function(l){if(l.a===n)s[l.b.i]=1;if(l.b===n)s[l.a.i]=1});return s}
+function show(n,x,y){cur=n.i;var s=nb(n);svg.classList.add('hl');nodes.forEach(function(m){m.el.classList.toggle('on',!!s[m.i])});links.forEach(function(l){l.el.classList.toggle('on',l.a===n||l.b===n)});
+tip.innerHTML='<b>'+n.name+'</b><div>'+n.eli+'</div><div class="pm-d">Status: '+n.st+'</div><div class="pm-d">'+(n.card?'Card: '+n.card:'Built in from the start (no card)')+' · links: '+n.deg+'</div>';
+tip.style.display='block';var tw=tip.offsetWidth,th=tip.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight,l=x+14,t=y+14;
+if(l+tw>vw-8)l=x-14-tw;if(l<8)l=Math.max(8,Math.min(vw-8-tw,8));if(t+th>vh-8)t=y-14-th;if(t<8)t=8;tip.style.left=Math.round(l)+'px';tip.style.top=Math.round(t)+'px'}
+function hide(){cur=-1;tip.style.display='none';svg.classList.remove('hl');nodes.forEach(function(m){m.el.classList.remove('on')});links.forEach(function(l){l.el.classList.remove('on')})}
+function render(){links.forEach(function(l){l.el.setAttribute('x1',l.a.x.toFixed(1));l.el.setAttribute('y1',l.a.y.toFixed(1));l.el.setAttribute('x2',l.b.x.toFixed(1));l.el.setAttribute('y2',l.b.y.toFixed(1))});
+nodes.forEach(function(n){n.el.setAttribute('transform','translate('+n.x.toFixed(1)+','+n.y.toFixed(1)+')')})}
+function declutter(){var kept=[];nodes.slice().sort(function(a,b){return b.deg-a.deg}).forEach(function(n){n.el.classList.remove('lbl-off');var bb;try{bb=n.tx.getBBox()}catch(e){return}
+var r={l:n.x+bb.x-2,r:n.x+bb.x+bb.width+2,t:n.y+bb.y-1,b:n.y+bb.y+bb.height+1},hit=r.l<0||r.r>W||kept.some(function(k){return r.l<k.r&&r.r>k.l&&r.t<k.b&&r.b>k.t});
+if(!hit)nodes.forEach(function(m){if(m!==n){var dx=Math.max(r.l-m.x,0,m.x-r.r),dy=Math.max(r.t-m.y,0,m.y-r.b);if(dx*dx+dy*dy<m.r*m.r)hit=true}});
+if(hit)n.el.classList.add('lbl-off');else kept.push(r)})}
+function loop(){tick();render();if(alpha>0.004||drag)raf=requestAnimationFrame(loop);else{raf=0;declutter()}}
+function heat(a){alpha=Math.max(alpha,a);if(!raf)raf=requestAnimationFrame(loop)}
+size();nodes.forEach(function(n,i){var a=i/nodes.length*Math.PI*2,rr=Math.min(W,H)*(0.18+0.22*((i*7)%5)/4);n.x=W/2+Math.cos(a)*rr;n.y=H/2+Math.sin(a)*rr});
+for(var s=0;s<320;s++)tick();alpha=Math.max(alpha,0.03);render();declutter();window.__pmReady=true;heat(0.03);
+var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){size();hide();heat(0.2)},150)});
+svg._nodes=nodes;
+})();</script>
+</section>
+</div>
+
+<section id="s-four">
 <h2 id="four">The 4 parts</h2>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
-<div class="card">
+<div class="four-grid">
+<div class="card pic">
 <svg viewBox="0 0 360 330" role="img" aria-labelledby="four-t">
 <title id="four-t">Four lanes. Logic ladder: waiting. Sentences: first step done, three waiting. Story elements: waiting. Questions: waiting.</title>
 <text x="8" y="18" class="t-h">A. Own logic</text>
@@ -204,12 +324,16 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><b>Sleep tidy-up</b> (KB-3742): smaller and faster, same answers. Waiting.</p>
 <p><b>Live growth numbers</b> (KB-3732): watch the cells grow. Waiting.</p>
 </div>
+</div>
+</section>
 
+<div class="row">
+<section id="s-dream">
 <h2 id="where">Where it lives</h2>
 <p>Inside brainiac itself, no separate copy. Each step is tried on a copy of the brain, behind a switch that is off by default.</p>
 
 <h2 id="dream">1. The dream</h2>
-<div class="card">
+<div class="card pic">
 <svg viewBox="0 0 360 190" role="img" aria-labelledby="dream-t">
 <title id="dream-t">Storybooks go into brainiac, and brainiac asks why</title>
 <defs><marker id="ah1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ahd"/></marker></defs>
@@ -227,9 +351,11 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 </svg>
 <p>Read it lots of storybooks. Over time it should start to wonder, and ask “why?” by itself.</p>
 </div>
+</section>
 
+<section id="s-loop">
 <h2 id="loop">2. The learning loop</h2>
-<div class="card">
+<div class="card pic">
 <svg viewBox="0 0 360 330" role="img" aria-labelledby="loop-t">
 <title id="loop-t">The learning loop: read, remember pieces, notice a gap, ask, learn the answer, tidy up while resting, repeat</title>
 <defs><marker id="ah2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ahd"/></marker></defs>
@@ -250,42 +376,47 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 </svg>
 <p>One circle, over and over: read, keep the pieces, notice what is missing, ask, learn the answer, and tidy up while resting.</p>
 </div>
+</section>
+</div>
 
+<div class="row">
+<section id="s-steps">
 <h2 id="steps">3. All the steps</h2>
 <p>The plan climbs one step at a time; some steps run side by side.</p>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
-<svg viewBox="0 -652 360 1096" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 12 done, 1 running, 6 not passed, the rest (10) waiting</title>
-<rect x="4" y="404" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
-<rect x="11" y="368" width="338" height="30" rx="8" class="st-ok"/><text x="23" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
-<rect x="18" y="332" width="324" height="30" rx="8" class="st-ok"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">done</text><text x="346" y="353" text-anchor="end" class="t-k">found a problem</text>
-<rect x="25" y="296" width="310" height="30" rx="8" class="st-ok"/><text x="37" y="317" class="t-k">Stop step repeatable (KB-3828)</text><text x="346" y="317" text-anchor="end" class="t-k">done</text>
-<rect x="32" y="260" width="296" height="30" rx="8" class="st-ok"/><text x="44" y="281" class="t-k">Mid-run lookups check (KB-3832)</text><text x="346" y="281" text-anchor="end" class="t-k">done</text>
-<rect x="39" y="224" width="282" height="30" rx="8" class="box-bad"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-cut">did not pass</text>
-<rect x="46" y="188" width="268" height="30" rx="8" class="box-bad"/><text x="58" y="209" class="t-k">How sentences start (KB-3726)</text><text x="346" y="209" text-anchor="end" class="t-cut">did not pass</text>
-<rect x="53" y="152" width="254" height="30" rx="8" class="box-bad"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-cut">not yet</text>
-<rect x="60" y="116" width="240" height="30" rx="8" class="box-bad"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-cut">failed</text>
-<rect x="67" y="80" width="226" height="30" rx="8" class="st-wait"/><text x="79" y="101" class="t-s">Asking itself (KB-3738)</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
-<rect x="74" y="44" width="212" height="30" rx="8" class="st-wait"/><text x="86" y="65" class="t-s">Asking you (KB-3740)</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
-<rect x="81" y="8" width="198" height="30" rx="8" class="st-wait"/><text x="93" y="29" class="t-s">Thinking ladder: 6 rungs</text><text x="346" y="29" text-anchor="end" class="t-n">waiting</text>
-<rect x="88" y="-28" width="184" height="30" rx="8" class="st-wait"/><text x="100" y="-7" class="t-s">Notice a gap</text><text x="346" y="-7" text-anchor="end" class="t-n">waiting</text>
-<rect x="95" y="-64" width="170" height="30" rx="8" class="st-wait"/><text x="107" y="-43" class="t-s">Tidy up while resting</text><text x="346" y="-43" text-anchor="end" class="t-n">waiting</text>
-<rect x="102" y="-100" width="156" height="30" rx="8" class="st-wait"/><text x="114" y="-79" class="t-s">Make room to grow</text><text x="346" y="-79" text-anchor="end" class="t-n">waiting</text>
-<rect x="109" y="-136" width="142" height="30" rx="8" class="st-wait"/><text x="121" y="-115" class="t-s">Live numbers view</text><text x="346" y="-115" text-anchor="end" class="t-n">waiting</text>
-<rect x="116" y="-172" width="128" height="30" rx="8" class="st-wait"/><text x="128" y="-151" class="t-s">Always on</text><text x="346" y="-151" text-anchor="end" class="t-n">waiting</text>
-<rect x="4" y="-280" width="352" height="30" rx="8" class="box-bad"/><text x="16" y="-259" class="t-k">Choosing inside the brain (KB-3854)</text><text x="346" y="-259" text-anchor="end" class="t-cut">not passed</text>
-<rect x="4" y="-244" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-223" class="t-k">Brain-made pick (KB-3858)</text><text x="346" y="-223" text-anchor="end" class="t-k">passed</text>
-<rect x="4" y="-352" width="352" height="30" rx="8" class="st-wait"/><text x="16" y="-331" class="t-s">Spread liking to related words (KB-3884)</text><text x="346" y="-331" text-anchor="end" class="t-n">waiting</text>
-<rect x="123" y="-208" width="114" height="30" rx="8" class="st-fix"/><text x="135" y="-187" class="t-s">Old answers (KB-3850)</text><text x="346" y="-187" text-anchor="end" class="t-n">working</text>
-<rect x="4" y="-316" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-295" class="t-k">Keep old answers in a second memory (KB-3864)</text><text x="346" y="-295" text-anchor="end" class="t-k">closed: diagnosis</text>
-<rect x="4" y="-388" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-367" class="t-k">Keep old answers through story sharing (KB-3892)</text><text x="346" y="-367" text-anchor="end" class="t-k">closed: diagnosis</text>
-<rect x="4" y="-424" width="352" height="30" rx="8" class="box-bad"/><text x="16" y="-403" class="t-s">In-sample read, new offers (KB-3888)</text><text x="346" y="-403" text-anchor="end" class="t-cut">not passed</text>
-<rect x="4" y="-460" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-439" class="t-k">Frozen glance changes next-word guesses (KB-3894)</text><text x="346" y="-439" text-anchor="end" class="t-k">done</text>
-<rect x="4" y="-496" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-475" class="t-k">Glance leaks fix (KB-3898)</text><text x="346" y="-475" text-anchor="end" class="t-k">PASS</text>
-<rect x="4" y="-532" width="352" height="30" rx="8" class="st-wait"/><text x="16" y="-511" class="t-s">Rerun drift check (KB-3900)</text><text x="346" y="-511" text-anchor="end" class="t-n">waiting</text>
-<rect x="4" y="-640" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-619" class="t-k">Map which change reaches answers (KB-3918)</text><text x="346" y="-619" text-anchor="end" class="t-k">done: diagnosis</text>
-<rect x="4" y="-604" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-583" class="t-k">Why the test drops after sharing (KB-3902)</text><text x="346" y="-583" text-anchor="end" class="t-k">done</text>
-</svg>
+<p class="gh-note">Top = newest step; the first steps sit at the bottom.</p>
+<ol class="stairs" aria-label="Staircase of the plan's steps, newest at the top: 12 done, 1 running, 6 not passed, the rest (10) waiting">
+<li class="s-ok"><span class="nm">Map which change reaches answers (KB-3918)</span><span class="chip c-ok">done: diagnosis</span></li>
+<li class="s-ok"><span class="nm">Why the test drops after sharing (KB-3902)</span><span class="chip c-ok">done</span></li>
+<li class="s-wait"><span class="nm">Rerun drift check (KB-3900)</span><span class="chip c-wait">waiting</span></li>
+<li class="s-ok"><span class="nm">Glance leaks fix (KB-3898)</span><span class="chip c-ok">PASS</span></li>
+<li class="s-ok"><span class="nm">Frozen glance changes next-word guesses (KB-3894)</span><span class="chip c-ok">done</span></li>
+<li class="s-bad"><span class="nm">In-sample read, new offers (KB-3888)</span><span class="chip c-fail">not passed</span></li>
+<li class="s-ok"><span class="nm">Keep old answers through story sharing (KB-3892)</span><span class="chip c-ok">closed: diagnosis</span></li>
+<li class="s-wait"><span class="nm">Spread liking to related words (KB-3884)</span><span class="chip c-wait">waiting</span></li>
+<li class="s-ok"><span class="nm">Keep old answers in a second memory (KB-3864)</span><span class="chip c-ok">closed: diagnosis</span></li>
+<li class="s-bad"><span class="nm">Choosing inside the brain (KB-3854)</span><span class="chip c-fail">not passed</span></li>
+<li class="s-ok"><span class="nm">Brain-made pick (KB-3858)</span><span class="chip c-ok">passed</span></li>
+<li class="s-fix"><span class="nm">Old answers (KB-3850)</span><span class="chip c-fix">working</span></li>
+<li class="s-wait"><span class="nm">Always on</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Live numbers view</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Make room to grow</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Tidy up while resting</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Notice a gap</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Thinking ladder: 6 rungs</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Asking you (KB-3740)</span><span class="chip c-wait">waiting</span></li>
+<li class="s-wait"><span class="nm">Asking itself (KB-3738)</span><span class="chip c-wait">waiting</span></li>
+<li class="s-bad"><span class="nm">Day-dream replay (KB-3730)</span><span class="chip c-fail">failed</span></li>
+<li class="s-bad"><span class="nm">Which words matter (KB-3728)</span><span class="chip c-fail">not yet</span></li>
+<li class="s-bad"><span class="nm">How sentences start (KB-3726)</span><span class="chip c-fail">did not pass</span></li>
+<li class="s-bad"><span class="nm">Stories to pieces (KB-3720)</span><span class="chip c-fail">did not pass</span></li>
+<li class="s-ok"><span class="nm">Mid-run lookups check (KB-3832)</span><span class="chip c-ok">done</span></li>
+<li class="s-ok"><span class="nm">Stop step repeatable (KB-3828)</span><span class="chip c-ok">done</span></li>
+<li class="s-ok"><span class="nm">Same-run check (KB-3772)</span><span class="chip c-ok">done, found a problem</span></li>
+<li class="s-ok"><span class="nm">Reading grows the brain</span><span class="chip c-ok">done</span></li>
+<li class="s-ok"><span class="nm">Count everything</span><span class="chip c-ok">done</span></li>
+</ol>
 <p>Counting and reading are done. The same-run check is done and found a problem: a clean-up step at stop is timed by the wall clock, so it asks a different number of words each time. Done: with the test switch on, the stop step now asks the same words every run (32 of 32, nothing left over). Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run). Step 1 done: same test run twice gives the same brain: 65 of 65 steps equal, in all 4 runs. Older reading check re-read: 86 vs needed 75, passed with room 11.</p>
 <p><span class="chip c-ok">KB-3834 done</span> REST + food delay count brain steps in test mode; two runs match 65/65.</p>
 <p><span class="chip c-wait">KB-3836 backlog</span> auto-save every 60 s -&gt; count steps in test mode.</p>
@@ -312,7 +443,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-ok">KB-3912 done</span> Checked against shuffled-pay brains: average-per-word scoring did no better than chance on the one set tested (a tie, borderline). At the point where the brain actually picks, it barely helped. No flag runs; idea closed. (replay on old logs)</p>
 <p><span class="chip c-ok">KB-3914 done</span> Checked on old runs: making the brain wait for the whole line made it worse (6 vs 10 right picks), because waiting brings back the long-line bias. Idea closed. Changing how the brain reads its drive does not help; the drive itself is too weak at pick time. (replay on old logs)</p>
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
-<p><span class="chip c-fix">KB-3922 started</span> step 0: taught answers help 7 of 20 new-worded asks (0 without teaching) but old answers dropped 43 -> 41; no build yet; checking the old-answer baseline + whether plain chat lines cost old answers (no-teach chat 43 -> 39).</p>
+<p><span class="chip c-fix">KB-3922 started</span> check: clean old-answer baseline on this brain copy is 45 of 47; plain chat lines cost only 1 old answer however many; chat lines that reuse an old answer's cue word cost more -&gt; next: second design round with fresh questions.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
 <p><span class="chip c-fail">KB-3918 done, diagnosis</span> design read: no tested change passes; answers also read a slot store, story sharing never writes it.</p>
@@ -328,7 +459,9 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-wait">KB-3870 open</span> After sharing, the trace no longer costs these answers; its case rests on X_chat (about 30).</p>
 <p><span class="chip c-fail">KB-3728 not yet</span> Brainiac learned that paid words are worth more, but that did not yet change what it chooses to read.</p>
 </div>
+</section>
 
+<section id="s-next">
 <h2 id="next">4. What's next</h2>
 <ol class="next">
 <li>Done: lookups during a run now land the same way every time, at the normal pace (1-2 per run).</li>
@@ -339,7 +472,9 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <li>Then the thinking ladder, starting with its first rung.</li>
 </ol>
 <p>Asking questions comes after brainiac learns how sentences start and which words matter.</p>
+</section>
+</div>
 
-<footer>More pictures: <a href="https://mchzimm.github.io/brainiac/">all brainiac pages</a> · <a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html">goal progress</a> · <a href="https://mchzimm.github.io/brainiac/eli5-brainiac-chat-path.html">chat path</a>. Cards behind this page: KB-3808 KB-3658 KB-3708 KB-3712 KB-3720 KB-3834 KB-3836 KB-3838 KB-3722 KB-3726 KB-3728 KB-3730 KB-3732 KB-3734 KB-3738 KB-3740 KB-3742 KB-3756 KB-3760 KB-3762 KB-3764 KB-3704 KB-3758 KB-3724 KB-3840 KB-3842 KB-3844 KB-3846 KB-3848 KB-3850</footer>
+<footer>More pictures: <a href="https://mchzimm.github.io/brainiac/">all brainiac pages</a> · <a href="https://mchzimm.github.io/brainiac/eli5-goal-progress.html">goal progress</a> · <a href="https://mchzimm.github.io/brainiac/eli5-brainiac-chat-path.html">chat path</a>. Cards behind this page: KB-3808 KB-3658 KB-3708 KB-3712 KB-3720 KB-3834 KB-3836 KB-3838 KB-3722 KB-3726 KB-3728 KB-3730 KB-3732 KB-3734 KB-3738 KB-3740 KB-3742 KB-3756 KB-3760 KB-3762 KB-3764 KB-3704 KB-3758 KB-3724 KB-3840 KB-3842 KB-3844 KB-3846 KB-3848 KB-3850 KB-3918 KB-3922 KB-3924</footer>
 </main>
 </body></html>
