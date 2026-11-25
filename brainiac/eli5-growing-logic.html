@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 04:16 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 04:49 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -196,11 +196,11 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> waiting. The check is written down, not run. Asking itself (KB-3738) now waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
+<p><b>Now:</b> waiting. The check is written down, not run. Asking itself (KB-3738) now waits on KB-3918.</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
-<p><b>Idle replay</b> (KB-3730): thinks over what it learned while idle. Design step running.</p>
+<p><b>Idle replay</b> (KB-3730): thinks over what it learned while idle. Failed its test (KB-3730).</p>
 <p><b>Sleep tidy-up</b> (KB-3742): smaller and faster, same answers. Waiting.</p>
 <p><b>Live growth numbers</b> (KB-3732): watch the cells grow. Waiting.</p>
 </div>
@@ -255,7 +255,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p>The plan climbs one step at a time; some steps run side by side.</p>
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
-<svg viewBox="0 -616 360 1060" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 11 done, 2 running, 5 not passed, the rest (10) waiting</title>
+<svg viewBox="0 -616 360 1060" role="img" aria-labelledby="steps-t"><title id="steps-t">Staircase of the plan's steps, from the bottom: 11 done, 1 running, 6 not passed, the rest (10) waiting</title>
 <rect x="4" y="404" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="425" class="t-k">Count everything</text><text x="346" y="425" text-anchor="end" class="t-k">done</text>
 <rect x="11" y="368" width="338" height="30" rx="8" class="st-ok"/><text x="23" y="389" class="t-k">Reading grows the brain</text><text x="346" y="389" text-anchor="end" class="t-k">done</text>
 <rect x="18" y="332" width="324" height="30" rx="8" class="st-ok"/><text x="30" y="353" class="t-k">Same-run check (KB-3772)</text><text x="346" y="353" text-anchor="end" class="t-k">done</text><text x="346" y="353" text-anchor="end" class="t-k">found a problem</text>
@@ -264,7 +264,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="39" y="224" width="282" height="30" rx="8" class="box-bad"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-cut">did not pass</text>
 <rect x="46" y="188" width="268" height="30" rx="8" class="box-bad"/><text x="58" y="209" class="t-k">How sentences start (KB-3726)</text><text x="346" y="209" text-anchor="end" class="t-cut">did not pass</text>
 <rect x="53" y="152" width="254" height="30" rx="8" class="box-bad"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-cut">not yet</text>
-<rect x="60" y="116" width="240" height="30" rx="8" class="st-wait"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
+<rect x="60" y="116" width="240" height="30" rx="8" class="box-bad"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-cut">failed</text>
 <rect x="67" y="80" width="226" height="30" rx="8" class="st-wait"/><text x="79" y="101" class="t-s">Asking itself (KB-3738)</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
 <rect x="74" y="44" width="212" height="30" rx="8" class="st-wait"/><text x="86" y="65" class="t-s">Asking you (KB-3740)</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
 <rect x="81" y="8" width="198" height="30" rx="8" class="st-wait"/><text x="93" y="29" class="t-s">Thinking ladder: 6 rungs</text><text x="346" y="29" text-anchor="end" class="t-n">waiting</text>
@@ -275,7 +275,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="116" y="-172" width="128" height="30" rx="8" class="st-wait"/><text x="128" y="-151" class="t-s">Always on</text><text x="346" y="-151" text-anchor="end" class="t-n">waiting</text>
 <rect x="4" y="-280" width="352" height="30" rx="8" class="box-bad"/><text x="16" y="-259" class="t-k">Choosing inside the brain (KB-3854)</text><text x="346" y="-259" text-anchor="end" class="t-cut">not passed</text>
 <rect x="4" y="-244" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-223" class="t-k">Brain-made pick (KB-3858)</text><text x="346" y="-223" text-anchor="end" class="t-k">passed</text>
-<rect x="4" y="-352" width="352" height="30" rx="8" class="st-fix"/><text x="16" y="-331" class="t-s">Spread liking to related words (KB-3884)</text><text x="346" y="-331" text-anchor="end" class="t-n">running</text>
+<rect x="4" y="-352" width="352" height="30" rx="8" class="st-wait"/><text x="16" y="-331" class="t-s">Spread liking to related words (KB-3884)</text><text x="346" y="-331" text-anchor="end" class="t-n">waiting</text>
 <rect x="123" y="-208" width="114" height="30" rx="8" class="st-fix"/><text x="135" y="-187" class="t-s">Old answers (KB-3850)</text><text x="346" y="-187" text-anchor="end" class="t-n">working</text>
 <rect x="4" y="-316" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-295" class="t-k">Keep old answers in a second memory (KB-3864)</text><text x="346" y="-295" text-anchor="end" class="t-k">closed: diagnosis</text>
 <rect x="4" y="-388" width="352" height="30" rx="8" class="st-ok"/><text x="16" y="-367" class="t-k">Keep old answers through story sharing (KB-3892)</text><text x="346" y="-367" text-anchor="end" class="t-k">closed: diagnosis</text>
@@ -307,13 +307,14 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
 <p><span class="chip c-fix">KB-3884 running</span> correction: the word-next-to-word count (16 and 19) did not check out; one-direction links get only 13 on one side, under the bar; the brain's real picks ignore pay so far; next: pick fresh story pairs by same-sentence count, fix the glance (KB-3898), then log what the spread does word by word. Two fresh story pairs picked and checked for the final test. Parked: next try is to make the brain replay what it learned while idle, so the signal itself gets stronger (KB-3730, after KB-3720).</p>
-<p><span class="chip c-fix">KB-3884 running</span> waits on KB-3730 context-cell result.</p>
+<p><span class="chip c-wait">KB-3884 waiting</span> waits on KB-3918.</p>
 <p><span class="chip c-ok">KB-3912 done</span> Checked against shuffled-pay brains: average-per-word scoring did no better than chance on the one set tested (a tie, borderline). At the point where the brain actually picks, it barely helped. No flag runs; idea closed. (replay on old logs)</p>
 <p><span class="chip c-ok">KB-3914 done</span> Checked on old runs: making the brain wait for the whole line made it worse (6 vs 10 right picks), because waiting brings back the long-line bias. Idea closed. Changing how the brain reads its drive does not help; the drive itself is too weak at pick time. (replay on old logs)</p>
-<p><span class="chip c-wait">next up</span> KB-3720 stays off. Four tries to protect old answers hit the same wall (old answers share memory slots with stories). Now: KB-3730 tests context cells during replay (offline).</p>
-<p><span class="chip c-fix">KB-3730 started</span> testing context cells in replay (offline).</p>
+<p><span class="chip c-wait">next up</span> All four plan steps (KB-3720, 3726, 3728, 3730) failed their tests; nothing is switched on in the live brain yet. Now: KB-3918 maps which change could reach how answers are picked.</p>
+<p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
+<p><span class="chip c-fix">KB-3918</span> started: design read.</p>
 <p><span class="chip c-fail">KB-3916 failed</span> synapse protection kept 25 of 63 old answers at best (need 60); longer context cells 3 of 47 (need 44).</p>
-<p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
+<p><span class="chip c-wait">KB-3738 waiting</span> waits on KB-3918.</p>
 <p><span class="chip c-ok">KB-3864 closed: diagnosis</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-ok">KB-3892 closed: diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
 <p><span class="chip c-fail">KB-3888 done, not passed</span> The race picks the valued side no more than the fake runs do: A 8.7 of 20 (fake 7.7-10.3), B 12 of 20 (fake 8-12). Bar was 15. No harm; feature stays off. Next: KB-3884, then a re-test on new offers.</p>
