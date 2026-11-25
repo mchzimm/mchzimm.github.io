@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 01:17 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 01:50 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -290,7 +290,8 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-wait">KB-3836 backlog</span> auto-save every 60 s -&gt; count steps in test mode.</p>
 <p><span class="chip c-fail">KB-3720 done, did not pass</span> Step 2: story share learning built and stored, but it is left off: re-reading the same stories after a restart wore the answer score down from 111 to 101 (needed 106). Follow-up KB-3838; now waits on KB-3850. Waits on KB-3892.</p>
 <p><span class="chip c-ok">KB-3902 done</span> Checked: probe score swings 98-122 from stop to stop (same stop always same number), so the 5-point harm bar can't be read; harm bar NOT MET, no harm or recovery claim. Next: KB-3904 window read.</p>
-<p><span class="chip c-fix">KB-3904</span> running: harm read averaged over many stops.</p>
+<p><span class="chip c-ok">KB-3904 done</span> harm can't be read against 'switch off', because with the switch off the brain doesn't change at all. No harm or gain claim.</p>
+<p><span class="chip c-fix">KB-3908 running</span> harm read on fresh stops vs the frozen reference and the bar 106.</p>
 <p><span class="chip c-wait">KB-3906 backlog</span></p>
 <p><span class="chip c-ok">verified</span> Same build: trace memory off raises answers 62 to 72 of 81. The trace alone costs 10 hits.</p>
 <p><span class="chip c-fail">KB-3726 did not pass</span> openers worked, but own lines still copy short heard bits (also with the feature off).</p>
@@ -305,7 +306,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
 <p><span class="chip c-fix">KB-3884 running</span> correction: the word-next-to-word count (16 and 19) did not check out; one-direction links get only 13 on one side, under the bar; the brain's real picks ignore pay so far; next: pick fresh story pairs by same-sentence count, fix the glance (KB-3898), then log what the spread does word by word. Two fresh story pairs picked and checked for the final test.</p>
-<p><span class="chip c-fix">KB-3884 running</span> F9 checked: paid pick sits right at the bar (9-13 per seed vs 11), combined 10 = not alive yet. Value does spread to other words (proven), but mostly after the race already stopped. Next: F10 checks where the race should stop + a clean rebuild.</p>
+<p><span class="chip c-fix">KB-3884 running</span> F11 checked: the bias is per line, not per length. If each line's own bias were removed, the paid pick would win clearly (46 vs 8 on the full line). Next: F12 tests whether a baseline the brain could learn (a race before payment) gets close to that.</p>
 <p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
 <p><span class="chip c-fail">KB-3864 diagnosis, not passed</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-fail">KB-3892 parked, diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
