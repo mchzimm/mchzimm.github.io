@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 12:37 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 12:55 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -215,7 +215,7 @@ var N=[
 ['map','Change map','w','KB-3918','A check of which changes can reach answers: none of the four tried passed.','done (diagnosis)'],
 ['selfq','Self-questions','t','KB-3922','Asks itself about a gap, then learns the answer like a chat turn.','failed, switched off'],
 ['trig','When to ask','p','KB-3924','Learns by itself when to ask, instead of a rule we wrote.','planned'],
-['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','KB-3944: designing the question opener'],
+['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','KB-3944: checking the opener design on paper'],
 ['askyou','Asking you','p','KB-3740','When it cannot answer its own question, it asks you.','waiting on KB-3922'],
 ['sleep','Sleep tidy-up','p','KB-3742','Tidies memory while resting: smaller, faster, same answers.','planned'],
 ['ladder','Thinking ladder','p','KB-3744 to KB-3754','Six rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.','planned'],
@@ -445,9 +445,9 @@ svg._nodes=nodes;
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
 <p><span class="chip c-fail">KB-3922 failed</span> second design round ran: taught 1 of 20 new questions, same as a swapped-answer sham (1), so no real learning yet. Found: the taught sentence IS remembered, but brainiac only finds it when the question's last word sits right before the answer in that sentence (13 of 18 hits that way vs 2 of 62 otherwise). Tested: shaped questions 9 of 20; question+answer pairs 7 of 20 reworded (19 same wording); told as plain chat 6. Words brainiac picks itself: 1, 1 and 3 of 20 (needs 5). Closed: did not pass. Reworded questions mostly use other words, and replies wander across lines.</p>
 <p><span class="chip c-wait">waiting</span> KB-3940: Checked 97 replies: the one-word note was right 8 times, the learned chain 29. No simple rule picks between them. Handed to KB-3626 (remember which question a note came from).</p>
-<p><span class="chip c-fix">in progress</span> KB-3948: It already knows where a sentence ends. The real problem: replies jump into the middle of a sentence it heard, instead of starting at the beginning. Next: count how many replies start at a sentence start.</p>
+<p><span class="chip c-wait">waiting</span> KB-3948: 53 of 60 replies start mid-sentence. The KB-3944 start memory picks the right first word 14 of 35 times on paper. Waits on KB-3944.</p>
 <p><span class="chip c-wait">waiting</span> KB-3738: brainiac asks itself questions. Found: today the teacher decides when it asks, and in the test every question had one shape ('what happened after ...'). Waits for KB-3944.</p>
-<p><span class="chip c-fix">in progress</span> KB-3944: learn how to word questions from questions it hears (who, where, why ...). Tests 1 and 2 failed: when new question words are heard, its own questions start with a story word instead (5 of 245 are questions). Next: design how it picks the first word of a question.</p>
+<p><span class="chip c-fix">in progress</span> KB-3944: On paper it works with matched practice material, but one pass came from what it heard last. One more paper round, then build.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
