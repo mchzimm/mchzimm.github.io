@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 18:20 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 18:43 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -263,7 +263,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <rect x="32" y="260" width="296" rx="8" class="st-ok"/><text x="44" y="281" class="t-k">Mid-run lookups check (KB-3832)</text><text x="346" y="281" text-anchor="end" class="t-k">done</text>
 <rect x="39" y="224" width="282" rx="8" class="box-bad"/><text x="51" y="245" class="t-k">Stories to pieces (KB-3720)</text><text x="346" y="245" text-anchor="end" class="t-cut">did not pass</text>
 <rect x="46" y="188" width="268" rx="8" class="box-bad"/><text x="58" y="209" class="t-k">How sentences start (KB-3726)</text><text x="346" y="209" text-anchor="end" class="t-cut">did not pass</text>
-<rect x="53" y="152" width="254" rx="8" class="st-wait"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-n">waiting</text>
+<rect x="53" y="152" width="254" rx="8" class="st-fix"/><text x="65" y="173" class="t-s">Which words matter (KB-3728)</text><text x="346" y="173" text-anchor="end" class="t-n">working</text>
 <rect x="60" y="116" width="240" rx="8" class="st-wait"/><text x="72" y="137" class="t-s">Day-dream replay (KB-3730)</text><text x="346" y="137" text-anchor="end" class="t-n">waiting</text>
 <rect x="67" y="80" width="226" rx="8" class="st-wait"/><text x="79" y="101" class="t-s">Asking itself (KB-3738)</text><text x="346" y="101" text-anchor="end" class="t-n">waiting</text>
 <rect x="74" y="44" width="212" rx="8" class="st-wait"/><text x="86" y="65" class="t-s">Asking you (KB-3740)</text><text x="346" y="65" text-anchor="end" class="t-n">waiting</text>
@@ -282,10 +282,11 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fail">KB-3840 did not pass</span> We tested every word-picking tweak on paper, and none stops brainiac from repeating pieces of sentences it heard; almost every line it says with 3 or more words holds such a piece.</p>
 <p><span class="chip c-wait">KB-3846 next</span> Find out whether the repeating comes from how brainiac stores word chains rather than how it picks words.</p>
 <p><span class="chip c-ok">KB-3838 done</span> Reading stories again doesn't break old links; the score dips, then comes back. Old chat skills: still unknown, the test is too easy to fail.</p>
-<p><span class="chip c-fail">KB-3724 did not pass</span> The extra reward was too small to notice, so we don't know if the idea works yet.</p>
-<p><span class="chip c-fix">KB-3844 in progress</span> A huge reward signal changed how brainiac learned (fewer links) but not its test score; one more middle-size try, then we decide.</p>
+<p><span class="chip c-fail">KB-3724 did not pass</span> The extra reward was too small to notice, so we don't know if the idea works yet. Its code is now in brainiac, switched off.</p>
+<p><span class="chip c-ok">KB-3844 done</span> A bigger reward did not make brainiac score better on new things, but a smaller one helped it keep more old answers (34 of 63 instead of 8).</p>
 <p><span class="chip c-ok">KB-3842 done</span> We built a test of what brainiac already knew. After reading new stories it lost most of its old next-word answers (it kept 8 of 63, then 0 after lots of re-reading), so story reading stays off in the live brain for now.</p>
-<p><span class="chip c-wait">KB-3848 next</span> Find a way to read new stories without forgetting old answers.</p>
+<p><span class="chip c-fix">KB-3848 working</span> Trying a gentler learning step, so new stories don't wipe old answers, while still checking that it learns the new stories.</p>
+<p><span class="chip c-fix">KB-3728 working</span> Brainiac gives value to words that paid off and uses it to choose what to read next.</p>
 </div>
 
 <h2 id="next">4. What's next</h2>
