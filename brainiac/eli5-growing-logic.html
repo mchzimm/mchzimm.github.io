@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 14:40 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 15:26 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -316,7 +316,7 @@ svg._nodes=nodes;
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> started. The check is written down, not run. Asking itself (KB-3738) now started: wording is built in (KB-3944), now it learns when to ask.</p>
+<p><b>Now:</b> waits on KB-3972 — answers to its own questions must go back into story memory first.</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
@@ -386,7 +386,7 @@ svg._nodes=nodes;
 <div class="legend"><span class="chip c-ok">done</span><span class="chip c-fix">running</span><span class="chip c-wait">waiting</span></div>
 <div class="card">
 <p class="gh-note">Top = newest step; the first steps sit at the bottom.</p>
-<ol class="stairs" aria-label="Staircase of the plan's steps, newest at the top: 12 done, 1 running, 6 not passed, the rest (10) waiting">
+<ol class="stairs" aria-label="Staircase of the plan's steps, newest at the top: 12 done, 2 running, 6 not passed, the rest (9) waiting">
 <li class="s-ok"><span class="nm">Map which change reaches answers (KB-3918)</span><span class="chip c-ok">done: diagnosis</span></li>
 <li class="s-ok"><span class="nm">Why the test drops after sharing (KB-3902)</span><span class="chip c-ok">done</span></li>
 <li class="s-wait"><span class="nm">Rerun drift check (KB-3900)</span><span class="chip c-wait">waiting</span></li>
@@ -406,7 +406,7 @@ svg._nodes=nodes;
 <li class="s-wait"><span class="nm">Notice a gap</span><span class="chip c-wait">waiting</span></li>
 <li class="s-wait"><span class="nm">Thinking ladder: 6 rungs</span><span class="chip c-wait">waiting</span></li>
 <li class="s-wait"><span class="nm">Asking you (KB-3740)</span><span class="chip c-wait">waiting</span></li>
-<li class="s-wait"><span class="nm">Asking itself (KB-3738)</span><span class="chip c-fix">in progress</span></li>
+<li class="s-fix"><span class="nm">Asking itself (KB-3738)</span><span class="chip c-fix">in progress</span></li>
 <li class="s-bad"><span class="nm">Day-dream replay (KB-3730)</span><span class="chip c-fail">failed</span></li>
 <li class="s-bad"><span class="nm">Which words matter (KB-3728)</span><span class="chip c-fail">not yet</span></li>
 <li class="s-bad"><span class="nm">How sentences start (KB-3726)</span><span class="chip c-fail">did not pass</span></li>
@@ -445,7 +445,10 @@ svg._nodes=nodes;
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
 <p><span class="chip c-fail">KB-3922 failed</span> second design round ran: taught 1 of 20 new questions, same as a swapped-answer sham (1), so no real learning yet. Found: the taught sentence IS remembered, but brainiac only finds it when the question's last word sits right before the answer in that sentence (13 of 18 hits that way vs 2 of 62 otherwise). Tested: shaped questions 9 of 20; question+answer pairs 7 of 20 reworded (19 same wording); told as plain chat 6. Words brainiac picks itself: 1, 1 and 3 of 20 (needs 5). Closed: did not pass. Reworded questions mostly use other words, and replies wander across lines.</p>
 <p><span class="chip c-wait">waiting</span> KB-3940: Checked 97 replies: the one-word note was right 8 times, the learned chain 29. No simple rule picks between them. Handed to KB-3626 (remember which question a note came from).</p>
-<p><span class="chip c-fix">in progress</span> KB-3948: Replies start in the middle of a heard sentence 53 of 60 times. Now that the question opener is built in, testing whether the same memory can start replies at the start of a sentence.</p>
+<p><span class="chip c-fail">KB-3948 failed</span> Tried: put a sentence-opening word in front of the reply. Even a perfect pick hurt the answers, so this road is closed. Next: brainiac must learn how heard sentences start.</p>
+<p><span class="chip c-fix">in progress</span> KB-3626: Remembers each told fact with the words around it, so a new fact no longer wipes an old one. Fix tries missed: an old question can still fill the slot. Next: decide what gets written, not what gets read.</p>
+<p><span class="chip c-fix">in progress</span> KB-3972: New: plan how heard answers get saved into story memory.</p>
+<p><span class="chip c-fail">KB-3974 failed</span> KB-3974: Starts its sentences like heard ones now, but then copies chants word for word. Next: fix the copying (KB-3846).</p>
 <p><span class="chip c-fix">in progress</span> KB-3738: Next big step: brainiac chooses by itself when to ask, at the spots in a story where it can't guess what comes next. Started.</p>
 <p><span class="chip c-fix">in progress</span> KB-3944: Built in, switched off. It now picks the right question word 61 of 100 times (28 by chance), and a separate check proved switched-off changes nothing. Switching it on waits for a live-style test (KB-3960).</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
