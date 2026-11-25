@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-25 14:02 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-25 15:05 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1808,7 +1808,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="viz"><div class="vhead">Claude calls: daily 500 is a soft target, not a cap · 2026-11-23: about 2709 booked, soft target 2733 (ledger)</div><div class="gauge"><div class="g-used" style="width:99.1%"><span>2709 used</span></div><div class="g-left" style="width:0.9%"><span>24</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left to target</div><div class="vcap">total since 500 = 2233 · per-run cap = advance estimate, never a stop · budget 0 = off (KB-3600, KB-3602)</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
-<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>74</b></div>
+<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>75</b></div>
 <div class="chip ch-ok"><span>Red record test on main (KB-3956)</span><b>Done PASS, 0 calls: test fixture fix, merged 4b9e5aaed</b></div>
 <div class="chip ch-ok"><span>Chart plots the goal runs (KB-3958)</span><b>Done, 0 calls: KB-3702 p1 144/166 141/160, p2 145/166 142/160 and KB-3890 p1 148/166 145/160, p2 142/166 139/160 plotted; goal note read from the chart data</b></div>
 <div class="chip ch-ok"><span>Missing privacy setting means off (KB-3430)</span><b>Done: closed by policy, no guard code, no verdict</b></div>
@@ -1874,15 +1874,16 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>Live conditions understudy test (KB-3702)</span><b>PASS: paid depth-2 pair p1 144/166 141/160, p2 145/166 142/160 (556 calls); live was on 7e9e9d3 at depth 2, now c7821db (KB-3788), met at depth 2 by KB-3890; KB-3710 Done (diagnosis); follow-up KB-3718 (Done, NO-GO, best gain +2); KB-3794 Done (diagnosis; lever ovlpin failed the paid read); KB-3804 Done FAIL (paid pair 145/166 142/160 each, bars met; paired net p1 -2, p2 -1, sum -3; flag stays off); Claude day target 3375, soft</b></div>
 <div class="chip ch-ok"><span>11-24 UTC deciding recording (KB-3566)</span><b>Bars met in replay and by KB-3684 fresh paid runs (r4 147/166 144/160, r5 148/166 145/160); bars met in fresh paid runs at depth 2 on 7e9e9d3; live moved to c7821db (KB-3788), goal met at depth 2 by KB-3890: KB-3702 PASS, Done (fresh paid depth-2 pair: p1 144/166 141/160, p2 145/166 142/160, bars 142/136, margin 2-3 on 166, 556 calls); live helper switched to 7e9e9d3 at depth 2 (owner, 21:50 PST, live smoke 4/4, 0 traceback); KB-3710 Done (diagnosis, no deploy): paid check 36 calls; fresh answers match saved 18/24 (15 exact); old version replies same 198/198, so it predates the switch; cause = last ladder rung's unagreed answer becomes final and replies are cached forever; follow-up KB-3718 (Done, NO-GO, best gain +2); KB-3794 Done (diagnosis; lever ovlpin failed the paid read); KB-3804 Done FAIL (paid pair 145/166 142/160 each, bars met; paired net p1 -2, p2 -1, sum -3; flag stays off); Claude day target 3375, soft, live switch done, KB-3666 (default shipped by KB-3664, main 7e9e9d3; local model off, depth 5; margin 2 over 142): confirm 1 kb3510_r2 144/166, 141/160 (old 50/60, hard 50/60, easy 44/46); confirm 2 kb3510_r3 144/166, 141/160 (old 52/60, hard 49/60, easy 43/46); bars 142/166 and 136/160; 370 calls each, refusals 0</b></div>
 <div class="chip ch-ok"><span>Full paid run 1 (KB-3510)</span><b>Run 1 not read; gate passed by confirms kb3510_r2 and kb3510_r3 (KB-3566)</b></div>
-<div class="chip ch-ok"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>flag off, not passed/adopted; follow-up check done: 2 env settings tested in 4 combos (wrong haiku-only setting throws replay out), replay command + settings locked before run 1; 10 new tests, each red when its safeguard breaks; 89 tests pass; tool frozen; next: replay after paid runs 1 and 2</b></div>
+<div class="chip ch-ok"><span>Accept same-meaning answers worded differently (KB-3512)</span><b>Done: closed, stale premise (prep for KB-3510 paid run)</b></div>
 <div class="chip ch-ok"><span>Paid-run harness: logs, fresh cache, margin knob, scorer (KB-3488)</span><b>built, tested on scripted always-right fake replies (0 calls): OLD CEILING 151/166, 148/160 was L2 (wide margin) on the earlier branch, not the real config; not a result; harm only measured by the paid run; ~217 calls per run; rebuilt on verified counter code, 40 tests OK; still blocked: KB-3496 and KB-3498 gates (KB-3494 verdict BLOCKED), peer live process with Claude on, maxbookpro deploy</b></div>
-<div class="chip ch-ok"><span>Live counter, both machines (KB-3438)</span><b>3 gaps fixed, independently verified (tests pass on 2nd machine); real counter file switch held until the KB-3498 plumbing says safe</b></div>
+<div class="chip ch-ok"><span>Live counter, both machines (KB-3438)</span><b>Done: closed, superseded by KB-3582 (soft take, own counter)</b></div>
 <div class="chip ch-ok"><span>Proto tests do not compile (KB-3642)</span><b>DONE: proto tests compile again, 24/24</b></div>
 <div class="chip ch-ok"><span>Rest of the Claude test (KB-3470)</span><b>Done: closed unreadable</b></div>
 <div class="chip ch-ok"><span>More late-grade cases held (KB-3472)</span><b>PASS</b></div>
 <div class="chip ch-ok"><span>Page overflows at 375 px (KB-3576)</span><b>Fixed, measured: page width 2475 -> 360 px at 375 px (chip text now wraps)</b></div>
 <div class="chip ch-ok"><span>Goal note vanishes with goal line (KB-3586)</span><b>Fixed, measured: note stays when goal text is unreadable; says goal met only when both runs of the pair are at or above the bar (lowest 142/166); error text printed, not [object Object]</b></div>
 <div class="chip ch-ok"><span>Late pass on an already closed turn still shown (KB-3484)</span><b>Done PASS (board): late pass after a closed turn: late8 20 = lift 12 + resend 8, 0 loss</b></div>
+<div class="chip ch-ok"><span>Paid run, counter switch, code swap</span><b>DONE (KB-3566, KB-3664): 2 of 2 fresh paid confirms pass; default shipped main 7e9e9d3; backlog KB-3666, KB-3672, KB-3674</b></div>
 </div>
 <div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>26</b></div>
 <div class="chip ch-no"><span>Brainiac chat verify (KB-3792)</span><b>FAIL (leg 2); follow-up KB-3882 Done PASS (flagged 2/3, kept 4/5), not built for live</b></div>
@@ -1900,7 +1901,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Second machine: no live Claude wiring</span><b>not wired</b></div>
 <div class="chip ch-no"><span>Edited sealed copy leaked</span><b>5 of 8 asked</b></div>
 <div class="chip ch-no"><span>No privacy switch in window</span><b>chat only</b></div>
-<div class="chip ch-no"><span>Live privacy log lines lost</span><b>lost on live</b></div>
+<div class="chip ch-no"><span>Live privacy log lines lost</span><b>fixed in code (KB-3056, merged 14d269369); live after rebuild from main + restart</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 <div class="chip ch-no"><span>Yes/no verify question on Claude answers (KB-3718)</span><b>Done, NO-GO (measured, 336 calls): sonnet with source text caught 11 of 25 wrong, wrongly rejected 3 right; haiku 16 right rejected for 16 caught; no source text: mostly "cannot verify"; best gain +2, same as always asking a stronger model; no flag built</b></div>
 <div class="chip ch-no"><span>Overlap pick when no rung span accepted (KB-3804)</span><b>Done FAIL: paid pair 145/166 142/160 each, bars met, paired net p1 -2, p2 -1, sum -3 (551 calls); flag off, not merged; six-draw nets +3, 0, 0, +1, -2, -1</b></div>
@@ -1910,12 +1911,15 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Margin lever: arbitration (KB-3928)</span><b>Done FAIL, no build, 0 calls: C1/C2 change 0 rows (accept rule already keeps local/rung-1 agreement); C3 net -22/-15/-11/-16 per run; on 3-way rows rung 2 beats local about 4:1; string arbitration exhausted</b></div>
 <div class="chip ch-no"><span>Flaky TestRungs under load (KB-3934)</span><b>Done FAIL, 0 calls: not reproduced (omaxy 160 loops + 2 full suites, mbp 4 full suites, 0 reds); reopen only with a kept traceback</b></div>
 <div class="chip ch-no"><span>Next 0-call lever (KB-3608)</span><b>lever A report-only read FAIL (W-&gt;R 1, R-&gt;notR 1, net +0); confirm config unchanged</b></div>
-<div class="chip ch-no"><span>Grader stronger model first, live (KB-3474)</span><b>started 11-22: first checks which model really grades</b></div>
+<div class="chip ch-no"><span>Grader stronger model first, live (KB-3474)</span><b>Done FAIL: sonnet-first lever dead; flag off</b></div>
 </div>
-<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>1</b></div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>4</b></div>
 <div class="chip ch-wip"><span>Right answer swapped by helper: checking a second route</span><b>KB-3462 · horse case fixed earlier</b></div>
+<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: read running</b></div>
+<div class="chip ch-wip"><span>Sealed check of outgoing prompt (KB-3408)</span><b>In Progress: building</b></div>
+<div class="chip ch-wip"><span>Counter path at call time (KB-3414)</span><b>In Progress: verifying</b></div>
 </div>
-<div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>11</b></div>
+<div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>12</b></div>
 <div class="chip ch-blk"><span>Scored confirm-run driver (KB-3552)</span><b>commit E (306b7071c, driver --g3-keep) verified PASS (104 tests); install on mbp held until confirm run</b></div>
 <div class="chip ch-blk"><span>5 order-dependent test failures (KB-3644)</span><b>filed (found by KB-3630): pass alone, fail in full suite</b></div>
 <div class="chip ch-blk"><span>CAP_DAY soft (KB-3610)</span><b>follow-up of KB-3600, filed</b></div>
@@ -1924,9 +1928,10 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-blk"><span>ABS + NONE-W levers (KB-3594)</span><b>scoped (0 calls): held old:10/11/39 unreachable (gold never in prompt); real ABS upside hard:3, hard:13 -&gt; KB-3596; NONE-W no lever under ~117 calls</b></div>
 <div class="chip ch-blk"><span>Containment (E) rule (KB-3540)</span><b>R2 committed (0a69a7c34): sham retired; E judged on stage-2 run by real replay at after-kind + confident, at most 1 lost right answer</b></div>
 <div class="chip ch-blk"><span>New C6 test (KB-3536)</span><b>waits: first full paid run; rule committed before any paid run</b></div>
-<div class="chip ch-ok"><span>Paid run, counter switch, code swap</span><b>DONE (KB-3566, KB-3664): 2 of 2 fresh paid confirms pass; default shipped main 7e9e9d3; backlog KB-3666, KB-3672, KB-3674</b></div>
 <div class="chip ch-blk"><span>Full paid N166 read</span><b>run 1 NOT READ (easy void); next run waits stage 1 (KB-3538), hollow-test fixes and quota; runs on maxbookpro, window 2</b></div>
 <div class="chip ch-blk"><span>Rung cost lever M1 (KB-3574)</span><b>Backlog: M1 rung cost, needs masked-span guard</b></div>
+<div class="chip ch-blk"><span>11 red tests on main (KB-3966)</span><b>Backlog</b></div>
+<div class="chip ch-blk"><span>Reply wait to EOF can time out (KB-3968)</span><b>Backlog</b></div>
 </div>
 </div>
 <h2>Where it stands</h2>
@@ -1971,7 +1976,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-25 14:02 PST";
+const UPDATED="2026-11-25 15:05 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
@@ -2096,7 +2101,7 @@ const PIECES=[
 {"id": "livecount", "name": "live Claude counter (KB-3438)", "lane": "link", "status": "done", "chip": "Done: superseded by KB-3582 (soft take, own counter)", "what": "One shared Claude call counter for live use on both machines.", "how": "Decided: the daily 500 soft target resets every day (UTC), one counter shared by both machines; when the counter cannot be reached, calls are refused. Design approved.", "works": "Yes: live Claude calls go through the soft-target counter (KB-3582).", "nums": "Built: two more guards added and tested; shared counter, 500 soft target per UTC day, refuses when unreachable. 9 design tests pass, each fails when its guard is removed; 0 new test failures. 72 calls left today.", "next": "Nothing open.", "to": ["claudemore"]},
 {"id": "holdlate", "name": "late grade hold (KB-3460)", "lane": "chat", "status": "done", "chip": "PASS: on by default", "what": "When the grade comes late or is missing, the answer is held back instead of shown unchecked.", "how": "Hold is on by default; a late passing grade from Claude lifts the hold and the answer is shown.", "works": "Yes in tests and live (restart 2026-11-22 05:57 PST); a live horse question showed the right answer only after its grade.", "nums": "Separate check: 189 pass, 0 fail; 26 of 26 late-grade answers held in the end-to-end test; late-pass test: 11 of 11 still-open answers shown after the grade, 9 already-closed turns not re-sent (KB-3484).", "next": "Re-send on already-closed turns (KB-3484).", "to": []},
 {"id": "fillswap", "name": "right answer swapped by helper (KB-3462)", "lane": "chat", "status": "blocked", "chip": "blocked (KB-3462)", "what": "A right answer the grader passed was replaced by a worse one-word helper answer ('neigh' became 'duck').", "how": "A passed answer keeps its place; the helper fills only when the answer did not pass, and its text is logged.", "works": "Checking. The horse case was a different route, already fixed and on live (KB-3370).", "nums": "Found on 1 traced chat turn; of 89 helper-filled turns read, the own answer was right in 80, wrong in 4 (only 1 of these had passed the grader; recheck pending), unclear in 5.", "next": "Switch-on read waits. Side findings: KB-3578 closed, KB-3584 passed, KB-3582 Done PASS.", "to": []},
-{"id": "graderfirst", "name": "stronger grader first (KB-3466, KB-3474)", "lane": "chat", "status": "done", "chip": "Done PASS (KB-3466, KB-3474)", "what": "The grader sometimes passed true-sounding wrong answers; in tests, trying the stronger model first caught them.", "how": "Tests only: stronger model first, then the cheaper one. Live switch is a separate card (KB-3474, started 11-22).", "works": "Yes in tests (KB-3466 PASS); live switch being built (KB-3474). Live grader today is haiku (a log label wrongly said sonnet; corrected 11-22).", "nums": "Wrong answers shown 0 of 12 (line 1); right answers kept 23 of 24; slowest 5 % at 5.6 s (limit 8 s).", "next": "Nothing open.", "to": []},
+{"id": "graderfirst", "name": "stronger grader first (KB-3466, KB-3474)", "lane": "chat", "status": "done", "chip": "Done: KB-3466 PASS, KB-3474 FAIL", "what": "The grader sometimes passed true-sounding wrong answers; in tests, trying the stronger model first caught them.", "how": "Tests only: stronger model first, then the cheaper one. Live switch KB-3474 Done FAIL (lever dead, flag off).", "works": "Yes in tests (KB-3466 PASS); live switch KB-3474 FAIL. Live grader today is haiku (a log label wrongly said sonnet; corrected 11-22).", "nums": "Wrong answers shown 0 of 12 (line 1); right answers kept 23 of 24; slowest 5 % at 5.6 s (limit 8 s).", "next": "Nothing open.", "to": []},
 ];
 const LBL={done:"done",verify:"built, verifying",planned:"planned",blocked:"blocked / backlog",now:"being worked on now"};
 document.getElementById("upd").textContent=UPDATED;
