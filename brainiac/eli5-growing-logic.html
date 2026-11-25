@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 09:23 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 09:45 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -312,7 +312,8 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-ok">KB-3912 done</span> Checked against shuffled-pay brains: average-per-word scoring did no better than chance on the one set tested (a tie, borderline). At the point where the brain actually picks, it barely helped. No flag runs; idea closed. (replay on old logs)</p>
 <p><span class="chip c-ok">KB-3914 done</span> Checked on old runs: making the brain wait for the whole line made it worse (6 vs 10 right picks), because waiting brings back the long-line bias. Idea closed. Changing how the brain reads its drive does not help; the drive itself is too weak at pick time. (replay on old logs)</p>
 <p><span class="chip c-wait">next up</span> All four plan steps failed; KB-3918 found no change that passes. Last candidate (write the slot store on every heard line) keeps 3 of 47 old answers, 44 needed: dead (checked twice). Stories never contain the old answers, so sharing them overwrites. decided: keep the line (advisor, 2026-11-25); story sharing stays off live, KB-3720 FAIL stands.</p>
-<p><span class="chip c-fix">KB-3922 started</span> self-question loop on chat-turn path, design audit (read-only).</p>
+<p><span class="chip c-fix">KB-3922 started</span> step 0: taught answers help 7 of 20 new-worded asks (0 without teaching) but old answers dropped 43 -> 41; no build yet; checking the old-answer baseline + whether plain chat lines cost old answers (no-teach chat 43 -> 39).</p>
+<p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
 <p><span class="chip c-fail">KB-3918 done, diagnosis</span> design read: no tested change passes; answers also read a slot store, story sharing never writes it.</p>
 <p><span class="chip c-fail">KB-3916 failed</span> synapse protection kept 25 of 63 old answers at best (need 60); longer context cells 3 of 47 (need 44).</p>
