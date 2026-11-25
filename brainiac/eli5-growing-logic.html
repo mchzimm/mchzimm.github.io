@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-24 22:41 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-24 22:47 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -299,10 +299,10 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fix">KB-3850 working</span> Idea tried on paper: a quick notebook by day, copied to long memory in sleep. It did not hold old answers. Rules for protecting word memories, picked without peeking at the test, also lost new learning. Next: a different memory store.</p>
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
-<p><span class="chip c-fix">KB-3884 running</span> reads 2 (checking): no grammar-class readout told paid from unpaid offers; 78 of 276 offer words are new to the brain; a fair new offer set needs new training stories.</p>
+<p><span class="chip c-fix">KB-3884 running</span> a simple same-sentence word count over the training lines picks the paid side 15 and 17 of 20 (checking); it is only just enough on one side; the test set is now only for tuning, a fresh story pair will decide.</p>
 <p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
 <p><span class="chip c-fail">KB-3864 diagnosis, not passed</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
-<p><span class="chip c-fix">KB-3892 running</span> The sim now matches the real brain row by row (checking); copying old links back would keep 37 of 47 old answers in the sim; no harm seen with the trace off; real chat not read yet.</p>
+<p><span class="chip c-fix">KB-3892 running</span> sim matches real brain row by row (checked); copying old links back keeps 37 of 47 old answers in the sim, the 10 lost have a competing new story; no harm with the trace off; next: what the real failed test needs, then real chat.</p>
 <p><span class="chip c-fail">KB-3888 done, not passed</span> The race picks the valued side no more than the fake runs do: A 8.7 of 20 (fake 7.7-10.3), B 12 of 20 (fake 8-12). Bar was 15. No harm; feature stays off. Next: KB-3884, then a re-test on new offers.</p>
 <p><span class="chip c-ok">KB-3894 done</span> A frozen glance changes nothing the brain learned; the gap of 5 next-word guesses while reading stories is only cell numbering order. 2 small leaks found -&gt; KB-3898.</p>
 <p><span class="chip c-wait">KB-3898 waiting</span> Fix for the 2 small glance leaks.</p>
