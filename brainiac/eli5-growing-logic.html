@@ -79,7 +79,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 01:50 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 02:29 PST</span></p>
 
 <h2 id="idea">The big idea</h2>
 <p><b>brainiac grows its own sentence and logic structures.</b> Nobody types the skills in. The code gives it only brain parts: cells, links that get stronger with use, a surprise signal, a reward, replay, sleep, and a place to save. Then it reads stories. Reading makes new cells and new links. One brain file is never wiped; it keeps growing.</p>
@@ -306,7 +306,7 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <p><span class="chip c-fail">KB-3854 not passed</span> Picking by value works on lines it learned, but not on new lines, and the pick was code, not the brain. Not passed.</p>
 <p><span class="chip c-ok">KB-3858 done</span> Passed: the brain picks the sentence with words it learned to like (46 vs 17 picks, fake runs 28-41). It only works through shared words, not yet for brand-new words.</p>
 <p><span class="chip c-fix">KB-3884 running</span> correction: the word-next-to-word count (16 and 19) did not check out; one-direction links get only 13 on one side, under the bar; the brain's real picks ignore pay so far; next: pick fresh story pairs by same-sentence count, fix the glance (KB-3898), then log what the spread does word by word. Two fresh story pairs picked and checked for the final test.</p>
-<p><span class="chip c-fix">KB-3884 running</span> F11 checked: the bias is per line, not per length. If each line's own bias were removed, the paid pick would win clearly (46 vs 8 on the full line). Next: F12 tests whether a baseline the brain could learn (a race before payment) gets close to that.</p>
+<p><span class="chip c-fix">KB-3884 running</span> F14: brains trained with shuffled pay labels show the same per-line lean, so the lean comes from what the brain read, not from pay. Subtracting it lifts the score 4 -&gt; 7 of 10, but that needs 6 extra brains, so it is a measurement, not something the brain can do itself yet. Next F15: check whether the two paid brains differ in gain, and whether one brain can predict its own lean.</p>
 <p><span class="chip c-wait">KB-3738 waiting</span> Waits on KB-3730 and on a working learning reward (KB-3724 did not pass).</p>
 <p><span class="chip c-fail">KB-3864 diagnosis, not passed</span> Real chat: story sharing keeps 7 of 47 old answers (11 after the first round); two-word answers 5 of 13, first-word 2 of 59. Same as the KB-3842 group. Backfill stays withdrawn.</p>
 <p><span class="chip c-fail">KB-3892 parked, diagnosis</span> old chat answers and the failed KB-3720 test turn out to be different things; copying old links back keeps at most 37 of 47 old answers and can't fix the test.</p>
