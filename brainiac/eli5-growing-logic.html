@@ -26,7 +26,9 @@ p{max-width:110ch}
 #pm-svg{touch-action:none;user-select:none;-webkit-user-select:none}
 .pm-l{stroke:var(--line);stroke-width:1.4}
 .pm-n circle{stroke:var(--bg);stroke-width:2;cursor:grab}
-.pm-n:focus{outline:none}.pm-n:focus circle{stroke:var(--link);stroke-width:3}
+.pm-g:focus{outline:none}.pm-g:focus circle{stroke:var(--link);stroke-width:3}
+.pm-hull{fill:none;stroke-width:3px;stroke-dasharray:10 7;stroke-linecap:round;pointer-events:none;filter:drop-shadow(0 0 3px currentColor)}
+.chip.pm-cat{background:transparent;color:var(--ink);border:3px dashed var(--line);padding:0 10px}
 .pm-n text{font-size:12px;fill:var(--dim);pointer-events:none;paint-order:stroke;stroke:var(--bg);stroke-width:3px;stroke-linejoin:round}
 .pm-n.lbl-off text{display:none}
 .pm-w{fill:var(--ok)}.pm-t{fill:var(--chk)}.pm-b{fill:var(--fail)}
@@ -34,8 +36,8 @@ p{max-width:110ch}
 #pm-svg.hl .pm-n{opacity:.18}#pm-svg.hl .pm-l{opacity:.08}
 #pm-svg.hl .pm-n.on{opacity:1}#pm-svg.hl .pm-n.on text{display:block;fill:var(--ink)}
 #pm-svg.hl .pm-l.on{opacity:1;stroke:var(--chk);stroke-width:2}
-.pm-tip{display:none;position:fixed;left:0;top:0;z-index:10;max-width:min(300px,calc(100vw - 32px));background:var(--tipbg);color:var(--tipink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.85rem;line-height:1.35;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.45)}
-.pm-tip b{display:block;font-size:.95rem}.pm-tip div{margin:3px 0}.pm-tip .pm-d{color:var(--dim)}
+.pm-tip{display:none;position:absolute;left:0;top:0;z-index:10;max-width:min(300px,calc(100vw - 32px));background:var(--tipbg);color:var(--tipink);border:1px solid var(--line);border-radius:10px;padding:8px 10px;font-size:.85rem;line-height:1.35;pointer-events:none;box-shadow:0 4px 14px rgba(0,0,0,.45)}
+.pm-tip b{display:block;font-size:.95rem;padding-right:22px}.pm-tip.pin{border-color:var(--chk)}.pm-tip .pm-last{color:var(--tipink)}.pm-x{pointer-events:auto;position:absolute;top:4px;right:6px;background:none;border:0;color:var(--tipink);font-size:1.2rem;line-height:1;cursor:pointer;padding:2px 6px}.pm-x:focus-visible{outline:2px solid var(--link)}.pm-tip div{margin:3px 0}.pm-tip .pm-d{color:var(--dim)}
 h1{font-size:1.8rem;line-height:1.2;margin:.2em 0 .3em}
 h1 a{color:inherit;text-decoration:none}
 h2{font-size:1.3rem;margin:1.5em 0 .4em}
@@ -106,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 17:52 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 18:28 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -187,85 +189,126 @@ if(window.fetch&&location.protocol!=='file:')fetch('eli5-growing-logic-growth.js
 <section id="s-map">
 <h2 id="map">How the parts connect</h2>
 <div class="card" id="pm">
-<p>Each dot is one part of brainiac. A line means two parts feed each other. Bigger dots have more lines. Move over a dot (or tap it) to see what it does; drag a dot to pull the web around.</p>
+<p>Each dot is one part of brainiac. A line means two parts feed each other. Bigger dots have more lines. A dashed loop goes around each group of parts. Move over a dot (or tap it) to see what it does and when a card for it last ran; click a dot to keep its box open (click again or press its x to close); drag a dot to pull the web around.</p>
 <div class="legend"><span class="chip c-ok">working or done</span><span class="chip c-chk">testing now</span><span class="chip c-wait">planned</span><span class="chip c-fail">blocked: did not pass, switched off</span></div>
-<div class="pm-wrap"><svg id="pm-svg" role="img" aria-label="Web of brainiac's parts: chat in and out, the reply maker, the answer store, word chains, story reading, the saved brain file, and the plan steps that connect to them. Each dot can be focused with Tab to read its details."></svg></div>
-<div id="pm-tip" class="pm-tip" role="status" aria-live="polite"></div>
-<p class="gh-note">Green parts run in the live brain today. Red parts were built and tested, did not pass, and stay switched off.</p>
+<div class="legend" id="pm-cats"></div>
+<div class="pm-wrap" id="pm-wrap"><svg id="pm-svg" role="img" aria-label="Web of brainiac's parts in three groups: the new growing-logic parts, brainiac's original parts, and the understory helper parts around live chat. Each dot can be focused with Tab to read its details; Enter keeps its box open."></svg></div>
+<p class="gh-note">Green parts run in the live brain today. Red parts were built and tested, did not pass, and stay switched off. The web refreshes by itself when the board changes.</p>
 </div>
+<!--graphjson:start--><script type="application/json" id="pm-data">{"generated_utc":"2026-11-26T02:28:35Z","cats":[{"id":"new","name":"growing-logic (new)","color":"#ff3cf0"},{"id":"orig","name":"brainiac original","color":"#ffe600"},{"id":"us","name":"understory","color":"#00f0ff"}],"parts":[{"id":"in","name":"Chat in","cat":"new","s":"w","card":"","eli":"Where the words you type come in.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"reply","name":"Reply maker","cat":"new","s":"w","card":"","eli":"Picks the next word, again and again, to build an answer.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"out","name":"Chat out","cat":"new","s":"w","card":"","eli":"Where brainiac’s answer goes back to you.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"learn","name":"Learn from each turn","cat":"new","s":"w","card":"","eli":"After each chat turn, brainiac learns from what was said.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"ans","name":"Answer store","cat":"new","s":"w","card":"KB-2370","eli":"Remembers answers to things it was asked before.","st":"working in the live brain","last":{"card":"KB-2370","utc":"2026-11-17"},"eta":"done"},{"id":"surp","name":"Surprise signal","cat":"new","s":"w","card":"KB-2370","eli":"Notices words that are new or unexpected.","st":"working in the live brain","last":{"card":"KB-2370","utc":"2026-11-17"},"eta":"done"},{"id":"chain","name":"Word chains","cat":"new","s":"w","card":"","eli":"Keeps chains of words that follow each other.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"read","name":"Story reading","cat":"new","s":"w","card":"KB-2571","eli":"Reads stories all day, dozens of sentences a second.","st":"working in the live brain","last":{"card":"KB-2571","utc":"2026-11-05"},"eta":"done"},{"id":"grow","name":"Growth counter","cat":"new","s":"w","card":"KB-3712","eli":"Counts the new cells and links that reading makes.","st":"done","last":{"card":"KB-3712","utc":"2026-11-24 23:20 UTC"},"eta":"done"},{"id":"save","name":"Saved brain file","cat":"new","s":"w","card":"","eli":"The one brain file. Never wiped; it keeps growing.","st":"working in the live brain","last":null,"eta":"n/a"},{"id":"same","name":"Same-run check","cat":"new","s":"w","card":"KB-3772","eli":"Makes sure the same test run twice gives the same brain.","st":"done","last":{"card":"KB-3772","utc":"2026-11-24 21:30 UTC"},"eta":"done"},{"id":"share","name":"Story sharing","cat":"new","s":"b","card":"KB-3720","eli":"Would copy what it reads into its word chains. Old answers wore away, so it stays off.","st":"did not pass, switched off","last":{"card":"KB-3720","utc":"2026-11-25 17:21 UTC"},"eta":"done"},{"id":"start","name":"Sentence openers","cat":"new","s":"b","card":"KB-3726","eli":"Would learn how sentences start. Its own lines still copy heard bits.","st":"did not pass, switched off","last":{"card":"KB-3726","utc":"2026-11-25 01:30 UTC"},"eta":"done"},{"id":"val","name":"Word liking","cat":"new","s":"b","card":"KB-3728","eli":"Would lean toward words that paid off. It did not change what it picks yet.","st":"not passed yet, switched off","last":{"card":"KB-3728","utc":"2026-11-25 03:43 UTC"},"eta":"done"},{"id":"replay","name":"Day-dream replay","cat":"new","s":"b","card":"KB-3730","eli":"Would think over what it learned while idle. No gain, so it stays off.","st":"failed, switched off","last":{"card":"KB-3730","utc":"2026-11-25 12:48 UTC"},"eta":"done"},{"id":"map","name":"Change map","cat":"new","s":"w","card":"KB-3918","eli":"A check of which changes can reach answers: none of the four tried passed.","st":"done (diagnosis)","last":{"card":"KB-3918","utc":"2026-11-25 13:27 UTC"},"eta":"done"},{"id":"selfq","name":"Self-questions","cat":"new","s":"t","card":"KB-3922","eli":"Asks itself about a gap, then learns the answer like a chat turn.","st":"failed, switched off","last":{"card":"KB-3940","utc":"2026-11-25 20:10 UTC"},"eta":"waiting"},{"id":"trig","name":"When to ask","cat":"new","s":"p","card":"KB-3924","eli":"Learns by itself when to ask, instead of a rule we wrote.","st":"planned","last":{"card":"KB-3924","utc":"2026-11-25 17:33 UTC"},"eta":"waiting"},{"id":"askself","name":"Asking itself in replay","cat":"new","s":"p","card":"KB-3738","eli":"Notices a gap while day-dreaming and asks itself.","st":"KB-3944: question opener built in, off","last":{"card":"KB-3944","utc":"2026-11-25 20:39 UTC"},"eta":"running, ETA n/a"},{"id":"askyou","name":"Asking you","cat":"new","s":"p","card":"KB-3740","eli":"When it cannot answer its own question, it asks you.","st":"waiting on KB-3922","last":{"card":"KB-3740","utc":"2026-11-25 17:21 UTC"},"eta":"waiting"},{"id":"sleep","name":"Sleep tidy-up","cat":"new","s":"p","card":"KB-3742","eli":"Tidies memory while resting: smaller, faster, same answers.","st":"planned","last":{"card":"KB-3742","utc":"2026-11-24 06:59 UTC"},"eta":"waiting"},{"id":"ladder","name":"Thinking ladder","cat":"new","s":"p","card":"KB-3744 to KB-3754","eli":"Six rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.","st":"planned","last":{"card":"KB-3744","utc":"2026-11-24 06:59 UTC"},"eta":"waiting"},{"id":"plan","name":"Growing-logic plan","cat":"new","s":"w","card":"KB-3658","eli":"The plan that ties these parts together.","st":"in progress","last":{"card":"KB-3658","utc":"2026-11-25 20:10 UTC"},"eta":"running, ETA n/a"},{"id":"o_cells","name":"Brain cells and links","cat":"orig","s":"w","card":"","eli":"Cells that fire, and links between them that get stronger with use.","st":"working in the live brain","last":{"card":"KB-2318","utc":"2026-11-01"},"eta":"done"},{"id":"o_senses","name":"Text senses","cat":"orig","s":"w","card":"","eli":"Letters and words come in as signals; words go out the same way.","st":"working in the live brain","last":{"card":"KB-1465","utc":"2026-10-21"},"eta":"done"},{"id":"o_chat","name":"Chat and teacher","cat":"orig","s":"w","card":"","eli":"Talks with you, and hears lessons from a teacher feed.","st":"working in the live brain","last":{"card":"KB-3126","utc":"2026-11-18 14:35 UTC"},"eta":"done"},{"id":"o_hippo","name":"Memory replay","cat":"orig","s":"w","card":"","eli":"Plays back fresh moments so they stick.","st":"working in the live brain","last":{"card":"KB-3686","utc":"2026-11-24 05:23 UTC"},"eta":"done"},{"id":"o_sleep","name":"Sleep","cat":"orig","s":"w","card":"","eli":"Rests to get energy back and settle what it learned.","st":"working in the live brain","last":{"card":"KB-3246","utc":"2026-11-20 05:12 UTC"},"eta":"done"},{"id":"o_reward","name":"Value and reward","cat":"orig","s":"w","card":"","eli":"Feels a reward when an act pays off, and leans toward it next time.","st":"working in the live brain","last":{"card":"KB-1473","utc":"2026-10-20"},"eta":"done"},{"id":"o_needs","name":"Body needs","cat":"orig","s":"w","card":"","eli":"Hunger and energy that rise and fall, so acts matter.","st":"working in the live brain","last":{"card":"KB-3832","utc":"2026-11-24 22:53 UTC"},"eta":"done"},{"id":"o_store","name":"Brain file storage","cat":"orig","s":"w","card":"","eli":"Saves the whole brain to its file and loads it back.","st":"working in the live brain","last":{"card":"KB-3844","utc":"2026-11-25 02:41 UTC"},"eta":"done"},{"id":"u_helper","name":"Understudy helper","cat":"us","s":"w","card":"","eli":"A stand-in that answers when brainiac’s own reply is empty or wrong.","st":"working in live chat","last":{"card":"KB-3954","utc":"2026-11-25 21:28 UTC"},"eta":"done"},{"id":"u_claude","name":"Claude backup","cat":"us","s":"w","card":"","eli":"The helper can ask Claude: a small model first, a bigger one as backup.","st":"working in live chat","last":{"card":"KB-3026","utc":"2026-11-25 21:26 UTC"},"eta":"done"},{"id":"u_grade","name":"Reply grader","cat":"us","s":"w","card":"","eli":"Grades brainiac’s own reply right or wrong.","st":"working in live chat","last":{"card":"KB-3962","utc":"2026-11-25 23:05 UTC"},"eta":"running, ETA n/a"},{"id":"u_judge","name":"Answer judge","cat":"us","s":"w","card":"","eli":"When both answer, picks which reply to show.","st":"working in live chat","last":{"card":"KB-3310","utc":"2026-11-20 18:40 UTC"},"eta":"done"},{"id":"u_own","name":"Own answer first","cat":"us","s":"w","card":"","eli":"Shows brainiac’s own learned answer; the helper is the fallback.","st":"working in live chat","last":{"card":"KB-3604","utc":"2026-11-25 21:08 UTC"},"eta":"done"},{"id":"u_teach","name":"Learning from the helper","cat":"us","s":"w","card":"","eli":"The helper’s right answers teach brainiac.","st":"working in live chat","last":{"card":"KB-3638","utc":"2026-11-24 06:25 UTC"},"eta":"done"},{"id":"u_guard","name":"Wrong-fact guard","cat":"us","s":"w","card":"","eli":"Stops the helper from teaching brainiac a wrong fact.","st":"working in live chat","last":{"card":"KB-3814","utc":"2026-11-24 14:55 UTC"},"eta":"waiting"}],"edges":["in-reply","reply-out","in-learn","learn-ans","learn-chain","surp-ans","surp-selfq","ans-reply","chain-reply","read-share","share-chain","read-grow","start-chain","start-reply","val-chain","replay-chain","replay-askself","selfq-out","selfq-learn","trig-selfq","selfq-askyou","askself-askyou","askyou-out","sleep-chain","sleep-save","chain-save","ans-save","same-save","grow-save","map-share","map-start","map-val","map-replay","ladder-chain","plan-share","plan-start","plan-val","plan-replay","plan-selfq","plan-trig","plan-askself","plan-askyou","plan-sleep","plan-ladder","plan-map","plan-same","plan-grow","o_cells-chain","o_cells-learn","o_cells-o_hippo","o_cells-o_store","o_hippo-replay","o_hippo-o_sleep","o_sleep-sleep","o_sleep-o_needs","o_store-save","o_reward-val","o_reward-o_needs","o_chat-in","o_chat-learn","o_senses-in","o_senses-out","o_senses-o_chat","u_helper-out","u_helper-reply","u_claude-u_helper","u_grade-reply","u_grade-u_helper","u_judge-u_helper","u_judge-reply","u_judge-u_own","u_own-ans","u_own-out","u_teach-u_helper","u_teach-learn","u_guard-u_teach","u_guard-u_grade","u_grade-o_reward"]}</script><!--graphjson:end-->
 <script id="pm-js">(function(){
-var NS='http://www.w3.org/2000/svg',svg=document.getElementById('pm-svg'),tip=document.getElementById('pm-tip');
-var ST={w:'working or done',t:'testing now',p:'planned',b:'blocked: did not pass, switched off'};
-var N=[
-['in','Chat in','w','','Where the words you type come in.','working in the live brain'],
-['reply','Reply maker','w','','Picks the next word, again and again, to build an answer.','working in the live brain'],
-['out','Chat out','w','','Where brainiac’s answer goes back to you.','working in the live brain'],
-['learn','Learn from each turn','w','','After each chat turn, brainiac learns from what was said.','working in the live brain'],
-['ans','Answer store','w','KB-2370','Remembers answers to things it was asked before.','working in the live brain'],
-['surp','Surprise signal','w','KB-2370','Notices words that are new or unexpected.','working in the live brain'],
-['chain','Word chains','w','','Keeps chains of words that follow each other.','working in the live brain'],
-['read','Story reading','w','KB-2571','Reads stories all day, dozens of sentences a second.','working in the live brain'],
-['grow','Growth counter','w','KB-3712','Counts the new cells and links that reading makes.','done'],
-['save','Saved brain file','w','','The one brain file. Never wiped; it keeps growing.','working in the live brain'],
-['same','Same-run check','w','KB-3772','Makes sure the same test run twice gives the same brain.','done'],
-['share','Story sharing','b','KB-3720','Would copy what it reads into its word chains. Old answers wore away, so it stays off.','did not pass, switched off'],
-['start','Sentence openers','b','KB-3726','Would learn how sentences start. Its own lines still copy heard bits.','did not pass, switched off'],
-['val','Word liking','b','KB-3728','Would lean toward words that paid off. It did not change what it picks yet.','not passed yet, switched off'],
-['replay','Day-dream replay','b','KB-3730','Would think over what it learned while idle. No gain, so it stays off.','failed, switched off'],
-['map','Change map','w','KB-3918','A check of which changes can reach answers: none of the four tried passed.','done (diagnosis)'],
-['selfq','Self-questions','t','KB-3922','Asks itself about a gap, then learns the answer like a chat turn.','failed, switched off'],
-['trig','When to ask','p','KB-3924','Learns by itself when to ask, instead of a rule we wrote.','planned'],
-['askself','Asking itself in replay','p','KB-3738','Notices a gap while day-dreaming and asks itself.','KB-3944: question opener built in, off'],
-['askyou','Asking you','p','KB-3740','When it cannot answer its own question, it asks you.','waiting on KB-3922'],
-['sleep','Sleep tidy-up','p','KB-3742','Tidies memory while resting: smaller, faster, same answers.','planned'],
-['ladder','Thinking ladder','p','KB-3744 to KB-3754','Six rungs: groups, compare, order and cause, not/all/some, if/then, question shapes.','planned'],
-['plan','Growing-logic plan','w','KB-3658','The plan that ties these parts together.','in progress']];
-var E='in-reply reply-out in-learn learn-ans learn-chain surp-ans surp-selfq ans-reply chain-reply read-share share-chain read-grow start-chain start-reply val-chain replay-chain replay-askself selfq-out selfq-learn trig-selfq selfq-askyou askself-askyou askyou-out sleep-chain sleep-save chain-save ans-save same-save grow-save map-share map-start map-val map-replay ladder-chain plan-share plan-start plan-val plan-replay plan-selfq plan-trig plan-askself plan-askyou plan-sleep plan-ladder plan-map plan-same plan-grow'.split(' ');
-var ix={},nodes=N.map(function(a,i){ix[a[0]]=i;return{i:i,id:a[0],name:a[1],s:a[2],card:a[3],eli:a[4],st:a[5],deg:0,x:0,y:0,vx:0,vy:0,fx:null}});
-var links=E.map(function(p){var q=p.split('-'),a=nodes[ix[q[0]]],b=nodes[ix[q[1]]];a.deg++;b.deg++;return{a:a,b:b}});
-nodes.forEach(function(n){n.r=5+3*Math.sqrt(n.deg)});
-var W=720,H=520,alpha=1,raf=0,drag=null,cur=-1;
+var NS='http://www.w3.org/2000/svg',svg=document.getElementById('pm-svg'),wrap=document.getElementById('pm-wrap'),catBox=document.getElementById('pm-cats');
+var D0=JSON.parse(document.getElementById('pm-data').textContent||'{}');
+var PAD=12,MARG=5,FADE=900,SEG=18;
+var nodes=[],byId={},links=[],byKey={},cats={},catOrder=[],fades=[],pins={},hov=null,noHov=null;
+var W=720,H=520,alpha=1,raf=0,drag=null,down=null,lastSig='';
 function mk(n,a,p){var e=document.createElementNS(NS,n);for(var k in a)e.setAttribute(k,a[k]);(p||svg).appendChild(e);return e}
-function size(){var w=Math.max(280,Math.round(svg.parentNode.clientWidth||720)),h=w<600?Math.round(Math.max(420,w*1.25)):Math.round(Math.min(620,Math.max(460,w*0.68)));
-if(W&&nodes[0].x){var sx=w/W,sy=h/H;nodes.forEach(function(n){n.x*=sx;n.y*=sy})}W=w;H=h;svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('height',H)}
-function tick(){var k=Math.min(W,H),rep=k*k*0.012,L0=k*0.13,i,j,a,b,dx,dy,d2,d,f;
-for(i=0;i<nodes.length;i++)for(j=i+1;j<nodes.length;j++){a=nodes[i];b=nodes[j];dx=b.x-a.x;dy=b.y-a.y;d2=dx*dx+dy*dy||0.01;d=Math.sqrt(d2);f=rep/d2*alpha;a.vx-=dx/d*f;a.vy-=dy/d*f;b.vx+=dx/d*f;b.vy+=dy/d*f}
-links.forEach(function(l){dx=l.b.x-l.a.x;dy=l.b.y-l.a.y;d=Math.sqrt(dx*dx+dy*dy)||0.01;f=(d-L0)*0.06*alpha;l.a.vx+=dx/d*f;l.a.vy+=dy/d*f;l.b.vx-=dx/d*f;l.b.vy-=dy/d*f});
-nodes.forEach(function(n){n.vx+=(W/2-n.x)*0.012*alpha;n.vy+=(H/2-n.y)*0.012*alpha;if(n.fx!=null){n.x=n.fx;n.y=n.fy;n.vx=n.vy=0;return}n.vx*=0.6;n.vy*=0.6;n.x+=n.vx;n.y+=n.vy;var m=n.r+8;n.x=Math.max(m+30,Math.min(W-m-30,n.x));n.y=Math.max(m,Math.min(H-m-14,n.y))});alpha*=0.985}
-var gl=mk('g',{}),gn=mk('g',{});
-links.forEach(function(l){l.el=mk('line',{'class':'pm-l'},gl)});
-nodes.forEach(function(n){var g=mk('g',{'class':'pm-n',tabindex:'0',role:'button','aria-label':n.name+': '+n.eli+' Status: '+n.st+(n.card?'. Card '+n.card:'')},gn);n.el=g;
-mk('circle',{r:n.r.toFixed(1),'class':'pm-'+n.s},g);n.tx=mk('text',{'text-anchor':'middle',y:(n.r+13).toFixed(1)},g);n.tx.textContent=n.name;
-g.addEventListener('pointerenter',function(e){show(n,e.clientX,e.clientY)});
-g.addEventListener('pointermove',function(e){if(!drag||drag===n)show(n,e.clientX,e.clientY)});
-g.addEventListener('pointerleave',function(e){if(e.pointerType==='mouse'&&drag!==n)hide()});
-g.addEventListener('pointerdown',function(e){e.preventDefault();e.stopPropagation();drag=n;try{g.setPointerCapture(e.pointerId)}catch(x){}var p=pt(e);n.fx=p.x;n.fy=p.y;show(n,e.clientX,e.clientY);heat(0.3)});
-g.addEventListener('focus',function(){var b=n.el.getBoundingClientRect();show(n,b.right,b.bottom)});
-g.addEventListener('blur',hide)});
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+var gh=mk('g',{'class':'pm-hulls'}),gl=mk('g',{}),gn=mk('g',{});
+function anchor(c){var i=catOrder.indexOf(c),wide=W>=600,A=wide?[[0.52,0.5],[0.17,0.3],[0.84,0.66]]:[[0.5,0.5],[0.32,0.13],[0.66,0.88]],a=A[i<0?0:i%3];return{x:a[0]*W,y:a[1]*H}}
+function size(){var w=Math.max(280,Math.round(wrap.clientWidth||720)),h=w<600?Math.round(Math.max(560,w*1.6)):Math.round(Math.min(680,Math.max(520,w*0.72)));
+if(W&&nodes.length&&nodes[0].x){var sx=w/W,sy=h/H;nodes.forEach(function(n){n.x*=sx;n.y*=sy})}W=w;H=h;svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('height',H)}
+/* fades: {t0,dur,from,to,set(v),end()} */
+function fade(from,to,set,end){var f={t0:performance.now(),dur:FADE,from:from,to:to,set:set,end:end};set(from);fades.push(f);heat(0.02);return f}
+function runFades(t){fades=fades.filter(function(f){var k=Math.min(1,(t-f.t0)/f.dur);f.set(f.from+(f.to-f.from)*k);if(k>=1){if(f.end)f.end();return false}return true})}
+function setCats(cs){catOrder=cs.map(function(c){return c.id});cs.forEach(function(c){var o=cats[c.id];if(!o){o=cats[c.id]={id:c.id};o.el=mk('path',{'class':'pm-hull','data-cat':c.id},gh);o.chip=document.createElement('span');o.chip.className='chip pm-cat';catBox.appendChild(o.chip)}
+o.name=c.name;o.color=c.color;o.el.style.stroke=c.color;o.el.style.color=c.color;o.chip.style.borderColor=c.color;o.chip.textContent=c.name});
+Object.keys(cats).forEach(function(k){if(catOrder.indexOf(k)<0){cats[k].el.remove();cats[k].chip.remove();delete cats[k]}})}
+function version(n,p){var v=mk('g',{'class':'pm-v'},n.g),e=mk('g',{'class':'pm-n'},v);mk('circle',{r:n.r.toFixed(1),'class':'pm-'+p.s},e);var tx=mk('text',{'text-anchor':'middle',y:(n.r+13).toFixed(1)},e);tx.textContent=p.name;
+n.g.setAttribute('aria-label',p.name+': '+p.eli+' Status: '+p.st+(p.card?'. Card '+p.card:'')+(p.last?'. Last card run '+p.last.utc+', '+p.last.card:'')+'. '+p.eta);return{v:v,el:e,tx:tx}}
+function addNode(p,x,y,w){var n={id:p.id,p:p,deg:0,r:7,x:x,y:y,vx:0,vy:0,fx:null,fy:null,w:w,dead:false};
+n.g=mk('g',{'class':'pm-g',tabindex:'0',role:'button'},gn);var V=version(n,p);n.v=V.v;n.el=V.el;n.tx=V.tx;
+var g=n.g;
+g.addEventListener('pointerenter',function(e){if(!drag&&!n.dead)hover(n,e.clientX,e.clientY)});
+g.addEventListener('pointermove',function(e){if((!drag||drag===n)&&!n.dead)hover(n,e.clientX,e.clientY)});
+g.addEventListener('pointerleave',function(e){if(noHov===n)noHov=null;if(e.pointerType==='mouse'&&drag!==n)unhover(n)});
+g.addEventListener('pointerdown',function(e){if(n.dead)return;e.preventDefault();e.stopPropagation();drag=n;down={x:e.clientX,y:e.clientY,moved:false,type:e.pointerType};try{g.setPointerCapture(e.pointerId)}catch(x){}var q=pt(e);n.fx=q.x;n.fy=q.y;hover(n,e.clientX,e.clientY);heat(0.3)});
+g.addEventListener('focus',function(){var b=g.getBoundingClientRect();hover(n,b.right,b.bottom)});
+g.addEventListener('blur',function(){unhover(n)});
+g.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();togglePin(n)}});
+nodes.push(n);byId[n.id]=n;return n}
 function pt(e){var b=svg.getBoundingClientRect();return{x:(e.clientX-b.left)*W/b.width,y:(e.clientY-b.top)*H/b.height}}
-svg.addEventListener('pointermove',function(e){if(!drag)return;var p=pt(e);drag.fx=p.x;drag.fy=p.y;show(drag,e.clientX,e.clientY);heat(0.15)});
-function up(e){if(!drag)return;var n=drag;drag=null;n.fx=n.fy=null;if(e.pointerType==='mouse'){var t=document.elementFromPoint(e.clientX,e.clientY);if(!t||!n.el.contains(t))hide()}}
+svg.addEventListener('pointermove',function(e){if(!drag)return;if(Math.abs(e.clientX-down.x)+Math.abs(e.clientY-down.y)>4)down.moved=true;var q=pt(e);drag.fx=q.x;drag.fy=q.y;if(!pins[drag.id])hover(drag,e.clientX,e.clientY);heat(0.15)});
+function up(e){if(!drag)return;var n=drag,d=down;drag=null;down=null;n.fx=n.fy=null;if(e.type==='pointerup'&&d&&!d.moved)togglePin(n);
+if(e.pointerType==='mouse'){var t=document.elementFromPoint(e.clientX,e.clientY);if(!t||!n.g.contains(t))unhover(n)}}
 svg.addEventListener('pointerup',up);svg.addEventListener('pointercancel',up);
-document.addEventListener('pointerdown',function(e){if(!svg.contains(e.target))hide()});
-window.addEventListener('scroll',function(){if(cur>=0&&!drag)hide()},{passive:true});
-function nb(n){var s={};s[n.i]=1;links.forEach(function(l){if(l.a===n)s[l.b.i]=1;if(l.b===n)s[l.a.i]=1});return s}
-function show(n,x,y){cur=n.i;var s=nb(n);svg.classList.add('hl');nodes.forEach(function(m){m.el.classList.toggle('on',!!s[m.i])});links.forEach(function(l){l.el.classList.toggle('on',l.a===n||l.b===n)});
-tip.innerHTML='<b>'+n.name+'</b><div>'+n.eli+'</div><div class="pm-d">Status: '+n.st+'</div><div class="pm-d">'+(n.card?'Card: '+n.card:'Built in from the start (no card)')+' · links: '+n.deg+'</div>';
-tip.style.display='block';var tw=tip.offsetWidth,th=tip.offsetHeight,vw=document.documentElement.clientWidth,vh=window.innerHeight,l=x+14,t=y+14;
-if(l+tw>vw-8)l=x-14-tw;if(l<8)l=Math.max(8,Math.min(vw-8-tw,8));if(t+th>vh-8)t=y-14-th;if(t<8)t=8;tip.style.left=Math.round(l)+'px';tip.style.top=Math.round(t)+'px'}
-function hide(){cur=-1;tip.style.display='none';svg.classList.remove('hl');nodes.forEach(function(m){m.el.classList.remove('on')});links.forEach(function(l){l.el.classList.remove('on')})}
+document.addEventListener('pointerdown',function(e){if(!svg.contains(e.target)&&!(e.target.closest&&e.target.closest('.pm-tip')))unhover()});
+window.addEventListener('scroll',function(){if(hov&&!drag)unhover()},{passive:true});
+function nb(n){var s={};s[n.id]=1;links.forEach(function(l){if(l.dead)return;if(l.a===n)s[l.b.id]=1;if(l.b===n)s[l.a.id]=1});return s}
+function focusSet(){var f=Object.keys(pins).map(function(k){return byId[k]}).filter(Boolean);if(hov&&f.indexOf(hov.n)<0)f.push(hov.n);return f}
+function highlight(){var f=focusSet(),s={};f.forEach(function(n){var q=nb(n);for(var k in q)s[k]=1});svg.classList.toggle('hl',f.length>0);
+nodes.forEach(function(m){m.el.classList.toggle('on',!!s[m.id])});links.forEach(function(l){l.el.classList.toggle('on',f.indexOf(l.a)>=0||f.indexOf(l.b)>=0)})}
+function tipHtml(n,pinned){var p=n.p,c=cats[p.cat];return(pinned?'<button type="button" class="pm-x" aria-label="Close '+esc(p.name)+'">×</button>':'')+'<b>'+esc(p.name)+'</b><div>'+esc(p.eli)+'</div><div class="pm-d">Status: '+esc(p.st)+'</div>'
++'<div class="pm-d">'+(p.card?'Card: '+esc(p.card)+' · ':(p.cat==='new'?'Built in from the start (no card) · ':''))+'links: '+n.deg+'</div>'
++'<div class="pm-d">Group: <span class="pm-k" style="color:'+esc(c?c.color:'')+'">'+esc(c?c.name:p.cat)+'</span></div>'
++'<div class="pm-last">Last card run: '+(p.last?esc(p.last.utc)+' ('+esc(p.last.card)+')':'n/a (no card)')+'</div><div class="pm-last">Card state: '+esc(p.eta||'n/a')+'</div>'}
+function newTip(n,pinned){var t=document.createElement('div');t.className='pm-tip'+(pinned?' pin':'');t.setAttribute('data-part',n.id);t.innerHTML=tipHtml(n,pinned);wrap.appendChild(t);t.style.display='block';
+if(pinned){t.setAttribute('role','dialog');t.querySelector('.pm-x').addEventListener('click',function(e){e.stopPropagation();unpin(n.id)})}else{t.setAttribute('role','status')}return t}
+function rectOf(t){return{l:t.offsetLeft,t:t.offsetTop,r:t.offsetLeft+t.offsetWidth,b:t.offsetTop+t.offsetHeight}}
+function place(t,cx,cy){var wb=wrap.getBoundingClientRect(),x=cx-wb.left,y=cy-wb.top,tw=t.offsetWidth,th=t.offsetHeight,ww=wrap.clientWidth,others=[];
+Array.prototype.forEach.call(wrap.querySelectorAll('.pm-tip'),function(o){if(o!==t&&!o.classList.contains('gone'))others.push(rectOf(o))});
+function ok(l,tp){if(tp<0)return false;for(var i=0;i<others.length;i++){var o=others[i];if(l<o.r+4&&l+tw+4>o.l&&tp<o.b+4&&tp+th+4>o.t)return false}return true}
+function cl(l){return Math.max(0,Math.min(ww-tw,l))}
+var c=[[x+14,y+14],[x-14-tw,y+14],[x+14,y-14-th],[x-14-tw,y-14-th]];others.forEach(function(o){c.push([o.r+8,o.t],[o.l-8-tw,o.t],[o.l,o.b+8],[o.l,o.t-8-th])});
+for(var i=0;i<c.length;i++){var l=cl(c[i][0]);if(ok(l,c[i][1])){t.style.left=Math.round(l)+'px';t.style.top=Math.round(c[i][1])+'px';return}}
+for(var yy=Math.max(0,y);yy<y+4000;yy+=12){for(var xx=0;xx<=Math.max(0,ww-tw);xx+=24){if(ok(xx,yy)){t.style.left=Math.round(xx)+'px';t.style.top=Math.round(yy)+'px';return}}}
+t.style.left=Math.round(cl(x+14))+'px';t.style.top=Math.round(y+14)+'px'}
+function hover(n,cx,cy){if(pins[n.id]){if(hov&&hov.n!==n)unhover();highlight();return}if(noHov===n)return;
+if(!hov||hov.n!==n){unhover();hov={n:n,t:newTip(n,false)}}place(hov.t,cx,cy);highlight()}
+function unhover(n){if(!hov||(n&&hov.n!==n))return;hov.t.remove();hov=null;highlight()}
+function pin(n){if(pins[n.id])return;var t;if(hov&&hov.n===n){t=hov.t;hov=null;t.className='pm-tip pin';t.setAttribute('role','dialog');t.innerHTML=tipHtml(n,true);t.querySelector('.pm-x').addEventListener('click',function(e){e.stopPropagation();unpin(n.id)})}
+else{var b=n.g.getBoundingClientRect();t=newTip(n,true);place(t,b.right,b.bottom)}pins[n.id]=t;highlight()}
+function unpin(id){var t=pins[id];if(!t)return;delete pins[id];t.remove();if(byId[id])noHov=byId[id];highlight()}
+function togglePin(n){if(pins[n.id])unpin(n.id);else pin(n)}
+function swapTip(old,n,pinned){var t=newTip(n,pinned);t.style.left=old.style.left;t.style.top=old.style.top;t.style.opacity='0';old.classList.add('gone');fade(1,0,function(v){old.style.opacity=v},function(){old.remove()});fade(0,1,function(v){t.style.opacity=v},function(){t.style.opacity=''});return t}
+/* hull: closed uniform cubic B-spline around padded node circles */
+function convex(P){P.sort(function(a,b){return a[0]-b[0]||a[1]-b[1]});if(P.length<3)return P;function cr(o,a,b){return(a[0]-o[0])*(b[1]-o[1])-(a[1]-o[1])*(b[0]-o[0])}var lo=[],hi=[],i;
+for(i=0;i<P.length;i++){while(lo.length>=2&&cr(lo[lo.length-2],lo[lo.length-1],P[i])<=0)lo.pop();lo.push(P[i])}for(i=P.length-1;i>=0;i--){while(hi.length>=2&&cr(hi[hi.length-2],hi[hi.length-1],P[i])<=0)hi.pop();hi.push(P[i])}lo.pop();hi.pop();return lo.concat(hi)}
+function hullD(ns){var P=[];ns.forEach(function(n){var R=Math.max(1,(n.r+PAD+MARG)*n.w);for(var k=0;k<16;k++){var a=k*Math.PI/8;P.push([n.x+R*Math.cos(a),n.y+R*Math.sin(a)])}});if(P.length<3)return'';
+var h=convex(P),c=[],i,j;for(i=0;i<h.length;i++){var p=h[i],q=h[(i+1)%h.length],L=Math.hypot(q[0]-p[0],q[1]-p[1]),m=Math.floor(L/SEG);c.push(p);for(j=1;j<=m;j++)c.push([p[0]+(q[0]-p[0])*j/(m+1),p[1]+(q[1]-p[1])*j/(m+1)])}
+var N=c.length,d='';function f(v){return v.toFixed(1)}for(i=0;i<N;i++){var P0=c[(i+N-1)%N],P1=c[i],P2=c[(i+1)%N],P3=c[(i+2)%N];
+if(!i)d='M'+f((P0[0]+4*P1[0]+P2[0])/6)+','+f((P0[1]+4*P1[1]+P2[1])/6);d+='C'+f((4*P1[0]+2*P2[0])/6)+','+f((4*P1[1]+2*P2[1])/6)+' '+f((2*P1[0]+4*P2[0])/6)+','+f((2*P1[1]+4*P2[1])/6)+' '+f((P1[0]+4*P2[0]+P3[0])/6)+','+f((P1[1]+4*P2[1]+P3[1])/6)}return d+'Z'}
+function tick(){var k=Math.min(W,H),rep=k*k*0.009,L0=k*0.11,i,j,a,b,dx,dy,d2,d,f;
+for(i=0;i<nodes.length;i++)for(j=i+1;j<nodes.length;j++){a=nodes[i];b=nodes[j];dx=b.x-a.x;dy=b.y-a.y;d2=dx*dx+dy*dy||0.01;d=Math.sqrt(d2);f=rep/d2*alpha*(a.p.cat===b.p.cat?1:1.8)*Math.min(a.w,b.w,1);a.vx-=dx/d*f;a.vy-=dy/d*f;b.vx+=dx/d*f;b.vy+=dy/d*f}
+links.forEach(function(l){if(l.dead)return;var L=l.a.p.cat===l.b.p.cat?L0:L0*1.8;dx=l.b.x-l.a.x;dy=l.b.y-l.a.y;d=Math.sqrt(dx*dx+dy*dy)||0.01;f=(d-L)*(l.a.p.cat===l.b.p.cat?0.06:0.02)*alpha;l.a.vx+=dx/d*f;l.a.vy+=dy/d*f;l.b.vx-=dx/d*f;l.b.vy-=dy/d*f});
+nodes.forEach(function(n){var A=anchor(n.p.cat);n.vx+=(A.x-n.x)*0.02*alpha;n.vy+=(A.y-n.y)*0.02*alpha;if(n.fx!=null){n.x=n.fx;n.y=n.fy;n.vx=n.vy=0}else{n.vx*=0.6;n.vy*=0.6;n.x+=n.vx;n.y+=n.vy}
+var m=n.r+PAD+MARG+4;n.x=Math.max(m,Math.min(W-m,n.x));n.y=Math.max(m,Math.min(H-m-12,n.y))});alpha*=0.985}
 function render(){links.forEach(function(l){l.el.setAttribute('x1',l.a.x.toFixed(1));l.el.setAttribute('y1',l.a.y.toFixed(1));l.el.setAttribute('x2',l.b.x.toFixed(1));l.el.setAttribute('y2',l.b.y.toFixed(1))});
-nodes.forEach(function(n){n.el.setAttribute('transform','translate('+n.x.toFixed(1)+','+n.y.toFixed(1)+')')})}
-function declutter(){var kept=[];nodes.slice().sort(function(a,b){return b.deg-a.deg}).forEach(function(n){n.el.classList.remove('lbl-off');var bb;try{bb=n.tx.getBBox()}catch(e){return}
+nodes.forEach(function(n){n.g.setAttribute('transform','translate('+n.x.toFixed(1)+','+n.y.toFixed(1)+')')});
+catOrder.forEach(function(k){cats[k].el.setAttribute('d',hullD(nodes.filter(function(n){return n.p.cat===k&&n.w>0.001})))})}
+function declutter(){var kept=[];nodes.filter(function(n){return!n.dead}).sort(function(a,b){return b.deg-a.deg}).forEach(function(n){n.el.classList.remove('lbl-off');var bb;try{bb=n.tx.getBBox()}catch(e){return}
 var r={l:n.x+bb.x-2,r:n.x+bb.x+bb.width+2,t:n.y+bb.y-1,b:n.y+bb.y+bb.height+1},hit=r.l<0||r.r>W||kept.some(function(k){return r.l<k.r&&r.r>k.l&&r.t<k.b&&r.b>k.t});
 if(!hit)nodes.forEach(function(m){if(m!==n){var dx=Math.max(r.l-m.x,0,m.x-r.r),dy=Math.max(r.t-m.y,0,m.y-r.b);if(dx*dx+dy*dy<m.r*m.r)hit=true}});
 if(hit)n.el.classList.add('lbl-off');else kept.push(r)})}
-function loop(){tick();render();if(alpha>0.004||drag)raf=requestAnimationFrame(loop);else{raf=0;declutter()}}
+function loop(){runFades(performance.now());tick();render();if(alpha>0.004||drag||fades.length)raf=requestAnimationFrame(loop);else{raf=0;declutter()}}
 function heat(a){alpha=Math.max(alpha,a);if(!raf)raf=requestAnimationFrame(loop)}
-size();nodes.forEach(function(n,i){var a=i/nodes.length*Math.PI*2,rr=Math.min(W,H)*(0.18+0.22*((i*7)%5)/4);n.x=W/2+Math.cos(a)*rr;n.y=H/2+Math.sin(a)*rr});
-for(var s=0;s<320;s++)tick();alpha=Math.max(alpha,0.03);render();declutter();window.__pmReady=true;heat(0.03);
-var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){size();hide();heat(0.2)},150)});
-svg._nodes=nodes;
+function radii(){nodes.forEach(function(n){n.deg=0});links.forEach(function(l){if(!l.dead){l.a.deg++;l.b.deg++}});
+nodes.forEach(function(n){var r=5+3*Math.sqrt(n.deg);if(Math.abs(r-n.r)>0.05){n.r=r;n.el.querySelector('circle').setAttribute('r',r.toFixed(1));n.tx.setAttribute('y',(r+13).toFixed(1))}})}
+function linkSet(D){var want={};(D.edges||[]).forEach(function(e){var q=e.split('-');if(byId[q[0]]&&byId[q[1]]&&!byId[q[0]].dead&&!byId[q[1]].dead)want[q[0]<q[1]?q[0]+'-'+q[1]:q[1]+'-'+q[0]]=[q[0],q[1]]});return want}
+function syncLinks(D,animate){var want=linkSet(D);
+links.forEach(function(l){if(!l.dead&&!want[l.k]){l.dead=true;delete byKey[l.k];if(animate)fade(1,0,function(v){l.el.setAttribute('stroke-opacity',v)},function(){l.el.remove();links.splice(links.indexOf(l),1)});else{l.el.remove();links.splice(links.indexOf(l),1)}}});
+Object.keys(want).forEach(function(k){if(byKey[k])return;var l={k:k,a:byId[want[k][0]],b:byId[want[k][1]],dead:false};l.el=mk('line',{'class':'pm-l'},gl);links.push(l);byKey[k]=l;if(animate)fade(0,1,function(v){l.el.setAttribute('stroke-opacity',v)},function(){l.el.removeAttribute('stroke-opacity')})})}
+function apply(D){var res={added:0,removed:0,changed:0},want={};setCats(D.cats||[]);(D.parts||[]).forEach(function(p){want[p.id]=p});
+nodes.slice().forEach(function(n){if(n.dead)return;if(!want[n.id]){res.removed++;n.dead=true;delete byId[n.id];if(hov&&hov.n===n)unhover();var t=pins[n.id];if(t){delete pins[n.id];t.classList.add('gone');fade(1,0,function(v){t.style.opacity=v},function(){t.remove()})}
+var v=n.v;fade(1,0,function(x){n.w=x;v.style.opacity=x},function(){n.g.remove();nodes.splice(nodes.indexOf(n),1)})}});
+syncLinks(D,true);
+(D.parts||[]).forEach(function(p){var n=byId[p.id];if(!n){res.added++;var s={x:0,y:0,c:0};(D.edges||[]).forEach(function(e){var q=e.split('-'),o=q[0]===p.id?byId[q[1]]:q[1]===p.id?byId[q[0]]:null;if(o&&!o.dead){s.x+=o.x;s.y+=o.y;s.c++}});
+var A=s.c?{x:s.x/s.c,y:s.y/s.c}:anchor(p.cat);n=addNode(p,A.x+(Math.random()-0.5)*30,A.y+(Math.random()-0.5)*30,0);var v=n.v;fade(0,1,function(x){n.w=x;v.style.opacity=x},function(){v.style.opacity=''})}
+else if(JSON.stringify(n.p)!==JSON.stringify(p)){res.changed++;var ov=n.v;n.p=p;var V=version(n,p);n.v=V.v;n.el=V.el;n.tx=V.tx;var nv=n.v;n.el.querySelector('circle').setAttribute('r',n.r.toFixed(1));
+fade(1,0,function(x){ov.style.opacity=x},function(){ov.remove()});fade(0,1,function(x){nv.style.opacity=x},function(){nv.style.opacity=''});
+if(pins[n.id])pins[n.id]=swapTip(pins[n.id],n,true);if(hov&&hov.n===n)hov.t=swapTip(hov.t,n,false)}});
+syncLinks(D,true);radii();highlight();heat(0.3);return res}
+var GURL=/brainiac-eli5-growing-logic/.test(location.pathname)?'brainiac-eli5-growing-logic-graph.json':'eli5-growing-logic-graph.json';
+function sig(D){return JSON.stringify([D.cats,D.parts,D.edges])}
+function poll(){if(location.protocol==='file:'||!window.fetch)return Promise.resolve(null);
+return fetch(GURL+'?t='+Date.now(),{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json()}).then(function(D){if(!D||!D.parts)return null;var s=sig(D);if(s===lastSig)return{added:0,removed:0,changed:0};lastSig=s;return apply(D)}).catch(function(){return null})}
+window.__graphPoll=poll;
+/* first paint from the inline copy */
+setCats(D0.cats||[]);size();(D0.parts||[]).forEach(function(p,i){var A=anchor(p.cat),a=i*2.4;addNode(p,A.x+Math.cos(a)*(20+i*2),A.y+Math.sin(a)*(20+i*2),1)});syncLinks(D0,false);radii();lastSig=sig(D0);
+for(var s=0;s<360;s++)tick();alpha=Math.max(alpha,0.03);render();declutter();window.__pmReady=true;heat(0.03);
+var rt=0;window.addEventListener('resize',function(){clearTimeout(rt);rt=setTimeout(function(){size();unhover();heat(0.2)},150)});
+setTimeout(poll,1500);setInterval(poll,60000);
+svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:apply,PAD:PAD,FADE:FADE,hov:function(){return hov}};
 })();</script>
 </section>
 </div>
