@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-25 18:28 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-25 20:29 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1904,7 +1904,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Main machine live: counter file missing</span><b>all calls refused</b></div>
 <div class="chip ch-no"><span>Second machine: no live Claude wiring</span><b>not wired</b></div>
 <div class="chip ch-no"><span>Edited sealed copy leaked</span><b>5 of 8 asked</b></div>
-<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only; privacy on does not stop fill Claude call (KB-3962, verify r1 NOT PASS, round 4 built); /privacy on still not trusted on live</b></div>
+<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only; privacy on does not stop fill Claude call (KB-3962, round 5 built 18748d86b, verifier running); /privacy on still not trusted on live</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 <div class="chip ch-no"><span>Yes/no verify question on Claude answers (KB-3718)</span><b>Done, NO-GO (measured, 336 calls): sonnet with source text caught 11 of 25 wrong, wrongly rejected 3 right; haiku 16 right rejected for 16 caught; no source text: mostly "cannot verify"; best gain +2, same as always asking a stronger model; no flag built</b></div>
 <div class="chip ch-no"><span>Overlap pick when no rung span accepted (KB-3804)</span><b>Done FAIL: paid pair 145/166 142/160 each, bars met, paired net p1 -2, p2 -1, sum -3 (551 calls); flag off, not merged; six-draw nets +3, 0, 0, +1, -2, -1</b></div>
@@ -1918,7 +1918,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 </div>
 <div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>4</b></div>
 <div class="chip ch-wip"><span>Right answer swapped by helper: checking a second route</span><b>KB-3462 · horse case fixed earlier</b></div>
-<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: verify r1 NOT PASS (kb2614 branch red, 'o ff' fail-open) -> round 4 built 89f8c883b (scripts parse = core, kb2614 fixed); independent re-read running. Live-exe leg (sha-matched): off fill 3 / grade 8, on 0 Claude calls</b></div>
+<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: round 5 built 18748d86b (test-only: testiso restore + 2 target hardening, scripts unchanged); kb2648 red = parallel race on TEACH_N, also red on main (KB-3998); independent verifier running; guard never open in full-binary reds (privacy-on arm refused every time)</b></div>
 <div class="chip ch-wip"><span>Counter path at call time (KB-3414)</span><b>In Progress: fix ready; rides in the KB-3408 candidate tree</b></div>
 </div>
 <div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>15</b></div>
@@ -1982,7 +1982,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="vrow"><div class="vlab">why</div><div class="vtrk"><div class="vbar v-bad" style="width:66.0%"></div><div class="vline" style="left:85%"></div><span class="vnum">33/50</span></div></div>
 <div class="vcap">Total 212 of 332 = 63.9 %, 0 model calls. Base 332 = 166 questions x 2 seeds pooled; no per-type read since (KB-3362 read totals only).</div></div>
 <script>
-const UPDATED="2026-11-25 18:28 PST";
+const UPDATED="2026-11-25 20:29 PST";
 const LANES={chat:"Answering a question (live chat)",study:"Background self-study",tests:"Tests",link:"Link to brainiac"};
 const PIECES=[
 {id:"user",name:"User / live chat",lane:"chat",status:"done",chip:"done",what:"You type one line, the understudy answers with one line.",how:"A plain text loop: read a line, make one reply, repeat.",works:"Yes, every reply starts with a label saying it is not brainiac.",nums:"One reply per line, max 8 words.",next:"Nothing planned.",to:["repl"]},
