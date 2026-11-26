@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 17:22 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 17:52 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -430,7 +430,7 @@ svg._nodes=nodes;
 <p><span class="chip c-fail">KB-3726 did not pass</span> openers worked, but own lines still copy short heard bits (also with the feature off).</p>
 <p><span class="chip c-fail">KB-3840 did not pass</span> We tested every word-picking tweak on paper, and none stops brainiac from repeating pieces of sentences it heard; almost every line it says with 3 or more words holds such a piece.</p>
 <p><span class="chip c-fix">KB-3846 in progress</span> Starting sentences like heard ones does not cause copying: it copies at the same rate either way. The old test was unfair to good openers.</p>
-<p><span class="chip c-fix">KB-3978 next</span> Re-test good sentence starts with a fair copy test on new stories.</p>
+<p><span class="chip c-ok">KB-3978 passed</span> Re-test good sentence starts with a fair copy test on new stories. Passed: it now starts its own lines with its own words (about 19 of 20 lines vs 7 without), without copying the teacher more.</p>
 <p><span class="chip c-ok">KB-3838 done</span> Reading stories again doesn't break old links; the score dips, then comes back. Old chat skills: still unknown, the test is too easy to fail.</p>
 <p><span class="chip c-fail">KB-3724 did not pass</span> The extra reward was too small to notice, so we don't know if the idea works yet. Its code is now in brainiac, switched off.</p>
 <p><span class="chip c-ok">KB-3844 done</span> A bigger reward did not make brainiac score better on new things, but a smaller one helped it keep more old answers (34 of 63 instead of 8).</p>
@@ -448,7 +448,7 @@ svg._nodes=nodes;
 <p><span class="chip c-wait">waiting</span> KB-3940: Checked 97 replies: the one-word note was right 8 times, the learned chain 29. No simple rule picks between them. Handed to KB-3626 (remember which question a note came from).</p>
 <p><span class="chip c-fail">KB-3948 failed</span> Tried: put a sentence-opening word in front of the reply. Even a perfect pick hurt the answers, so this road is closed. Next: brainiac must learn how heard sentences start.</p>
 <p><span class="chip c-fix">in progress</span> KB-3626: Remembers each told fact with the words around it, so a new fact no longer wipes an old one. Fix tries missed: an old question can still fill the slot. Next: decide what gets written, not what gets read.</p>
-<p><span class="chip c-fix">KB-3972 in progress</span> When it asks and hears the answer, it ties the answer into the same story: 125 of 133 gaps where it said nothing got closed in a test. But right after a story it almost never has a gap to ask about (1 of 235 spots), so asking has to happen later; looking back in sleep finds only 7 of 52 gaps even when it asks, so a better way to find them is next.</p>
+<p><span class="chip c-fix">KB-3972 in progress</span> When it asks and hears the answer, it ties the answer into the same story: 125 of 133 gaps where it said nothing got closed in a test. But right after a story it almost never has a gap to ask about (1 of 235 spots), so asking has to happen later; with nightly review it keeps what it was told (0 forgotten starts in 67 stories), so what should make it ask is being designed next.</p>
 <p><span class="chip c-fail">KB-3974 failed</span> KB-3974: Starts its sentences like heard ones now, but then copies chants word for word. Next: fix the copying (KB-3846).</p>
 <p><span class="chip c-fix">in progress</span> KB-3738: Next big step: brainiac chooses by itself when to ask, at the spots in a story where it can't guess what comes next. Started.</p>
 <p><span class="chip c-fix">in progress</span> KB-3944: Built in, switched off. It now picks the right question word 61 of 100 times (28 by chance), and a separate check proved switched-off changes nothing. Switching it on waits for a live-style test (KB-3960).</p>
