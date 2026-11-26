@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-25 15:55 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-25 16:23 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1808,8 +1808,8 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="viz"><div class="vhead">Claude calls: daily 500 is a soft target, not a cap · 2026-11-23: about 2709 booked, soft target 2733 (ledger)</div><div class="gauge"><div class="g-used" style="width:99.1%"><span>2709 used</span></div><div class="g-left" style="width:0.9%"><span>24</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left to target</div><div class="vcap">total since 500 = 2233 · per-run cap = advance estimate, never a stop · budget 0 = off (KB-3600, KB-3602)</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
-<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>76</b></div>
-<div class="chip ch-ok"><span>Live privacy log lines kept (KB-3056)</span><b>LIVE since 2026-11-25 ~15:05 PST: helper stderr goes to the core log; KB-3920 env pins live too</b></div>
+<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>77</b></div>
+<div class="chip ch-ok"><span>Live privacy log lines kept (KB-3056)</span><b>live, not yet observed: since 2026-11-25 ~15:05 PST 0 helper-routed asks in the live log; KB-3920 env pins live too</b></div>
 <div class="chip ch-ok"><span>Red record test on main (KB-3956)</span><b>Done PASS, 0 calls: test fixture fix, merged 4b9e5aaed</b></div>
 <div class="chip ch-ok"><span>Chart plots the goal runs (KB-3958)</span><b>Done, 0 calls: KB-3702 p1 144/166 141/160, p2 145/166 142/160 and KB-3890 p1 148/166 145/160, p2 142/166 139/160 plotted; goal note read from the chart data</b></div>
 <div class="chip ch-ok"><span>Missing privacy setting means off (KB-3430)</span><b>Done: closed by policy, no guard code, no verdict</b></div>
@@ -1885,6 +1885,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>Goal note vanishes with goal line (KB-3586)</span><b>Fixed, measured: note stays when goal text is unreadable; says goal met only when both runs of the pair are at or above the bar (lowest 142/166); error text printed, not [object Object]</b></div>
 <div class="chip ch-ok"><span>Late pass on an already closed turn still shown (KB-3484)</span><b>Done PASS (board): late pass after a closed turn: late8 20 = lift 12 + resend 8, 0 loss</b></div>
 <div class="chip ch-ok"><span>Paid run, counter switch, code swap</span><b>DONE (KB-3566, KB-3664): 2 of 2 fresh paid confirms pass; default shipped main 7e9e9d3; backlog KB-3666, KB-3672, KB-3674</b></div>
+<div class="chip ch-ok"><span>Sealed check of outgoing prompt (KB-3408)</span><b>PASSED, not live yet: understudy refuses sealed sentences in its own Claude prompts (edited, partial, cross-session copies 8/8 -> 0/8; replay same score, 0 misses); live switch waits on the owner</b></div>
 </div>
 <div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>25</b></div>
 <div class="chip ch-no"><span>Brainiac chat verify (KB-3792)</span><b>FAIL (leg 2); follow-up KB-3882 Done PASS (flagged 2/3, kept 4/5), not built for live</b></div>
@@ -1901,7 +1902,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Main machine live: counter file missing</span><b>all calls refused</b></div>
 <div class="chip ch-no"><span>Second machine: no live Claude wiring</span><b>not wired</b></div>
 <div class="chip ch-no"><span>Edited sealed copy leaked</span><b>5 of 8 asked</b></div>
-<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only; privacy on does not stop fill Claude call (KB-3962, build round 2); /privacy on still not trusted on live</b></div>
+<div class="chip ch-no"><span>No privacy switch in window</span><b>chat only; privacy on does not stop fill Claude call (KB-3962, build round 3 done, verifier running); /privacy on still not trusted on live</b></div>
 <div class="chip ch-no"><span>Ask grader again when unsure (KB-3446)</span><b>FAIL: too few cases to read</b></div>
 <div class="chip ch-no"><span>Yes/no verify question on Claude answers (KB-3718)</span><b>Done, NO-GO (measured, 336 calls): sonnet with source text caught 11 of 25 wrong, wrongly rejected 3 right; haiku 16 right rejected for 16 caught; no source text: mostly "cannot verify"; best gain +2, same as always asking a stronger model; no flag built</b></div>
 <div class="chip ch-no"><span>Overlap pick when no rung span accepted (KB-3804)</span><b>Done FAIL: paid pair 145/166 142/160 each, bars met, paired net p1 -2, p2 -1, sum -3 (551 calls); flag off, not merged; six-draw nets +3, 0, 0, +1, -2, -1</b></div>
@@ -1913,10 +1914,9 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-no"><span>Next 0-call lever (KB-3608)</span><b>lever A report-only read FAIL (W-&gt;R 1, R-&gt;notR 1, net +0); confirm config unchanged</b></div>
 <div class="chip ch-no"><span>Grader stronger model first, live (KB-3474)</span><b>Done FAIL: sonnet-first lever dead; flag off</b></div>
 </div>
-<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>4</b></div>
+<div class="bcol bc-wip"><div class="bh bh-wip">IN PROGRESS <b>3</b></div>
 <div class="chip ch-wip"><span>Right answer swapped by helper: checking a second route</span><b>KB-3462 · horse case fixed earlier</b></div>
-<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: privacy gate for core Claude paths, build round 2; /privacy on still not trusted on live</b></div>
-<div class="chip ch-wip"><span>Sealed check of outgoing prompt (KB-3408)</span><b>In Progress: gate built (fix 63f69ed, final ee266d3); whole-sentence, edited, merged, partial, cross-session and wrapped copies send 0 sealed rows; tie replay 0 misses, same score (p1 148/166 145/160, p2 142/166 139/160), 0 refusals; final verify (3a, store compat, live smoke) then switch</b></div>
+<div class="chip ch-wip"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>In Progress: privacy gate for core Claude paths, build round 3 done, verifier running; /privacy on still not trusted on live</b></div>
 <div class="chip ch-wip"><span>Counter path at call time (KB-3414)</span><b>In Progress: fix ready; rides in the KB-3408 candidate tree</b></div>
 </div>
 <div class="bcol bc-blk"><div class="bh bh-blk">BLOCKED <b>14</b></div>
@@ -1932,7 +1932,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-blk"><span>Rung cost lever M1 (KB-3574)</span><b>Backlog: M1 rung cost, needs masked-span guard</b></div>
 <div class="chip ch-blk"><span>11 red tests on main (KB-3966)</span><b>Backlog</b></div>
 <div class="chip ch-blk"><span>Reply wait to EOF can time out (KB-3968)</span><b>Backlog</b></div>
-<div class="chip ch-blk"><span>Question text naming sealed content (KB-3970)</span><b>Backlog: still leaves</b></div>
+<div class="chip ch-blk"><span>Question text naming sealed content (KB-3970)</span><b>Backlog: still leaves; the core fill and settle send the helper reply to Claude, which can quote a sealed row (open)</b></div>
 <div class="chip ch-blk"><span>Sealed gate known gaps (KB-3976)</span><b>Backlog: one-word edits, run-on middle, lone half row across sessions, common-opening refusals</b></div>
 </div>
 </div>
