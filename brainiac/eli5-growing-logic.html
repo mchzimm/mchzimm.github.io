@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 02:00 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 02:27 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -515,7 +515,10 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4000 failed</span> Taught a new word with one answer line, then asked: it used the word 0 of 26 times (closed 3 vs 2 of 26).</p>
 <p><span class="chip c-fail">KB-4002 failed</span> Taught the word with varied lines and with repeats: used at most 2 of 26 times; repeats hurt old learning 2-3x more than a sham. Asking (KB-3986) must wait.</p>
 <p><span class="chip c-fail">KB-4004 failed</span> The extra boost for a brand-new word was far too weak: it moved the word's pull by about 1 part in 10,000, so answers did not change. The pair-memory trick also failed (KB-4010): it only reaches words heard in the same two-word context, and 73% of misses are not.<br>Next: let a new word borrow from look-alike words (KB-4016, ETA ~03:00 PST).</p>
+<p><span class="chip c-fail">KB-4016 look-alike words: failed</span> Borrowing from look-alike words lifted every word equally, so the new word never pulled ahead.<br>Next: only the new word itself gets the boost (KB-4022).</p>
 <p><span class="chip c-fail">KB-4006 failed after three tries</span> Three tries: the praise / wrong signal reaches the parts that build answers, but answers move no more than with fake praise.<br>Next: ask the exact same question again after praise to find where the answer is really decided (KB-4018).</p>
+<p><span class="chip c-fail">KB-4018 repeat check: no better than fake praise</span> Asking the exact same question again after praise moves the answer no more than fake praise does.<br>Praising only the one answer knocked a wrong answer off a little, but did not bring a right one back; next, credit the first word and the pick (KB-4024).</p>
+<p><span class="chip c-wait">KB-4020 asking: first try unreadable</span> The sorter that tells questions from statements was not accurate enough.<br>Fixing the sorter next.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
