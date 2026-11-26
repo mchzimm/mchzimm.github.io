@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 04:54 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 05:01 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -525,7 +525,8 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4028 asking: closed after 3 tries</span> The question frame makes brainiac ask (93 vs 11 question-led) but off topic: slot-fill 0.34 vs limit 0.105; on the same prompts off overlaps 0.77, lever 0.50.</p>
 <p><span class="chip c-fail">KB-4026 closed</span> Superseded by KB-4028.</p>
 <p><span class="chip c-wait">KB-4040 backlog</span> ask about what was just said (question drawn from the route answer's content).</p>
-<p><span class="chip c-wait">KB-4030 bench readable</span> Bigger test bench built. Paying the first word: T+ gap (not passing), T- pass-candidate, independent check still running.</p>
+<p><span class="chip c-ok">KB-4030 done</span> Blame test passes: told "that is wrong", brainiac moves off the wrong answer (independent check agrees; credit = storing the strongest rival answer, not the KB-4024 lever). Praise test still a gap, see KB-4038.</p>
+<p><span class="chip c-wait">KB-4044 backlog</span> Land that code safely (off by default), then decide turning it on live.</p>
 <p><span class="chip c-wait">KB-4038 backlog</span> Stored right pick 62 of 70 times, but the later reply rarely says the whole answer; find why it is not restored.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
