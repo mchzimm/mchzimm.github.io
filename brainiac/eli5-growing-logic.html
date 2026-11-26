@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 11:11 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 13:15 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -374,7 +374,7 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> KB-3972 parked: the answer-into-memory step works in a test, but in a live-like brain there is only 1 gap in 235 spots to ask about (needs 20). Waits on what should make it ask (KB-3986).</p>
+<p><b>Now:</b> KB-4082 done but switched off (it cuts later replies); KB-4090 running: end the question where the heard statement ended.</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
@@ -531,9 +531,10 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4072 done, fail</span> priming the words you just said made it recite them backwards, never a real question; priming ruled out.</p>
 <p><span class="chip c-fail">KB-4076 done, fail</span> no way to teach a question shape by example in the word chain: links stay inside one line and only follow exact words.</p>
 <p><span class="chip c-ok">KB-4078 done, pass (scoped)</span> starts the right question about a new word in frames it was taught by example, then rambles; controls and a harm check passed.</p>
-<p><span class="chip c-wait">KB-4084 backlog</span> live-copy teach of the same question start.</p>
+<p><span class="chip c-wait">KB-4084 backlog</span> live-copy teach of the same question start; KB-4082 stays off there until KB-4090 passes.</p>
 <p><span class="chip c-wait">KB-4080 backlog</span> let the word chain borrow links from similar words (for frames it was never taught).</p>
-<p><span class="chip c-wait">KB-4082 backlog</span> teach it where a question ends so the junk tail stops.</p>
+<p><span class="chip c-ok">KB-4082 done, pass (scoped)</span> new questions end cleanly on first hearing, 32/32 vs 0/32 off, two word sets; switched on it also cuts later replies that should keep words (188/188 changed), so it stays off, not live.</p>
+<p><span class="chip c-fix">KB-4090 running</span> make the question end where the heard statement ended.</p>
 <p><span class="chip c-wait">KB-4038 backlog</span> Stored right pick 62 of 70 times, but the later reply rarely says the whole answer; find why it is not restored.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
