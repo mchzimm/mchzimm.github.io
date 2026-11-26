@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 10:16 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 11:11 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -530,7 +530,8 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4050 done, fail</span> baseline: asks 6 of 52, never about the new word; with a stored question shape it asks 52 of 52, still never about the new word.</p>
 <p><span class="chip c-fail">KB-4072 done, fail</span> priming the words you just said made it recite them backwards, never a real question; priming ruled out.</p>
 <p><span class="chip c-fail">KB-4076 done, fail</span> no way to teach a question shape by example in the word chain: links stay inside one line and only follow exact words.</p>
-<p><span class="chip c-fix">KB-4078 in progress, first real sign</span> starts the right question about a new word, in frames it was taught (it is warm -> why does it feel warm), then rambles; not a pass yet, the control test could not run, retrying.</p>
+<p><span class="chip c-ok">KB-4078 done, pass (scoped)</span> starts the right question about a new word in frames it was taught by example, then rambles; controls and a harm check passed.</p>
+<p><span class="chip c-wait">KB-4084 backlog</span> live-copy teach of the same question start.</p>
 <p><span class="chip c-wait">KB-4080 backlog</span> let the word chain borrow links from similar words (for frames it was never taught).</p>
 <p><span class="chip c-wait">KB-4082 backlog</span> teach it where a question ends so the junk tail stops.</p>
 <p><span class="chip c-wait">KB-4038 backlog</span> Stored right pick 62 of 70 times, but the later reply rarely says the whole answer; find why it is not restored.</p>
