@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 06:15 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 06:57 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -527,7 +527,7 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4040 closed, fail, 3 of 3</span> ask about what was just said. Question shape comes from stored teacher questions; the lever only nudged the topic; copying lives in the base walk, not in prompt word order; best clean lift 9 vs 2.</p>
 <p><span class="chip c-ok">KB-4030 done</span> Blame test passes: told "that is wrong", brainiac moves off the wrong answer (independent check agrees; credit = storing the strongest rival answer, not the KB-4024 lever). Praise test still a gap, see KB-4038.</p>
 <p><span class="chip c-ok">KB-4044 done, pass (blame test, flag off)</span> blame test now lives in main behind an off switch; with it off nothing changes (byte for byte, 300 of 300 asks); with it on the blame test passes (S 0.45 and 0.43 vs null 0.25); the praise side is still a gap.</p>
-<p><span class="chip c-wait">KB-4050 backlog</span> Can brainiac ask about a topic no stored teacher question covers?</p>
+<p><span class="chip c-fix">KB-4050 in progress</span> checking for truly new topics: first count found 0 usable test lines, but the list it checked against held the wrong rows; with the fixed list 261 candidate lines (131 if the strict version applies); test set not drawn yet</p>
 <p><span class="chip c-wait">KB-4038 backlog</span> Stored right pick 62 of 70 times, but the later reply rarely says the whole answer; find why it is not restored.</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
