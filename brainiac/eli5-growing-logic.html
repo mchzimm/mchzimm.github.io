@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 01:01 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 01:08 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -514,8 +514,8 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-fail">KB-4008 failed</span> The teacher now also asks who / where / why questions: 186 of 203 own questions start like a question and use 3 question words (what 159, who 26, where 1), and the word fits the story 88 of 100 times (24 by chance). But hearing those extra questions changed 21 of 2082 chat replies (needs 0). Next: hear them on a separate question path so chat stays the same. Off changes nothing (checked 3 ways).</p>
 <p><span class="chip c-fail">KB-4000 failed</span> Taught a new word with one answer line, then asked: it used the word 0 of 26 times (closed 3 vs 2 of 26).</p>
 <p><span class="chip c-fail">KB-4002 failed</span> Taught the word with varied lines and with repeats: used at most 2 of 26 times; repeats hurt old learning 2-3x more than a sham. Asking (KB-3986) must wait.</p>
-<p><span class="chip c-fix">KB-4004 running</span> First read done: the brain spreads some drive to the taught word's new places, but the word still wins 0 of ~129 of them: the gap is binding strength, not missing coverage.<br>Next: a gentle lever to learn the new transition faster (switched off by default), measured on the same bench (ETA ~00:45 PST).</p>
-<p><span class="chip c-wait">KB-4006 design</span> Brainiac should learn from praise ("very good") and from being told, or finding, it is wrong.<br>The praise words are learned by pairing them with real right/wrong results, not a coded word list; design first.</p>
+<p><span class="chip c-fail">KB-4004 failed</span> The extra boost for a brand-new word was far too weak: it moved the word's pull by about 1 part in 10,000, so answers did not change.<br>Next: let a new word fire only inside its own two-word context (card number TBD, ETA ~03:00 PST).</p>
+<p><span class="chip c-fail">KB-4006 first check failed</span> Told "very good" / "wrong" in a test, brainiac's answers did not change at all: the praise signal only reaches a small part of its memory, not the part that builds its answers.<br>Next: pay the parts that build the replies, tested first on a copy (ETA ~02:00 PST).</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
