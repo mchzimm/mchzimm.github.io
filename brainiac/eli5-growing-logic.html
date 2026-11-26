@@ -106,7 +106,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-25 15:55 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-25 16:11 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -448,7 +448,7 @@ svg._nodes=nodes;
 <p><span class="chip c-wait">waiting</span> KB-3940: Checked 97 replies: the one-word note was right 8 times, the learned chain 29. No simple rule picks between them. Handed to KB-3626 (remember which question a note came from).</p>
 <p><span class="chip c-fail">KB-3948 failed</span> Tried: put a sentence-opening word in front of the reply. Even a perfect pick hurt the answers, so this road is closed. Next: brainiac must learn how heard sentences start.</p>
 <p><span class="chip c-fix">in progress</span> KB-3626: Remembers each told fact with the words around it, so a new fact no longer wipes an old one. Fix tries missed: an old question can still fill the slot. Next: decide what gets written, not what gets read.</p>
-<p><span class="chip c-fix">KB-3972 in progress</span> When it asks and hears the answer, it now ties the answer into the same story (117 of 133 gaps closed in a test). Next: check it ignores wrong answers.</p>
+<p><span class="chip c-fix">KB-3972 in progress</span> When it asks and hears the answer, it ties the answer into the same story: 125 of 133 gaps where it said nothing got closed in a test. But a wrong reply where it already knew the answer overwrote the right one, so next it will only hold questions where it has no answer yet.</p>
 <p><span class="chip c-fail">KB-3974 failed</span> KB-3974: Starts its sentences like heard ones now, but then copies chants word for word. Next: fix the copying (KB-3846).</p>
 <p><span class="chip c-fix">in progress</span> KB-3738: Next big step: brainiac chooses by itself when to ask, at the spots in a story where it can't guess what comes next. Started.</p>
 <p><span class="chip c-fix">in progress</span> KB-3944: Built in, switched off. It now picks the right question word 61 of 100 times (28 by chance), and a separate check proved switched-off changes nothing. Switching it on waits for a live-style test (KB-3960).</p>
