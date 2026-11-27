@@ -83,7 +83,7 @@ svg .mono{font-family:var(--f-num)}
   <div class="eyebrow">brainiac · how work gets proven</div>
   <h1>The progress engine</h1>
   <p>Big goal, small bets, fair tests. Keep only what is proven.</p>
-  <div class="stamp">updated <span id="upd">2026-11-27 02:30 PST</span></div>
+  <div class="stamp">updated <span id="upd">2026-11-27 03:06 PST</span></div>
 </header>
 
 <!-- 1. overview loop -->
@@ -158,7 +158,7 @@ svg .mono{font-family:var(--f-num)}
 <section id="earlystop">
   <div class="eyebrow">5 · real step rows</div>
   <h2>Short steps, one row each</h2>
-  <p>Does a new word's pull grow with more examples?</p>
+  <p>Does a new word's pull grow with more examples? Test bench only, not the running brain.</p>
   <div class="panels" id="stoppanels">
     <div class="pan"><h3>More different pairs</h3><p>Pull falls. Still right 27/27.</p>
       <svg id="stopdose" viewBox="0 0 300 200" style="display:block;width:100%;height:auto" role="img" aria-label="Pull with 1, 2, 4, 8, 16, 32 different word pairs: 0.140, 0.066, 0.033, 0.017, 0.009, 0.005. Fake: 0.026, 0.016, 0.041, 0.007, 0.006, 0.001."></svg></div>
@@ -169,10 +169,10 @@ svg .mono{font-family:var(--f-num)}
   <div class="tiles">
     <div class="tile"><div class="eyebrow">time</div><div class="big">2.88 s <small>of 300 s limit</small></div></div>
     <div class="tile"><div class="eyebrow">stop rule</div><div><span class="pill p-und">UNDECIDED</span></div><p>All 6 + 6 steps used; never leveled off. No early stop.</p></div>
-    <div class="tile"><div class="eyebrow">check set in advance, at 8</div><div><span class="pill p-pass">PASS (scoped)</span></div><p>Small test memory, not live.</p></div>
+    <div class="tile"><div class="eyebrow">check set in advance, at 8</div><div><span class="pill p-pass">PASS (scoped)</span></div><p>Test bench only, not the running brain.</p></div>
     <div class="tile"><div class="eyebrow">break-check: verified</div><p>Learning broken: test FAILED. Restored: passed.</p></div>
   </div>
-  <p class="src">KB-4118 · 14 step rows · commit 6948bcd5d, merged 95f202eee · noun slot, first word set · fake beat real at 4 pairs · KB-4120: no answer · next: KB-4124 (backlog)</p>
+  <p class="src">KB-4118 · 14 step rows · commit 6948bcd5d, merged 95f202eee · noun slot, first word set · fake beat real at 4 pairs · KB-4120: no answer · next: KB-4124 (running: test-bench math check, not a learning test) · KB-4128 (not started)</p>
 </section>
 
 <!-- 6. side by side -->
