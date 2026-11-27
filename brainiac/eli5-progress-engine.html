@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>brainiac Progress Engine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: one narrow reading column; each section = one big picture + few words; charts in their own scroll boxes. Dark-first by policy. */
+:root{
+  color-scheme:dark;
+  --bg:#0f141c; --panel:#161d29; --panel2:#1c2533; --line:#2c3748;
+  --ink:#e9edf4; --ink2:#b4bfd0; --muted:#8e9ab0;
+  --accent:#7fd6c2;            /* needle / headings */
+  --arm:#3a87d9; --ctl:#cf7a2c; /* with fix / without or fake (validated, dark) */
+  --pass:#5cc98d; --fail:#f07b6e; --und:#b9a9ff;
+  --rule:#d8c27a; --tool:#7fd6c2; --log:#8e9ab0;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-num:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--f-body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(30px,6vw,52px);font-weight:800}
+h2{font-size:clamp(22px,4vw,32px);font-weight:800}
+h3{font-size:18px;font-weight:600}
+p{margin:0;max-width:62ch;color:var(--ink2)}
+a{color:var(--accent)}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.eyebrow{font:500 12px/1 var(--f-num);letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.stamp{font:500 12px var(--f-num);color:var(--muted)}
+header{display:flex;flex-direction:column;gap:12px}
+section{display:flex;flex-direction:column;gap:16px;min-width:0}
+.fig{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;overflow-x:auto;min-width:0}
+.fig svg{display:block;width:100%;height:auto}
+.note{font-size:13px;color:var(--muted)}
+.src{font:500 11px var(--f-num);color:var(--muted)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 11px/1 var(--f-num);padding:5px 8px;border-radius:999px;border:1px solid currentColor;white-space:nowrap}
+.c-rule{color:var(--rule)} .c-tool{color:var(--tool)} .c-log{color:var(--log)}
+.pill{display:inline-block;font:700 12px/1 var(--f-num);padding:5px 8px;border-radius:6px;color:var(--bg)}
+.p-pass{background:var(--pass)} .p-fail{background:var(--fail)} .p-und{background:var(--und)}
+.legend{display:flex;flex-wrap:wrap;gap:8px 16px;font-size:13px;color:var(--ink2)}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;vertical-align:-1px;margin-right:6px}
+/* process cards */
+.procs{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.proc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.proc .hd{display:flex;align-items:center;gap:10px}
+.num{font:500 13px var(--f-num);color:var(--bg);background:var(--accent);width:26px;height:26px;border-radius:50%;display:grid;place-items:center;flex:none}
+.io{display:grid;grid-template-columns:1fr;gap:4px;font-size:14px}
+.io div{display:grid;grid-template-columns:44px 1fr;gap:8px;align-items:baseline}
+.io b{font:500 11px var(--f-num);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.io span{color:var(--ink)}
+.fast{font-size:13px;color:var(--accent);border-top:1px dashed var(--line);padding-top:8px}
+.foot{display:flex;flex-wrap:wrap;gap:6px}
+/* panels */
+.panels{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.pan{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.pan .t{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.pan .id{font:500 12px var(--f-num);color:var(--muted)}
+.pan p{font-size:13px}
+.arrowrow{font:500 12px var(--f-num);color:var(--muted)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.big{font:800 32px/1 var(--f-display);color:var(--ink)}
+.big small{font:500 13px var(--f-num);color:var(--muted)}
+ul.plain{margin:0;padding-left:18px;color:var(--ink2);font-size:14px}
+.crew{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+svg text{font-family:var(--f-body)}
+svg .mono{font-family:var(--f-num)}
+@media (prefers-reduced-motion:no-preference){.needle{transition:transform .6s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">brainiac · how work gets proven</div>
+  <h1>The progress engine</h1>
+  <p>How the agents that build brainiac turn a big goal into small bets, test each bet fast and fair, and only keep what is proven.</p>
+  <div class="stamp">updated <span id="upd">2026-11-27 01:47 PST</span></div>
+</header>
+
+<!-- 1. overview loop -->
+<section id="loop">
+  <div class="eyebrow">1 · the whole loop</div>
+  <h2>One loop, again and again</h2>
+  <div class="fig" style="max-width:560px">
+  <svg viewBox="0 0 372 720" role="img" aria-labelledby="loopT loopD">
+    <title id="loopT">The progress loop</title>
+    <desc id="loopD">Final goal, find the gap, pick next need, make a guess, write rules first, set up a fair test, run short steps, verdict, proof, ship and record, then back to the gap. A failed verdict loops back to a new guess.</desc>
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8e9ab0"/></marker>
+      <marker id="ahf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#f07b6e"/></marker>
+      <marker id="aha" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#7fd6c2"/></marker>
+    </defs>
+    <g id="nodes"></g>
+    <!-- FAIL loop on left: from verdict (node 8) back to guess (node 4) -->
+    <path d="M58 524 H22 V266 H54" fill="none" stroke="#f07b6e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#ahf)"/>
+    <text x="14" y="400" fill="#f07b6e" font-size="12" transform="rotate(-90 14 400)" text-anchor="middle">FAIL: new guess</text>
+    <!-- next card loop on right: from ship (node 10) back to gap (node 2) -->
+    <path d="M302 656 H340 V134 H306" fill="none" stroke="#7fd6c2" stroke-width="2" marker-end="url(#aha)"/>
+    <text x="350" y="400" fill="#7fd6c2" font-size="12" transform="rotate(90 350 400)" text-anchor="middle">next card: new gap</text>
+  </svg>
+  </div>
+  <div class="legend"><span><span class="sw" style="background:var(--fail)"></span>FAIL goes back to a new guess</span><span><span class="sw" style="background:var(--accent)"></span>PASS ships, then the next gap</span><span><span class="sw" style="background:var(--und)"></span>UNDECIDED: the reviewer picks the next try</span></div>
+</section>
+
+<!-- 2. each process -->
+<section id="steps">
+  <div class="eyebrow">2 · each piece</div>
+  <h2>What goes in, what comes out</h2>
+  <div class="legend">
+    <span class="chip c-tool">tool enforces</span><span>a program stops it</span>
+    <span class="chip c-rule">written rule</span><span>agents follow it; nothing forces it</span>
+  </div>
+  <div class="procs" id="procs"></div>
+</section>
+
+<!-- 3. past numbers -->
+<section id="past">
+  <div class="eyebrow">3 · learning from past numbers</div>
+  <h2>Six tries at one need</h2>
+  <p>Need: brainiac should ask a question about a word it just heard. Every try is compared with a control. Blue = with the change. Orange = switched off or a fake change.</p>
+  <div class="panels" id="tries"></div>
+  <p class="note">Each card used its own measure and item count, so bars only compare inside one card. Source: brainiac board and metrics files of the named cards.</p>
+</section>
+
+<!-- 4. worked example -->
+<section id="example">
+  <div class="eyebrow">4 · one real card, start to end</div>
+  <h2>KB-4084: does the question lesson work on a copy of the real brain?</h2>
+  <div class="fig">
+  <svg viewBox="0 0 640 250" role="img" aria-label="KB-4084 results out of 32 asks, pass line at 24">
+    <g id="exbars"></g>
+  </svg>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="eyebrow">rule set first</div><p>Pass line: right question on at least 24 of 32 asks. Written down before the run.</p></div>
+    <div class="tile"><div class="eyebrow">fair test</div><p>Same brain, three ways: lesson on, switched off, two fake lessons. Fake lessons copied their own fake pattern 32/32, so the test sees what was taught.</p></div>
+    <div class="tile"><div class="eyebrow">proof</div><p>A checker broke the new path on purpose, rebuilt, re-ran: 0/32. The check reads "FAILED". So the test really watches the fix.</p></div>
+    <div class="tile"><div class="eyebrow">honest miss</div><p>One count was off by one (203 vs 204 turns). It stays on record as a miss. A new dated check on a fresh copy was met.</p></div>
+  </div>
+  <div class="tile" style="max-width:640px">
+    <div class="t"><span class="pill p-pass">PASS (scoped)</span></div>
+    <h3>Not claimed</h3>
+    <ul class="plain"><li>works in the live brain (moved to a new card)</li><li>survives real chat</li><li>how it mixes with a neighbor path</li></ul>
+  </div>
+  <p class="src">KB-4084 · board line + metrics/KB-4084.jsonl · ask legs 18-21 s, teach 11-12 s, 0 paid AI calls</p>
+</section>
+
+<!-- 5. early stop -->
+<section id="earlystop">
+  <div class="eyebrow">5 · stop as soon as it is decided</div>
+  <h2>Short steps, stop early</h2>
+  <p>Each step adds one small batch and one row of numbers. After every row: can more steps still change the answer? If not, stop.</p>
+  <div class="fig">
+  <svg viewBox="0 0 660 230" role="img" aria-label="Example: three test runs. One passes at step 4, one fails at step 3, one reaches the ceiling undecided.">
+    <g id="stopcharts"></g>
+  </svg>
+  </div>
+  <div class="legend"><span><span class="sw" style="background:var(--arm)"></span>score after each step</span><span><span class="sw" style="background:#3a4558"></span>steps saved</span><span>dashed = pass line</span></div>
+  <p class="note"><b>Example, made-up numbers.</b> This rule is new: written 2026-11-27. No real step rows exist yet. Plateau = the score stays inside its normal wobble for 2+ steps in a row. Ceiling = most steps and most seconds allowed; hitting it means UNDECIDED, never PASS. Safety checks always run before any early PASS.</p>
+</section>
+
+<!-- 6. side by side -->
+<section id="parallel">
+  <div class="eyebrow">6 · run the arms together</div>
+  <h2>7 test arms: 54 s in a row, 9 s side by side</h2>
+  <div class="fig">
+  <svg viewBox="0 0 664 300" role="img" aria-label="KB-4050: seven legs of 7 to 8 seconds. In a row 54 seconds, side by side 9 seconds. Setup 52 seconds either way.">
+    <g id="gantt"></g>
+  </svg>
+  </div>
+  <div class="legend"><span><span class="sw" style="background:#3a4558"></span>rest of the run (build, teach, read), same both ways</span><span><span class="sw" style="background:var(--arm)"></span>one test arm</span></div>
+  <p class="src">KB-4050 · metrics row 2026-11-26 16:21 UTC · 7 legs, 7-8 s each, legs together 9 s, whole run 61 s. "In a row" = sum of the same 7 walls (54 s), not a separate run.</p>
+</section>
+
+<!-- 7. speed levers -->
+<section id="levers">
+  <div class="eyebrow">7 · speed levers</div>
+  <h2>Four ways to move faster without cutting corners</h2>
+  <div class="tiles">
+    <div class="tile"><div class="eyebrow">reuse past reads</div><div class="big">0 <small>new base runs</small></div><p>Same code, same setup? Quote the old number instead of measuring again. KB-4084 reused a count from KB-4078 and saved a run; that count was off by one, was caught, and stays on record.</p><span class="chip c-rule">written rule</span></div>
+    <div class="tile"><div class="eyebrow">cheapest killer test first</div><div class="big">0 <small>runs needed</small></div><p>KB-4076 ended at step 0: reading the code showed the idea could not work. No run, no wait.</p><span class="chip c-rule">written rule</span></div>
+    <div class="tile"><div class="eyebrow">parallel</div><div class="big">6× <small>faster arms</small></div><p>Test arms side by side (KB-4050: 9 s, not 54 s). Separate cards run on separate agents at once.</p><span class="chip c-rule">written rule</span></div>
+    <div class="tile"><div class="eyebrow">memory + time guard</div><div class="big">≤1 GB <small>aim per test</small></div><p>The test runner waits when memory is short and stops a test that runs too long. KB-4072: 4 arms together peaked at 983 MB.</p><div class="foot"><span class="chip c-tool">wait + kill: tool enforces</span><span class="chip c-rule">1 GB aim: written target</span></div></div>
+  </div>
+</section>
+
+<!-- 8. crew -->
+<section id="crew">
+  <div class="eyebrow">8 · who does what</div>
+  <h2>Four roles</h2>
+  <div class="crew">
+    <div class="tile"><h3>Lead agent</h3><p>Picks the next need, writes the rules, hands out cards, merges.</p></div>
+    <div class="tile"><h3>Worker agent</h3><p>One card, own copy of the code. Builds, runs the short steps, reports numbers.</p></div>
+    <div class="tile"><h3>Checker agent</h3><p>Not the builder. Breaks the fix on purpose; the test must turn red.</p></div>
+    <div class="tile"><h3>Reviewer</h3><p>A stronger model. Picks forks and any verdict change.</p></div>
+  </div>
+  <p class="note">All four roles are written rules. A hook that watches hand-offs only logs; it does not block.</p>
+</section>
+
+<footer class="note">Sources: agent rules for testing, cards and decisions; dynamic test length, side-by-side and modular rules; brainiac board and metrics files. Card numbers in small print point to where each number lives.</footer>
+</div>
+
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg";
+function el(t,a,txt){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(txt!=null)e.textContent=txt;return e;}
+var C={ink:"#e9edf4",ink2:"#b4bfd0",muted:"#8e9ab0",line:"#2c3748",panel2:"#1c2533",arm:"#3a87d9",ctl:"#cf7a2c",pass:"#5cc98d",fail:"#f07b6e",und:"#b9a9ff",acc:"#7fd6c2",saved:"#3a4558"};
+
+/* 1. loop nodes */
+var N=[["Final goal","where we want to end up"],["Find the gap","past numbers: where are we now?"],["Next need","smallest step that moves the needle"],["Guess","if we change X, then Y goes up"],["Rules first","pass line + stop rule, before any run"],["Fair test setup","with change · without · fake change"],["Short steps","one row of numbers each, stop early"],["Verdict",""],["Proof","checker breaks it: test must fail"],["Ship + record","numbers saved, pages updated"]];
+var g=document.getElementById("nodes");
+N.forEach(function(n,i){
+  var y=20+i*66;
+  g.appendChild(el("rect",{x:54,y:y,width:248,height:46,rx:10,fill:C.panel2,stroke:i==0?C.acc:C.line,"stroke-width":i==0?2:1}));
+  g.appendChild(el("text",{x:68,y:y+19,fill:C.ink,"font-size":14,"font-weight":700},(i+1)+". "+n[0]));
+  if(n[1])g.appendChild(el("text",{x:68,y:y+37,fill:C.ink2,"font-size":12},n[1]));
+  if(i==7){[["PASS",C.pass,68],["FAIL",C.fail,128],["UNDECIDED",C.und,184]].forEach(function(p){
+    g.appendChild(el("rect",{x:p[2],y:y+26,width:p[0].length*7.6+10,height:16,rx:4,fill:p[1]}));
+    g.appendChild(el("text",{x:p[2]+5,y:y+38,fill:"#0f141c","font-size":11,"class":"mono"},p[0]));});}
+  if(i<N.length-1)g.appendChild(el("path",{d:"M178 "+(y+46)+" V"+(y+64),stroke:C.muted,"stroke-width":2,"marker-end":"url(#ah)"}));
+});
+
+/* 2. process cards */
+var P=[
+ ["Final goal","a wish","name it so a test can check it","one clear target","everything else points here","rule"],
+ ["Find the gap","the goal + past numbers","compare now vs goal; read old results first","the biggest missing piece","no re-measuring what is already known","rule"],
+ ["Next need","the gap","cut it to the smallest useful step","one card with a plain-words aim","small steps finish in minutes, not days","rule"],
+ ["Guess","the card","pick one change to try","“if X, then Y goes up”","one change at a time = clear answer","rule"],
+ ["Rules first","the guess","write pass line, fail line, stop rule, ceiling; save it","a locked rule file","no moving the goalposts after seeing data","rule"],
+ ["Fair test setup","the rule file","same brain copy: with, without, fake change","arms that can really differ","a fake change shows when a win is luck","rule"],
+ ["Short steps","the arms","one small batch per step, one row of numbers","a growing table","stop the moment the answer is clear","tool"],
+ ["Verdict","the table","check lines + controls + safety checks","PASS, FAIL or UNDECIDED","a clear verdict ends the card","rule"],
+ ["Proof","a PASS","checker breaks the fix; reviewer looks","test goes red = proof holds","no wrong PASS to undo later","rule"],
+ ["Ship + record","the proof","merge, save numbers, update pages; FAIL gets a follow-up card at once","history for the next gap","next card starts from real numbers","rule"]];
+var pc=document.getElementById("procs");
+P.forEach(function(p,i){
+  var d=document.createElement("div");d.className="proc";
+  var chip=p[5]=="tool"?'<span class="chip c-tool">wall-time cap: tool enforces</span><span class="chip c-rule">step ceiling + stop rule: written rule</span>':'<span class="chip c-rule">written rule</span>';
+  d.innerHTML='<div class="hd"><span class="num">'+(i+1)+'</span><h3>'+p[0]+'</h3></div>'+
+   '<div class="io"><div><b>in</b><span>'+p[1]+'</span></div><div><b>does</b><span>'+p[2]+'</span></div><div><b>out</b><span>'+p[3]+'</span></div></div>'+
+   '<div class="fast">faster because: '+p[4]+'</div><div class="foot">'+chip+'</div>';
+  pc.appendChild(d);
+});
+
+/* 3. try panels */
+var T=[
+ ["KB-4050","lever vs fake lever",2,3,52,"question uses the new word","FAIL","no better than fake"],
+ ["KB-4072 · try 1","word priming vs fake",4,0,50,"question form","FAIL","it recited words, not a question"],
+ ["KB-4072 · try 2","gated priming vs fake",0,1,50,"question form","FAIL","priming ruled out"],
+ ["KB-4076","teach by example pairs",null,null,0,"","FAIL","step 0 code read: a one-line lesson cannot carry over. No run."],
+ ["KB-4078","old path + pair lessons",32,0,32,"right question shape","PASS","two fresh sets; fake lesson and off both 0"],
+ ["KB-4084","same, on copy of real brain",32,0,32,"right question shape","PASS","scoped: copy, not live"]];
+var tr=document.getElementById("tries");
+T.forEach(function(t,i){
+  var d=document.createElement("div");d.className="pan";
+  var cls=t[6]=="PASS"?"p-pass":"p-fail";
+  var lab=t[6]=="PASS"&&t[0]=="KB-4084"?"PASS (scoped)":t[6];
+  var svg='';
+  if(t[2]!=null){
+    var W=180,H=96,base=74,max=56;
+    var h1=t[2]/t[4]*max,h2=t[3]/t[4]*max;
+    svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+t[0]+': '+t[2]+' of '+t[4]+' with change, '+t[3]+' of '+t[4]+' control">'+
+      '<line x1="10" x2="170" y1="'+base+'" y2="'+base+'" stroke="'+C.line+'"/>'+
+      '<rect x="40" y="'+(base-Math.max(h1,1.5))+'" width="36" height="'+Math.max(h1,1.5)+'" rx="3" fill="'+C.arm+'"><title>with change: '+t[2]+'/'+t[4]+'</title></rect>'+
+      '<rect x="104" y="'+(base-Math.max(h2,1.5))+'" width="36" height="'+Math.max(h2,1.5)+'" rx="3" fill="'+C.ctl+'"><title>control: '+t[3]+'/'+t[4]+'</title></rect>'+
+      '<text x="58" y="'+(base-Math.max(h1,1.5)-5)+'" text-anchor="middle" fill="'+C.ink+'" font-size="12" class="mono">'+t[2]+'/'+t[4]+'</text>'+
+      '<text x="122" y="'+(base-Math.max(h2,1.5)-5)+'" text-anchor="middle" fill="'+C.ink+'" font-size="12" class="mono">'+t[3]+'/'+t[4]+'</text>'+
+      '<text x="58" y="90" text-anchor="middle" fill="'+C.muted+'" font-size="11">with</text>'+
+      '<text x="122" y="90" text-anchor="middle" fill="'+C.muted+'" font-size="11">control</text></svg>';
+  } else {
+    svg='<svg viewBox="0 0 180 96" role="img" aria-label="KB-4076: no run needed"><circle cx="90" cy="42" r="26" fill="none" stroke="'+C.muted+'" stroke-width="2"/><text x="90" y="49" text-anchor="middle" fill="'+C.ink+'" font-size="20" class="mono">0</text><text x="90" y="90" text-anchor="middle" fill="'+C.muted+'" font-size="11">runs needed</text></svg>';
+  }
+  d.innerHTML='<div class="t"><span class="id">'+(i+1)+' · '+t[0]+'</span><span class="pill '+cls+'">'+lab+'</span></div><h3>'+t[1]+'</h3>'+svg+(t[5]?'<div class="src">measure: '+t[5]+'</div>':'')+'<p>'+t[7]+'</p>';
+  tr.appendChild(d);
+});
+
+/* 4. KB-4084 bars */
+var eb=document.getElementById("exbars");
+var x0=170,sc=13; // 32 -> 416
+var R=[["lesson taught",32,C.arm],["switched off",0,C.ctl],["broken on purpose",0,C.ctl]];
+eb.appendChild(el("text",{x:x0,y:22,fill:C.muted,"font-size":12},"asks answered with the right question (of 32)"));
+R.forEach(function(r,i){
+  var y=44+i*56;
+  eb.appendChild(el("text",{x:x0-12,y:y+22,fill:C.ink,"font-size":14,"text-anchor":"end"},r[0]));
+  eb.appendChild(el("rect",{x:x0,y:y,width:32*sc,height:32,rx:4,fill:C.panel2}));
+  if(r[1]>0){var b=el("rect",{x:x0,y:y,width:r[1]*sc,height:32,rx:4,fill:r[2]});b.appendChild(el("title",{},r[0]+": "+r[1]+"/32"));eb.appendChild(b);}
+  else eb.appendChild(el("rect",{x:x0,y:y,width:4,height:32,rx:2,fill:r[2]}));
+  eb.appendChild(el("text",{x:r[1]>0?x0+r[1]*sc-8:x0+12,y:y+21,fill:r[1]>0?"#0f141c":C.ink,"font-size":13,"class":"mono","text-anchor":r[1]>0?"end":"start"},r[1]+"/32"));
+});
+var lx=x0+24*sc;
+eb.appendChild(el("line",{x1:lx,x2:lx,y1:36,y2:214,stroke:C.acc,"stroke-width":2,"stroke-dasharray":"5 4"}));
+eb.appendChild(el("text",{x:lx,y:234,fill:C.acc,"font-size":12,"text-anchor":"middle","class":"mono"},"pass line 24"));
+
+/* 5. early stop small multiples (example data) */
+var sg=document.getElementById("stopcharts");
+var S=[["PASS at step 4",[0.55,0.71,0.74,0.73],"PASS",C.pass,"4 steps saved"],
+       ["FAIL at step 3",[0.18,0.2,0.19],"FAIL",C.fail,"line out of reach"],
+       ["ceiling reached",[0.4,0.52,0.46,0.58,0.49,0.6,0.5,0.57],"UNDECIDED",C.und,"never PASS"]];
+S.forEach(function(s,k){
+  var ox=10+k*218,w=196,top=34,bot=176,n=8,line=0.6;
+  var X=function(i){return ox+14+i*(w-24)/(n-1);},Y=function(v){return bot-(v)*(bot-top);};
+  sg.appendChild(el("text",{x:ox,y:16,fill:C.ink,"font-size":13,"font-weight":700},s[0]));
+  if(s[1].length<n)sg.appendChild(el("rect",{x:X(s[1].length-1)+6,y:top,width:X(n-1)-X(s[1].length-1),height:bot-top,fill:C.saved,opacity:.6}));
+  sg.appendChild(el("line",{x1:ox+8,x2:ox+w,y1:bot,y2:bot,stroke:C.line}));
+  sg.appendChild(el("line",{x1:ox+8,x2:ox+w,y1:Y(line),y2:Y(line),stroke:C.muted,"stroke-dasharray":"4 4"}));
+  sg.appendChild(el("line",{x1:X(n-1),x2:X(n-1),y1:top-6,y2:bot,stroke:C.muted,"stroke-width":1}));
+  sg.appendChild(el("text",{x:X(n-1),y:top-10,fill:C.muted,"font-size":10,"text-anchor":"end"},"ceiling"));
+  var d="";s[1].forEach(function(v,i){d+=(i?"L":"M")+X(i)+" "+Y(v);});
+  sg.appendChild(el("path",{d:d,fill:"none",stroke:C.arm,"stroke-width":2}));
+  s[1].forEach(function(v,i){var c=el("circle",{cx:X(i),cy:Y(v),r:4,fill:C.arm,stroke:"#161d29","stroke-width":2});c.appendChild(el("title",{},"step "+(i+1)+": "+v));sg.appendChild(c);});
+  for(var i=0;i<n;i++)sg.appendChild(el("text",{x:X(i),y:bot+14,fill:C.muted,"font-size":10,"text-anchor":"middle","class":"mono"},i+1));
+  sg.appendChild(el("text",{x:ox+8,y:bot+30,fill:C.muted,"font-size":10},"step"));
+  sg.appendChild(el("rect",{x:ox+8,y:bot+38,width:s[2].length*7.4+10,height:16,rx:4,fill:s[3]}));
+  sg.appendChild(el("text",{x:ox+13,y:bot+50,fill:"#0f141c","font-size":11,"class":"mono"},s[2]));
+  sg.appendChild(el("text",{x:ox+s[2].length*7.4+26,y:bot+50,fill:C.ink2,"font-size":11},s[4]));
+});
+
+/* 6. gantt KB-4050 */
+var gg=document.getElementById("gantt");
+var walls=[["off",7],["off2",8],["frame",7],["lev",8],["swap",8],["levc",8],["swapc",8]];
+var gx=110,gs=4.4,setup=52; // 120 s -> 528
+gg.appendChild(el("text",{x:10,y:26,fill:C.ink,"font-size":14,"font-weight":700},"in a row"));
+gg.appendChild(el("rect",{x:gx,y:12,width:setup*gs,height:20,rx:3,fill:C.saved}));
+var t=setup;walls.forEach(function(w){var r=el("rect",{x:gx+t*gs+1,y:12,width:w[1]*gs-2,height:20,rx:3,fill:C.arm});r.appendChild(el("title",{},w[0]+": "+w[1]+" s"));gg.appendChild(r);t+=w[1];});
+gg.appendChild(el("text",{x:gx+t*gs+6,y:27,fill:C.ink,"font-size":13,"class":"mono"},t+" s"));
+gg.appendChild(el("text",{x:10,y:76,fill:C.ink,"font-size":14,"font-weight":700},"side by side"));
+gg.appendChild(el("rect",{x:gx,y:62,width:setup*gs,height:20,rx:3,fill:C.saved}));
+walls.forEach(function(w,i){var r=el("rect",{x:gx+setup*gs,y:62+i*24,width:w[1]*gs,height:20,rx:3,fill:C.arm});r.appendChild(el("title",{},w[0]+": "+w[1]+" s"));gg.appendChild(r);
+  gg.appendChild(el("text",{x:gx+setup*gs+w[1]*gs+6,y:76+i*24,fill:C.muted,"font-size":11,"class":"mono"},w[0]+" "+w[1]+" s"));});
+gg.appendChild(el("line",{x1:gx+61*gs,x2:gx+61*gs,y1:56,y2:240,stroke:C.acc,"stroke-width":2,"stroke-dasharray":"4 4"}));
+gg.appendChild(el("text",{x:gx+61*gs+6,y:236,fill:C.acc,"font-size":13,"class":"mono"},"done 61 s"));
+gg.appendChild(el("text",{x:gx+setup*gs/2,y:100,fill:C.ink2,"font-size":12,"text-anchor":"middle"},"rest of run 52 s"));
+[0,30,60,90,120].forEach(function(s){gg.appendChild(el("line",{x1:gx+s*gs,x2:gx+s*gs,y1:250,y2:256,stroke:C.muted}));gg.appendChild(el("text",{x:gx+s*gs,y:272,fill:C.muted,"font-size":11,"text-anchor":"middle","class":"mono"},s+" s"));});
+gg.appendChild(el("line",{x1:gx,x2:gx+120*gs,y1:250,y2:250,stroke:C.line}));
+})();
+</script>
+</body>
+</html>
