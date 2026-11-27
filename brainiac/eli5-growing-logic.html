@@ -108,7 +108,7 @@ footer{margin-top:2em;padding-top:10px;border-top:1px solid var(--line);color:va
 <main>
 <h1><a href="https://mchzimm.github.io/brainiac/eli5-growing-logic.html">How does brainiac learn to think for itself?</a></h1>
 <p class="sub">brainiac is a small computer brain that learns from text, the way a child learns from stories. Here is the plan to help it grow its own logic, and where it stands today.</p>
-<p class="upd">Updated <span id="upd">2026-11-26 21:37 PST</span></p>
+<p class="upd">Updated <span id="upd">2026-11-26 21:41 PST</span></p>
 
 <section id="s-idea">
 <h2 id="idea">The big idea</h2>
@@ -374,7 +374,7 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <h3>D. Asking questions, and how to ask</h3>
 <p><b>Means:</b> brainiac notices what it does not know and asks, in a good question.</p>
 <p><b>How:</b> it asks itself first (KB-3738); that counts only if the answer makes a later answer better. Then it asks you (KB-3740). It learns question openers with the sentence steps. A new check (KB-3800): well-formed question, right question word for the gap.</p>
-<p><b>Now:</b> KB-4102 failed and is closed (test only, never switched on); KB-4106 designing (design sent back for revision); KB-4108 waiting; KB-4104 on hold; KB-4098 passed (limited); KB-4080 failed; KB-4094 (live teach) waits on restart; KB-4082/4092 switch stays off.</p>
+<p><b>Now:</b> KB-4102 failed and is closed (test only, never switched on); KB-4106 blocked (waits for KB-4110); KB-4110 working; KB-4108 waiting; KB-4104 on hold; KB-4098 passed (limited); KB-4080 failed; KB-4094 (live teach) waits on restart; KB-4082/4092 switch stays off.</p>
 </div>
 <div class="card">
 <h3>Behind the scenes</h3>
@@ -538,13 +538,14 @@ svg._nodes=nodes;window.__pm={nodes:nodes,links:links,cats:cats,pins:pins,apply:
 <p><span class="chip c-ok">KB-4098 done, pass (limited)</span> stories put new words beside taught words' neighbors: link formed for 24 of 32, followed swapped stories 23 of 32; no change in replies seen yet; some common nouns miss.</p>
 <p><span class="chip c-fail">KB-4102 done, fail</span> test only, never switched on: picked the right question shape for a new word 26 of 32 times, but also answered 16 of 64 untaught sentences (limit 6; 12 of 64 before the new story); a fairer retest was not run.</p>
 <p><span class="chip c-wait">KB-4104 on hold</span> make one story stick for crowded words.</p>
-<p><span class="chip c-fix">KB-4106 designing</span> design sent back for revision: its harm check could not move.</p>
+<p><span class="chip c-fail">KB-4106 blocked</span> building the question start also answers plain statements; waits for KB-4110.</p>
+<p><span class="chip c-fix">KB-4110 working</span> new: learn which heard words fit an open spot in a question.</p>
 <p><span class="chip c-wait">KB-4100 backlog</span> questions run on only in "stop here" shapes when the story sentence continues.</p>
 <p><span class="chip c-ok">KB-4082 done, pass (scoped)</span> new questions end cleanly on first hearing, 32/32 vs 0/32 off, two word sets; switched on it also cuts later replies that should keep words (188/188 changed), so it stays off, not live.</p>
 <p><span class="chip c-ok">KB-4090 done, pass (scoped)</span> question ends at the slot only if the heard statement did: 32/32 both sets, continuing-statement control 0/32, on vs off byte-equal 204/204 turns, A1-24 24/24; guard stubs turned tests red.</p>
 <p><span class="chip c-ok">KB-4092 done, pass (scoped)</span> a question copies a statement's extra words only in copy-taught frames: reach 32/32, own habit 8/8, flip 8/8, on vs off byte-equal 204/204, sham 0/32; stop habit load-bearing; untaught frames not claimed (KB-4080); earlier literal-cap fail stays on record.</p>
 <p><span class="chip c-ok">KB-4038 done, diagnosis</span> taught word pick is lost because the reply starts from the newest heard words; 26 of 38 asks could not give the whole answer.</p>
-<p><span class="chip c-wait">KB-4108 waiting</span> let brainiac learn where to start its reply.</p>
+<p><span class="chip c-wait">KB-4108 waiting</span> let brainiac learn where to start its reply (hold lifted).</p>
 <p><span class="chip c-wait">KB-3924 backlog</span> learn when to ask (replaces coded ask-on-gap rule) before any live turn-on.</p>
 <p><span class="chip c-wait">KB-3942 backlog</span> learn which different words mean the same thing.</p>
 <p><span class="chip c-fail">KB-3730 failed</span> context cells in replay: no gain (123 vs 128 without replay); they reach fill-in-blank only, not answers.</p>
