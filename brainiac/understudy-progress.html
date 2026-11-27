@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-27 05:21 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-27 05:59 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1809,10 +1809,10 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <h2>Latest results (plain words)</h2>
 <div class="board">
 <div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>83</b></div>
-<div class="chip ch-ok"><span>Safe live start keeps the helper on (KB-4132)</span><b>PASSED, not live yet: merged 05:13 PST; second read, the first failed on two old tests</b></div>
+<div class="chip ch-ok"><span>Safe live start keeps the helper on (KB-4132)</span><b>PASSED, live since the 2026-11-27 05:45 PST restart: merged 05:13 PST; second read, the first failed on two old tests</b></div>
 <div class="chip ch-ok"><span>Fail-closed stub guard fix (KB-3996)</span><b>Done PASS (merged 0a189b9b1): plain cargo test never execs real claude; gaps -&gt; KB-4012</b></div>
-<div class="chip ch-ok"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>PASS + Done 2026-11-26 (merged 34ad793b6): fill + chatgrade scripts live; core gates (settle, meanings) reach live at next core restart: accepted interim; core gates ride the live core owner's next restart; clause 8 MET on live exe; verifier 4041/18 vs main 4022/18, same red set</b></div>
-<div class="chip ch-ok"><span>Chat hello ends withheld: I do not know yet (KB-4052)</span><b>Done PASS 2026-11-26 (merge 8023705e0): two Claude judges disagreed, veto won; blocked draft now not offered to fill check, Claude must answer; 0 extra calls on reply path; live after core owner restarts on a build holding it; tests 41/41, stub -&gt; 8 FAILED, suite 4067 vs 4062 passed, same 16 failing names both trees; helper ok on greetings pre-existing (handle() identical old vs new)</b></div>
+<div class="chip ch-ok"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>PASS + Done 2026-11-26 (merged 34ad793b6): fill + chatgrade scripts live; core gates (settle, meanings) live since the 2026-11-27 05:45 PST restart; clause 8 MET on live exe; verifier 4041/18 vs main 4022/18, same red set</b></div>
+<div class="chip ch-ok"><span>Chat hello ends withheld: I do not know yet (KB-4052)</span><b>Done PASS 2026-11-26 (merge 8023705e0): two Claude judges disagreed, veto won; blocked draft now not offered to fill check, Claude must answer; 0 extra calls on reply path; live since the 2026-11-27 05:45 PST restart; tests 41/41, stub -&gt; 8 FAILED, suite 4067 vs 4062 passed, same 16 failing names both trees; helper ok on greetings pre-existing (handle() identical old vs new)</b></div>
 <div class="chip ch-ok"><span>Sealed gate fails open on empty or partial set (KB-3982)</span><b>WORKING live 2026-11-26 07:54 UTC: helper on understudy 1f37744 (live repo 5872877, old tree kept); fails closed on empty or partial set; live-layout smoke MET (fake CLI: non-held ask 2 calls, sealed ask 0 calls, SEALED_EMPTY 0, 0 real Claude calls); SEALED_SET files=62 digested=62 digests=887; first live ask must print SEALED_SET (watch); KB-3970 still open</b></div>
 <div class="chip ch-ok"><span>Live privacy log lines kept (KB-3056)</span><b>live, not yet observed: since 2026-11-25 ~15:05 PST 0 helper-routed asks in the live log; KB-3920 env pins live too</b></div>
 <div class="chip ch-ok"><span>Red record test on main (KB-3956)</span><b>Done PASS, 0 calls: test fixture fix, merged 4b9e5aaed</b></div>
