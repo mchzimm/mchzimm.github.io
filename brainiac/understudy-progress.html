@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-28 02:27 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-28 02:52 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1809,6 +1809,7 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <h2>Latest results (plain words)</h2>
 <div class="board">
 <div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>85</b></div>
+<div class="chip ch-blk"><span>Wrong helper answer learned (KB-4284)</span><b>BACKLOG: teach only helper answers graded good</b></div>
 <div class="chip ch-ok"><span>Your name asked, helper says its own (KB-4268)</span><b>PASSED: helper now told who asks; own-name asks answered with brainiac 10/15 -> 0/15, Max 12/15</b></div>
 <div class="chip ch-ok"><span>Name-only helper answer not shown (KB-4238)</span><b>PASSED: unit tests + stubs + no-harm chat test (name reply not seen there); full switched-on test run caught 2 older tests, fixed; merged, switched on, live since the 2026-11-28 00:39 PST restart</b></div><div class="chip ch-ok"><span>Plural question lists all usual answers (KB-4226)</span><b>PASSED: what colors are apples lists several colors (replay 10 of 10, chat test 5 of 5); merged, switched on, live since the 2026-11-28 00:39 PST restart; on the two post-restart test lines brainiac drafted &quot;brainiac hi&quot; and &quot;red&quot;, and the Claude helper (haiku) replaced both</b></div>
 <div class="chip ch-ok"><span>Safe live start keeps the helper on (KB-4132)</span><b>PASSED, live since the 2026-11-27 05:45 PST restart: merged 05:13 PST; second read, the first failed on two old tests</b></div>
