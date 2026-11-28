@@ -62,7 +62,7 @@ table{border-collapse:collapse;width:100%;font-size:13px;background:var(--surfac
 .ftag,.fnote{font-size:12px;color:var(--muted);margin-bottom:4px}.fnote{margin:6px 0 0}
 </style></head><body>
 <h1><a href="https://mchzimm.github.io/brainiac/understudy-progress.html">Brainiac Understudy</a></h1>
-<div class="stamp">updated <span id="upd">2026-11-27 06:39 PST</span></div>
+<div class="stamp">updated <span id="upd">2026-11-27 19:58 PST</span></div>
 <div class="intro"><p>The understudy is a small helper that answers questions about stories while the real brainiac is still growing up. You read it a story, it keeps some sentences, and then you can ask it things. It is only a stand-in, like a substitute teacher, and it is NOT brainiac: every answer starts with "[understudy, not brainiac]". When brainiac learns to answer well, the understudy goes away.</p></div>
 <!-- KB-3572 per-question progress chart (ids + R/W/- states only). refresh: see brainiac/tools/kb3572_chart_data.py docstring -->
 <section id="kb3572" aria-labelledby="kb3572-h">
@@ -1808,7 +1808,8 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="viz"><div class="vhead">Claude calls: daily 500 is a soft target, not a cap · 2026-11-23: about 2709 booked, soft target 2733 (ledger)</div><div class="gauge"><div class="g-used" style="width:99.1%"><span>2709 used</span></div><div class="g-left" style="width:0.9%"><span>24</span></div></div><div class="vkey"><i class="k k-used"></i>used <i class="k k-res"></i>reserved <i class="k k-left"></i>left to target</div><div class="vcap">total since 500 = 2233 · per-run cap = advance estimate, never a stop · budget 0 = off (KB-3600, KB-3602)</div></div>
 <h2>Latest results (plain words)</h2>
 <div class="board">
-<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>83</b></div>
+<div class="bcol bc-ok"><div class="bh bh-ok">WORKING <b>84</b></div>
+<div class="chip ch-ok"><span>Plural question lists all usual answers (KB-4226)</span><b>PASSED: what colors are apples lists several colors (replay 10 of 10, chat test 5 of 5); merged, switched on, live not restarted yet</b></div>
 <div class="chip ch-ok"><span>Safe live start keeps the helper on (KB-4132)</span><b>PASSED, live since the 2026-11-27 05:45 PST restart: merged 05:13 PST; second read, the first failed on two old tests</b></div>
 <div class="chip ch-ok"><span>Fail-closed stub guard fix (KB-3996)</span><b>Done PASS (merged 0a189b9b1): plain cargo test never execs real claude; gaps -&gt; KB-4012</b></div>
 <div class="chip ch-ok"><span>Helper refusal, fill step can still call Claude (KB-3962)</span><b>PASS + Done 2026-11-26 (merged 34ad793b6): fill + chatgrade scripts live; core gates (settle, meanings) live since the 2026-11-27 05:45 PST restart; clause 8 MET on live exe; verifier 4041/18 vs main 4022/18, same red set</b></div>
@@ -1893,7 +1894,8 @@ if(window.ResizeObserver){var ro=new ResizeObserver(later);roots.forEach(functio
 <div class="chip ch-ok"><span>Sealed check of outgoing prompt (KB-3408)</span><b>PASSED, live: understudy refuses sealed sentences in its own Claude prompts (edited, partial, cross-session copies 8/8 -> 0/8; replay same score, 0 misses); live via KB-3982: helper on 1f37744 since 2026-11-26 07:54 UTC</b></div>
 <div class="chip ch-ok"><span>KB-3970 design delta (KB-3984)</span><b>Done: KB-3970 design approved at review 3; rule pre-registered, 19 clauses (C1-C12, C14-C20); 0 Claude calls</b></div>
 </div>
-<div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>24</b></div>
+<div class="bcol bc-no"><div class="bh bh-no">NOT WORKING <b>25</b></div>
+<div class="chip ch-no"><span>Greeting gets the helper name (KB-4224)</span><b>VOID: name reply 0 of 160 without the line; prompt line merged off; follow-up KB-4238</b></div>
 <div class="chip ch-no"><span>Brainiac chat verify (KB-3792)</span><b>FAIL (leg 2); follow-up KB-3882 Done PASS (flagged 2/3, kept 4/5), not built for live</b></div>
 <div class="chip ch-no"><span>Live-code replay gate (KB-3886)</span><b>UNREADABLE: gate, not a verdict; KB-3890 read the live-bound code directly</b></div>
 <div class="chip ch-no"><span>After-wording flag (KB-3806)</span><b>FAIL: 0/4 always-wrong ids flip, R 19/19, 135 calls; flag off</b></div>
